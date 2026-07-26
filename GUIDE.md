@@ -8,18 +8,20 @@ Một site cá nhân để chia sẻ **bài giảng, sheet, PDF, project**. Publ
 
 ```
 Personal_website/
-├── index.html              ← trang web duy nhất (chứa toàn bộ UI + JS)
+├── index.html              ← nội dung trang (markup song ngữ VI/EN)
+├── assets/
+│   ├── css/
+│   │   ├── tokens.css      ← màu, font, spacing (design tokens)
+│   │   ├── base.css        ← reset, typography, nav, hero, section, footer
+│   │   └── components.css  ← lưới tài liệu, thẻ, modal, form
+│   └── js/
+│       └── app.js          ← toàn bộ JS + CONFIG Supabase + song ngữ
 ├── supabase-setup.sql      ← script tạo database & policy (chạy 1 lần)
-├── assets/                 ← ảnh & video cho hero/about (đã có sẵn)
-│   ├── hero-video.mp4
-│   ├── art-1.jpg
-│   ├── art-2.jpg
-│   └── art-3.jpg
 ├── GUIDE.md                ← file này
-└── README.md               ← bản tóm tắt cũ
+└── README.md               ← bản tóm tắt
 ```
 
-Toàn bộ frontend nằm trong **1 file `index.html`** — không build, không npm. Mở trực tiếp bằng trình duyệt là chạy.
+Frontend là **HTML/CSS/JS thuần** — không build, không npm. Deploy tĩnh (Vercel/Netlify/GitHub Pages) là chạy. Chỉ cần chạy qua một web server (http://), không mở bằng `file://` vì magic-link auth cần origin http.
 
 ---
 
@@ -70,7 +72,7 @@ Toàn bộ frontend nằm trong **1 file `index.html`** — không build, không
 2. Copy:
    - **Project URL** (vd `https://abcxyz.supabase.co`)
    - **anon public** key (chuỗi dài bắt đầu `eyJhbGc...`)
-3. Mở `index.html`, tìm block `CONFIG` (gần dòng ~1324, ngay sau `<script>` cuối cùng), điền vào:
+3. Mở `assets/js/app.js`, block `CONFIG` nằm ngay đầu file, điền vào:
 
 ```js
 const CONFIG = {
@@ -173,18 +175,22 @@ Không cần đăng nhập, không cần app. Chỉ owner cần login.
 
 ## 7. Customize nhanh
 
+Trang song ngữ: mỗi đoạn text có `data-vi="..."` và `data-en="..."` trong `index.html`. **Sửa cả hai** để đổi nội dung ở cả hai ngôn ngữ (phần bên trong thẻ là bản tiếng Việt hiển thị mặc định).
+
 | Muốn đổi | Sửa ở đâu |
 |---|---|
-| Tên brand "Ara — Portfolio" | Tìm `Ara <em>—</em> Portfolio` trong `index.html` (2 chỗ: nav + footer) |
-| Text hero ("The quiet work…") | Tìm `<h1>` trong `<header class="hero">` |
+| **Tên "Ngọc Đạt"** | Find-replace `Ngọc Đạt` trong `index.html` (nav, hero, about, footer) |
+| Text hero | Tìm `<h1 class="reveal d1"` trong `index.html` — sửa cả text hiển thị lẫn `data-vi`/`data-en` |
 | Sub-title hero | Tìm `class="hero-sub"` |
+| Số liệu (stats) hero | Tìm `class="hero-stats"` |
+| Thành tích / huy chương | Tìm `<div class="ledger">` (mỗi giải là 1 `.ledger-row`) |
+| Nội dung giảng dạy | Tìm `class="teach-grid"` và `class="teach-proof"` |
 | Email contact | Find-replace `ngocdat2006@gmail.com` |
-| Số điện thoại / địa chỉ | Tìm `+84 (0)24...` và `16 Hàng Bạc` trong footer |
-| Màu accent vàng | Đổi biến `--gold` ở đầu `<style>` |
-| Màu ocean blue chính | Đổi `--ocean`, `--ink-2` |
-| Font | Tìm `@import` Google Fonts trong `<link>` ở `<head>` |
-| Video background hero | Thay file `assets/hero-video.mp4` (giữ nguyên tên), hoặc đổi `<source src=...>` trong section hero |
-| Ảnh art trong About | Thay `assets/art-2.jpg` |
+| Link GitHub / LinkedIn | Tìm `class="socials"` trong footer, thay `href="#"` |
+| Màu accent (ink-blue) | Đổi `--accent` trong `assets/css/tokens.css` |
+| Tông màu / nền giấy | Đổi `--paper`, `--ink`, `--brass` trong `tokens.css` |
+| Font | Đổi `<link>` Google Fonts trong `<head>` + biến `--serif/--sans/--mono` trong `tokens.css` |
+| Loại tài liệu & nhãn | Sửa `TYPE_LABELS` và chip filter (`data-f`) trong `app.js` + `index.html` |
 
 ---
 

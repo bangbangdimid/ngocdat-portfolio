@@ -1,114 +1,38 @@
-# Portfolio — Setup Guide
+# Ngọc Đạt — Personal Website
 
-Site portfolio public với hero cinematic. Owner login bằng magic link để upload/edit/xóa projects. Mọi người khác chỉ xem được.
+Trang cá nhân **song ngữ Việt–Anh** theo hướng *academic tối giản*: hồ sơ học thuật (Olympic Toán, thành tích), giới thiệu giảng dạy, và một **kho tài liệu** công khai. Ai cũng xem & tải được; **chỉ owner** (đăng nhập bằng magic link) mới thêm/sửa/xoá tài liệu.
 
-## Files
+## Cấu trúc
 
-- `index.html` — toàn bộ trang web (1 file duy nhất, không cần build)
-- `supabase-setup.sql` — script tạo bảng + bảo mật, chạy 1 lần
-- `README.md` — file này
-
----
-
-## Demo trước khi setup backend
-
-Mở `index.html` bằng trình duyệt là chạy được ngay ở **demo mode** (lưu localStorage). Để vào owner mode trong demo: click "Sign in" ở footer, nhập email `ngocdat2006@gmail.com`, click submit.
-
-Demo phù hợp để xem giao diện. Bước thật bắt đầu bên dưới.
-
----
-
-## Bước 1 — Tạo Supabase project
-
-1. Vào https://supabase.com/dashboard, sign up / log in (free tier đủ dùng)
-2. **New project** → đặt tên (ví dụ "portfolio") → chọn region gần bạn (Singapore) → set DB password → Create
-3. Đợi ~2 phút project khởi tạo
-
-## Bước 2 — Chạy SQL setup
-
-1. Mở project vừa tạo → sidebar **SQL Editor** → **New query**
-2. Mở file `supabase-setup.sql`, **Find & Replace** tất cả `ngocdat2006@gmail.com` thành email bạn muốn dùng làm owner (4 chỗ). Mặc định đã đúng nếu bạn dùng email đó.
-3. Paste toàn bộ vào SQL editor → bấm **Run** (hoặc Ctrl+Enter)
-4. Phải thấy "Success. No rows returned" — nghĩa là tables, RLS policies, storage bucket đã được tạo
-
-## Bước 3 — Bật Email auth
-
-1. Sidebar **Authentication** → **Providers** → đảm bảo **Email** đang On
-2. **Authentication** → **URL Configuration** → set **Site URL** thành domain bạn sẽ deploy (vd `https://your-portfolio.netlify.app`). Khi đang test local, để `http://localhost:5500` hoặc tương tự.
-
-## Bước 4 — Lấy API key & gắn vào HTML
-
-1. Sidebar **Project Settings** (icon bánh răng) → **API**
-2. Copy **Project URL** và **anon public** key
-3. Mở `index.html`, tìm block `CONFIG` (gần dòng ~480), điền vào:
-
-```js
-const CONFIG = {
-  SUPABASE_URL: 'https://xxxxx.supabase.co',          // ← Project URL
-  SUPABASE_ANON_KEY: 'eyJhbGc...',                    // ← anon key
-  OWNER_EMAIL: 'ngocdat2006@gmail.com',               // ← email owner
-  STORAGE_BUCKET: 'portfolio'
-};
+```
+index.html              nội dung trang (markup song ngữ VI/EN)
+assets/css/tokens.css   design tokens — màu, font, spacing
+assets/css/base.css     reset, typography, nav, hero, section, footer
+assets/css/components.css  lưới tài liệu, thẻ, modal, form
+assets/js/app.js        JS + CONFIG Supabase + hệ thống song ngữ
+supabase-setup.sql      script tạo database & policy (chạy 1 lần)
+GUIDE.md                hướng dẫn setup đầy đủ (đọc file này để deploy)
 ```
 
-Save file. Mở lại trong trình duyệt — banner "Demo mode" sẽ biến mất.
+Không cần build/npm. Deploy tĩnh (Vercel/Netlify/GitHub Pages). Khi chạy local phải qua web server (`http://`), không mở bằng `file://` — magic-link auth cần origin http.
 
-## Bước 5 — Login lần đầu
+## Bắt đầu nhanh
 
-1. Click **Sign in** ở footer
-2. Nhập email owner → **Send magic link**
-3. Mở email, click vào link → bạn được redirect về site
-4. Banner vàng "Owner Mode" hiện ở trên cùng → bạn đã có quyền edit
-5. Click **+ Add New Project** ở cuối phần Work để tạo project đầu tiên
+1. **Xem trước:** chạy một static server trong thư mục này, ví dụ `npx serve` hoặc `python -m http.server 5500`, rồi mở `http://localhost:5500`.
+2. **Backend Supabase:** đã cấu hình sẵn trong `assets/js/app.js` (block `CONFIG` ở đầu file). Owner email hiện là `ngocdat2006@gmail.com`. Chi tiết tạo project + chạy SQL: xem [GUIDE.md](GUIDE.md).
+3. **Đăng nhập owner:** footer → *Đăng nhập* → nhập email owner → mở magic link trong hộp thư → banner "Chế độ chủ trang" hiện lên → thêm tài liệu bằng ô **+**.
 
-## Bước 6 — Deploy public
+## Song ngữ
 
-Bất kỳ static host nào cũng được. Đơn giản nhất:
+Nút **VI / EN** ở góc phải nav. Mỗi đoạn text có thuộc tính `data-vi` và `data-en` trong `index.html`; muốn đổi nội dung nhớ sửa cả hai. Lựa chọn ngôn ngữ được lưu trong `localStorage`.
 
-**Netlify Drop** — kéo thả folder chứa `index.html` vào https://app.netlify.com/drop. Có ngay URL public.
+## Tuỳ biến
 
-**Vercel** — `npx vercel` trong folder, follow prompts.
-
-**GitHub Pages** — push `index.html` lên repo → Settings → Pages → branch main / root.
-
-⚠️ Sau khi deploy, quay lại Supabase **Authentication → URL Configuration** và update **Site URL** thành domain thật để magic link redirect đúng chỗ.
-
----
-
-## Cách dùng
-
-**Public visitors** — xem grid project, click vào để xem chi tiết, download file.
-
-**Owner (bạn)** — sau khi login:
-- Click **+ Add New Project** để tạo mới
-- Mỗi card project có nút edit (✎) và delete (🗑) ở góc trên
-- Trong editor: drag-drop cover image/video, drag-drop nhiều file đính kèm (PDF, video, sheet, image, text — bất kỳ định dạng gì)
-- Click **Sign out** trong auth modal để thoát owner mode
-
-**Limits** — Supabase free tier: 500MB database, 1GB file storage, 5GB bandwidth/tháng. Đủ cho portfolio cá nhân vài chục projects với file <50MB. Nếu đầy có thể upgrade $25/tháng.
-
----
-
-## Custom
-
-**Đổi text hero** — sửa thẳng trong `index.html`, tìm thẻ `<h1>` trong `<header class="hero">`.
-
-**Đổi màu accent** — đầu file CSS có biến `--accent: #d6b67a` (màu vàng kem). Đổi hex code thôi.
-
-**Đổi font** — tìm `@import` Google Fonts, đổi sang font khác.
-
-**Đổi video background** — sửa `<source src="...">` trong thẻ `<video>` ở section hero.
-
-**Custom domain** — Netlify/Vercel đều có settings để add custom domain miễn phí.
-
----
+Xem bảng "Customize nhanh" trong [GUIDE.md](GUIDE.md). Nhanh nhất:
+- Đổi tên: find-replace `Ngọc Đạt` trong `index.html`.
+- Đổi màu/nền/font: sửa biến trong `assets/css/tokens.css`.
+- Đổi thành tích: sửa các `.ledger-row` trong `index.html`.
 
 ## Bảo mật
 
-- RLS (Row Level Security) đảm bảo chỉ email owner có thể INSERT/UPDATE/DELETE projects và files. Anon key bị lộ không sao — Supabase chặn bằng policy.
-- Magic link auth: không có password để bị crack.
-- Người không phải owner login vào → policy trả 0 rows khi insert/update → họ không phá được data của bạn.
-
----
-
-Có gì sai sót báo lại nhé.
+RLS (Row Level Security) ở Supabase đảm bảo chỉ email owner mới INSERT/UPDATE/DELETE được — anon key để lộ cũng không sao vì policy chặn ở server. Magic-link: không có mật khẩu để bị lộ.

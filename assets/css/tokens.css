@@ -1,0 +1,79 @@
+/* ============================================================
+   Design tokens — Academic Minimal
+   Deliberate palette + type system for a maths / finance profile.
+   Restrained, editorial, precise. One accent (ink-blue) + one
+   honour tone (muted brass). Serif display · sans body · mono data.
+   ============================================================ */
+:root {
+  /* ---- Surfaces & ink ---- */
+  --paper:        #fcfbf8;   /* page background — warm scholarly white */
+  --surface:      #ffffff;   /* cards / raised panels                 */
+  --surface-2:    #f4f2ec;   /* subtle inset / alt rows               */
+  --ink:          #16181d;   /* primary text                          */
+  --ink-soft:     #3f444e;   /* secondary text                        */
+  --muted:        #838a95;   /* captions, meta                        */
+  --muted-2:      #a9afb8;   /* faint labels                          */
+
+  /* ---- Lines ---- */
+  --line:         rgba(20, 24, 32, .10);
+  --line-strong:  rgba(20, 24, 32, .18);
+  --line-ink:     rgba(20, 24, 32, .82);
+
+  /* ---- Accent (ink-blue) + honour (brass) ---- */
+  --accent:       #274a76;
+  --accent-deep:  #1c3557;
+  --accent-soft:  #eaf0f7;
+  --accent-line:  rgba(39, 74, 118, .22);
+  --brass:        #9a6a2c;
+  --brass-soft:   #f3ead9;
+
+  /* ---- Typography ---- */
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono:  "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-xs:    clamp(0.72rem, 0.70rem + 0.10vw, 0.78rem);
+  --text-sm:    clamp(0.82rem, 0.80rem + 0.12vw, 0.90rem);
+  --text-base:  clamp(0.98rem, 0.94rem + 0.20vw, 1.08rem);
+  --text-lg:    clamp(1.16rem, 1.08rem + 0.40vw, 1.40rem);
+  --text-xl:    clamp(1.5rem,  1.30rem + 1.0vw,  2.1rem);
+  --text-2xl:   clamp(2.0rem,  1.55rem + 2.2vw,  3.2rem);
+  --text-hero:  clamp(2.6rem,  1.7rem  + 4.3vw,  5.4rem);
+
+  --leading-tight: 1.08;
+  --leading-snug:  1.28;
+  --leading-body:  1.68;
+
+  --tracking-label: .22em;
+  --tracking-wide:  .06em;
+
+  /* ---- Spacing ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-section: clamp(4.5rem, 3rem + 6vw, 9rem);
+
+  --maxw: 1180px;
+  --maxw-narrow: 780px;
+
+  /* ---- Radius & elevation (small, disciplined) ---- */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(20, 24, 32, .05),
+               0 8px 24px -18px rgba(20, 24, 32, .28);
+  --shadow-md: 0 2px 6px rgba(20, 24, 32, .06),
+               0 26px 50px -30px rgba(20, 24, 32, .40);
+
+  /* ---- Motion ---- */
+  --dur-fast:   150ms;
+  --dur-normal: 300ms;
+  --dur-slow:   620ms;
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-std:   cubic-bezier(0.4, 0, 0.2, 1);
+}
