@@ -32,34 +32,50 @@
     $("tabSignup").classList.toggle("active", name === "signup");
     document.querySelector(".auth-tabs").style.display = name === "reset" ? "none" : "";
     if (!keepMsg) clearMsg();
+    ensureWidget(PANES[name]);
   }
   $("tabLogin").addEventListener("click", () => selectPane("login"));
   $("tabSignup").addEventListener("click", () => selectPane("signup"));
   $("forgotLink").addEventListener("click", (e) => { e.preventDefault(); $("fgEmail").value = $("liEmail").value; selectPane("forgot"); });
   $("backToLogin").addEventListener("click", (e) => { e.preventDefault(); selectPane("login"); });
-  if (params.get("tab") === "signup") selectPane("signup");
 
   // ---------- optional Cloudflare Turnstile ----------
+  // Widgets are rendered lazily, only in the pane the user is looking at:
+  // a challenge inside a display:none pane may never complete.
+  const CAPTCHA_ON = !!CFG.TURNSTILE_SITE_KEY;
   const captchaTokens = new WeakMap();
   const widgetIds = new WeakMap();
+  function ensureWidget(paneId) {
+    if (!CAPTCHA_ON || !window.turnstile) return;
+    const box = $(paneId)?.querySelector("[data-turnstile]");
+    if (!box || widgetIds.has(box)) return;
+    const id = window.turnstile.render(box, {
+      sitekey: CFG.TURNSTILE_SITE_KEY,
+      language: window.I18N.getLang(),
+      callback: (token) => captchaTokens.set(box, token),
+      "expired-callback": () => captchaTokens.delete(box),
+      "error-callback": () => { captchaTokens.delete(box); },
+    });
+    widgetIds.set(box, id);
+  }
   function initTurnstile() {
-    if (!CFG.TURNSTILE_SITE_KEY) return;
+    if (!CAPTCHA_ON) return;
     const s = document.createElement("script");
     s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     s.async = true; s.defer = true;
-    s.onload = () => document.querySelectorAll("[data-turnstile]").forEach((box) => {
-      const id = window.turnstile.render(box, {
-        sitekey: CFG.TURNSTILE_SITE_KEY,
-        callback: (token) => captchaTokens.set(box, token),
-        "expired-callback": () => captchaTokens.delete(box),
-      });
-      widgetIds.set(box, id);
-    });
+    s.onload = () => { const active = document.querySelector(".auth-pane.active"); if (active) ensureWidget(active.id); };
     document.head.appendChild(s);
   }
   function tokenFor(form) {
     const box = form.querySelector("[data-turnstile]");
     return box ? captchaTokens.get(box) || null : null;
+  }
+  // true if we may submit; otherwise tells the user to finish the bot check
+  function captchaReady(form) {
+    if (!CAPTCHA_ON || tokenFor(form)) return true;
+    showMsg("err", t("Vui lòng đợi ô xác minh chống robot (Cloudflare) hoàn tất rồi bấm lại.",
+                     "Please wait for the Cloudflare bot check to finish, then try again."));
+    return false;
   }
   // a Turnstile token is single-use: reset after every attempt
   function resetCaptcha(form) {
@@ -95,6 +111,7 @@
     const form = e.currentTarget;
     const email = $("liEmail").value.trim(), password = $("liPass").value;
     if (!validEmail(email) || !password) return showMsg("err", t("Nhập email và mật khẩu hợp lệ.", "Enter a valid email and password."));
+    if (!captchaReady(form)) return;
     withBusy($("liBtn"), t("Đang đăng nhập…", "Signing in…"), async () => {
       const res = await window.Auth.signIn({ email, password, captchaToken: tokenFor(form) });
       resetCaptcha(form);
@@ -113,6 +130,7 @@
     if (!validEmail(email)) return showMsg("err", t("Email không hợp lệ.", "Invalid email."));
     if (phone && !/^[+\d][\d\s.-]{7,18}$/.test(phone)) return showMsg("err", t("Số điện thoại không hợp lệ.", "Invalid phone number."));
     if (password.length < 8) return showMsg("err", t("Mật khẩu tối thiểu 8 ký tự.", "Password must be at least 8 characters."));
+    if (!captchaReady(form)) return;
     withBusy($("suBtn"), t("Đang tạo…", "Creating…"), async () => {
       const res = await window.Auth.signUp({ fullName, email, phone, password, captchaToken: tokenFor(form) });
       resetCaptcha(form);
@@ -134,6 +152,7 @@
     const form = e.currentTarget;
     const email = $("fgEmail").value.trim();
     if (!validEmail(email)) return showMsg("err", t("Email không hợp lệ.", "Invalid email."));
+    if (!captchaReady(form)) return;
     withBusy($("fgBtn"), t("Đang gửi…", "Sending…"), async () => {
       const res = await window.Auth.requestPasswordReset(email, tokenFor(form));
       resetCaptcha(form);
@@ -162,6 +181,7 @@
   });
 
   // ---------- boot ----------
+  if (params.get("tab") === "signup") selectPane("signup");
   initTurnstile();
   window.sb.auth.onAuthStateChange((event) => {
     if (event === "PASSWORD_RECOVERY") selectPane("reset");
