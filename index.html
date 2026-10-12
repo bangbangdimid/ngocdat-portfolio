@@ -11,15 +11,8 @@
 <link rel="stylesheet" href="assets/css/tokens.css" />
 <link rel="stylesheet" href="assets/css/base.css" />
 <link rel="stylesheet" href="assets/css/components.css" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
-<!-- ═══════════ Owner banner ═══════════ -->
-<div class="owner-banner" id="ownerBanner">
-  <span data-vi="Chế độ chủ trang — bạn có thể thêm / sửa / xoá tài liệu" data-en="Owner mode — you can add / edit / delete materials">Chế độ chủ trang — bạn có thể thêm / sửa / xoá tài liệu</span>
-  <button id="signOutBtn" data-vi="Đăng xuất" data-en="Sign out">Đăng xuất</button>
-</div>
 
 <!-- ═══════════ Nav ═══════════ -->
 <nav class="nav" id="nav">
@@ -28,10 +21,11 @@
     <li><a href="#about"    data-vi="Giới thiệu" data-en="About">Giới thiệu</a></li>
     <li><a href="#honors"   data-vi="Thành tích" data-en="Honours">Thành tích</a></li>
     <li><a href="#teaching" data-vi="Giảng dạy"  data-en="Teaching">Giảng dạy</a></li>
-    <li><a href="#work"     data-vi="Tài liệu"   data-en="Archive">Tài liệu</a></li>
+    <li><a href="#work"     data-vi="Khu học tập" data-en="Classroom">Khu học tập</a></li>
     <li><a href="#contact"  data-vi="Liên hệ"    data-en="Contact">Liên hệ</a></li>
   </ul>
   <div class="nav-right">
+    <a class="btn primary" href="login.html" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</a>
     <div class="lang-toggle" role="group" aria-label="Language">
       <button data-lang="vi" class="active">VI</button>
       <button data-lang="en">EN</button>
@@ -235,33 +229,41 @@
   </div>
 </section>
 
-<!-- ═══════════ Archive / Work ═══════════ -->
+<!-- ═══════════ Khu học tập ═══════════ -->
 <section class="section" id="work">
   <div class="wrap">
     <div class="section-head">
       <div class="titles">
-        <div class="eyebrow reveal">§04 — <span data-vi="Kho tài liệu" data-en="Archive">Kho tài liệu</span></div>
+        <div class="eyebrow reveal">§04 — <span data-vi="Khu học tập" data-en="Classroom">Khu học tập</span></div>
         <h2 class="reveal d1"
-            data-vi="Bài giảng, đề &amp; <span class='ital'>tài liệu</span>."
-            data-en="Lectures, problem sets &amp; <span class='ital'>materials</span>.">
-          Bài giảng, đề &amp; <span class="ital">tài liệu</span>.
+            data-vi="Lớp học <span class='ital'>trực tuyến</span> của mình."
+            data-en="My <span class='ital'>online</span> classroom.">
+          Lớp học <span class="ital">trực tuyến</span> của mình.
         </h2>
       </div>
-      <p class="lede reveal d2" data-vi="Kho tài liệu mở: bài giảng, đề luyện, ghi chú và code. Bấm vào từng mục để xem chi tiết và tải về." data-en="An open archive: lectures, practice papers, notes, and code. Open any item to view details and download.">Kho tài liệu mở: bài giảng, đề luyện, ghi chú và code. Bấm vào từng mục để xem chi tiết và tải về.</p>
+      <p class="lede reveal d2" data-vi="Học sinh của lớp đăng nhập để xem lại video bài giảng và tải tài liệu, đề, lời giải — mọi lúc, mọi nơi." data-en="Enrolled students sign in to re-watch lecture videos and download materials, problem sets and solutions — anytime.">Học sinh của lớp đăng nhập để xem lại video bài giảng và tải tài liệu, đề, lời giải — mọi lúc, mọi nơi.</p>
     </div>
 
-    <div class="filters reveal" id="filters">
-      <span class="chip active" data-f="all"     data-vi="Tất cả"        data-en="All">Tất cả</span>
-      <span class="chip"        data-f="lecture" data-vi="Bài giảng"     data-en="Lectures">Bài giảng</span>
-      <span class="chip"        data-f="paper"   data-vi="Đề &amp; Lời giải" data-en="Problems">Đề &amp; Lời giải</span>
-      <span class="chip"        data-f="doc"     data-vi="Ghi chú"       data-en="Notes">Ghi chú</span>
-      <span class="chip"        data-f="sheet"   data-vi="Bảng tính"     data-en="Sheets">Bảng tính</span>
-      <span class="chip"        data-f="code"    data-vi="Code"          data-en="Code">Code</span>
-      <span class="chip"        data-f="folder"  data-vi="Bộ sưu tập"    data-en="Folders">Bộ sưu tập</span>
-      <span class="count" id="count"></span>
+    <div class="teach-grid">
+      <div class="teach-card reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M11 8.5l3.5 2-3.5 2z" fill="currentColor"/></svg>
+        <h3 data-vi="Đã là học sinh của lớp?" data-en="Already enrolled?">Đã là học sinh của lớp?</h3>
+        <p data-vi="Đăng nhập bằng tài khoản của bạn để vào kho video &amp; tài liệu của khoá đã kích hoạt." data-en="Sign in with your account to open the video & material library of your activated course.">Đăng nhập bằng tài khoản của bạn để vào kho video &amp; tài liệu của khoá đã kích hoạt.</p>
+        <a class="btn primary" href="login.html" style="margin-top:1rem" data-vi="Vào khu học tập" data-en="Enter classroom">Vào khu học tập</a>
+      </div>
+      <div class="teach-card reveal d1">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.1 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <h3 data-vi="Muốn đăng ký học?" data-en="Want to enrol?">Muốn đăng ký học?</h3>
+        <p data-vi="Liên hệ trực tiếp để được tư vấn lộ trình và nhận mã kích hoạt lớp học." data-en="Contact me directly for guidance on the learning path and your class activation code.">Liên hệ trực tiếp để được tư vấn lộ trình và nhận mã kích hoạt lớp học.</p>
+        <a class="btn ghost" href="tel:+84909000000" style="margin-top:1rem" data-vi="Gọi: 0909 000 000" data-en="Call: 0909 000 000">Gọi: 0909 000 000</a>
+      </div>
+      <div class="teach-card reveal d2">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+        <h3 data-vi="Phụ huynh muốn xem thử?" data-en="Parents — want a preview?">Phụ huynh muốn xem thử?</h3>
+        <p data-vi="Một vài bài giảng mẫu sẽ được mở công khai ngay tại đây để phụ huynh tham khảo chất lượng lớp học." data-en="A few sample lectures will be openly available here so parents can judge the quality of the class.">Một vài bài giảng mẫu sẽ được mở công khai ngay tại đây để phụ huynh tham khảo chất lượng lớp học.</p>
+        <span class="btn" style="margin-top:1rem;opacity:.6;pointer-events:none" data-vi="Bài giảng mẫu — sắp có" data-en="Sample lectures — coming soon">Bài giảng mẫu — sắp có</span>
+      </div>
     </div>
-
-    <div class="grid" id="grid"></div>
   </div>
 </section>
 
@@ -303,7 +305,8 @@
           <li><a href="#about"    data-vi="Giới thiệu" data-en="About">Giới thiệu</a></li>
           <li><a href="#honors"   data-vi="Thành tích" data-en="Honours">Thành tích</a></li>
           <li><a href="#teaching" data-vi="Giảng dạy"  data-en="Teaching">Giảng dạy</a></li>
-          <li><a href="#work"     data-vi="Kho tài liệu" data-en="Archive">Kho tài liệu</a></li>
+          <li><a href="#work"     data-vi="Khu học tập" data-en="Classroom">Khu học tập</a></li>
+          <li><a href="login.html" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</a></li>
         </ul>
       </div>
     </div>
@@ -313,107 +316,31 @@
       <div class="socials">
         <a href="#" target="_blank" rel="noopener">GitHub</a>
         <a href="#" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="#" id="ownerSignin" title="Owner sign-in" data-vi="· Đăng nhập" data-en="· Sign in">· Đăng nhập</a>
+        <a href="login.html" data-vi="· Đăng nhập" data-en="· Sign in">· Đăng nhập</a>
       </div>
     </div>
   </div>
 </footer>
 
-<!-- ═══════════ Auth modal ═══════════ -->
-<div class="modal" id="authModal" aria-hidden="true">
-  <div class="modal-card">
-    <button class="modal-close" data-close aria-label="Close">×</button>
-    <h3 data-vi="Đăng nhập chủ trang" data-en="Owner sign-in">Đăng nhập chủ trang</h3>
-    <p class="sub" data-vi="Nhập email chủ trang để nhận magic link đăng nhập." data-en="Enter the owner email to receive a sign-in magic link.">Nhập email chủ trang để nhận magic link đăng nhập.</p>
-    <form id="authForm">
-      <div class="field">
-        <label for="authEmail" data-vi="Email" data-en="Email">Email</label>
-        <input type="email" id="authEmail" required placeholder="you@example.com" />
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn primary" id="authSubmit" data-vi="Gửi magic link" data-en="Send magic link">Gửi magic link</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ═══════════ Editor modal ═══════════ -->
-<div class="modal" id="editorModal" aria-hidden="true">
-  <div class="modal-card wide">
-    <button class="modal-close" data-close aria-label="Close">×</button>
-    <h3 id="editorTitle"><span class="ital">Tài liệu</span> mới</h3>
-    <form id="editorForm">
-      <input type="hidden" id="fId" />
-      <div class="field">
-        <label for="fTitle" data-vi="Tiêu đề" data-en="Title">Tiêu đề</label>
-        <input type="text" id="fTitle" required data-vi-ph="VD: Chuyên đề Bất đẳng thức — buổi 03" data-en-ph="e.g. Inequalities — Lecture 03" placeholder="VD: Chuyên đề Bất đẳng thức — buổi 03" />
-      </div>
-      <div class="field">
-        <label for="fDesc" data-vi="Mô tả" data-en="Description">Mô tả</label>
-        <textarea id="fDesc" data-vi-ph="Một dòng mô tả ngắn." data-en-ph="A short description." placeholder="Một dòng mô tả ngắn."></textarea>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label for="fType" data-vi="Loại" data-en="Type">Loại</label>
-          <select id="fType">
-            <option value="lecture" data-vi="Bài giảng · Video" data-en="Lecture · Video">Bài giảng · Video</option>
-            <option value="paper"   data-vi="Đề &amp; Lời giải · PDF" data-en="Problems · PDF">Đề &amp; Lời giải · PDF</option>
-            <option value="doc"     data-vi="Ghi chú" data-en="Notes">Ghi chú</option>
-            <option value="sheet"   data-vi="Bảng tính" data-en="Sheet">Bảng tính</option>
-            <option value="code"    data-vi="Code" data-en="Code">Code</option>
-            <option value="folder"  data-vi="Bộ sưu tập" data-en="Folder">Bộ sưu tập</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="fTags" data-vi="Nhãn (phân tách bằng dấu ·)" data-en="Tags (· separated)">Nhãn (phân tách bằng dấu ·)</label>
-          <input type="text" id="fTags" data-vi-ph="HSG · Đại số" data-en-ph="Olympiad · Algebra" placeholder="HSG · Đại số" />
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label for="fMeta" data-vi="Thông tin (kích thước / số trang / thời lượng)" data-en="Meta (size / pages / length)">Thông tin</label>
-          <input type="text" id="fMeta" data-vi-ph="VD: 2.4 MB · 14 tr · 38:14" data-en-ph="e.g. 2.4 MB · 14 pp · 38:14" placeholder="VD: 2.4 MB · 14 tr · 38:14" />
-        </div>
-        <div class="field">
-          <label for="fDate" data-vi="Thời gian" data-en="Date">Thời gian</label>
-          <input type="text" id="fDate" data-vi-ph="VD: Học kỳ 1, 2026" data-en-ph="e.g. Term 1, 2026" placeholder="VD: Học kỳ 1, 2026" />
-        </div>
-      </div>
-      <div class="field">
-        <label data-vi="Tệp đính kèm" data-en="Attachments">Tệp đính kèm</label>
-        <div class="drop" id="filesDrop">
-          <input type="file" id="filesInput" multiple />
-          <span data-vi="Kéo-thả tệp vào đây (PDF, video, ảnh, bảng tính… — mọi định dạng)" data-en="Drop files here (PDF, video, image, sheet… — any format)">Kéo-thả tệp vào đây (PDF, video, ảnh, bảng tính… — mọi định dạng)</span>
-        </div>
-        <div class="file-list" id="filesPreview"></div>
-      </div>
-      <div class="field">
-        <label data-vi="Ảnh bìa" data-en="Cover">Ảnh bìa</label>
-        <div class="drop" id="coverDrop">
-          <input type="file" id="coverInput" accept="image/*,video/mp4" />
-          <span id="coverHint" data-vi="Kéo-thả 1 ảnh/video bìa (bỏ trống để dùng hình mặc định theo loại)" data-en="Drop one cover image/video (leave empty for a default by type)">Kéo-thả 1 ảnh/video bìa (bỏ trống để dùng hình mặc định theo loại)</span>
-        </div>
-        <div class="file-list" id="coverPreview"></div>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn danger" id="deleteBtn" style="display:none; margin-right:auto;" data-vi="Xoá" data-en="Delete">Xoá</button>
-        <button type="button" class="btn" data-close data-vi="Huỷ" data-en="Cancel">Huỷ</button>
-        <button type="submit" class="btn primary" id="saveBtn" data-vi="Lưu tài liệu" data-en="Save material">Lưu tài liệu</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ═══════════ Detail modal ═══════════ -->
-<div class="modal" id="detailModal" aria-hidden="true">
-  <div class="modal-card">
-    <button class="modal-close" data-close aria-label="Close">×</button>
-    <div id="detailBody"></div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script src="assets/js/app.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script>
+  /* nav scroll state + mobile burger (landing only) */
+  (function () {
+    var nav = document.getElementById("nav");
+    var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 60); };
+    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+    var burger = document.getElementById("navBurger");
+    var links = document.getElementById("navLinks");
+    if (burger) burger.addEventListener("click", function () { links.classList.toggle("open"); });
+    document.querySelectorAll("#navLinks a").forEach(function (a) {
+      a.addEventListener("click", function () { links.classList.remove("open"); });
+    });
+    /* reveal on scroll */
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+  })();
+</script>
 </body>
 </html>

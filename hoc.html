@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Khu học tập — Ngọc Đạt</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/tokens.css" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/components.css" />
+<link rel="stylesheet" href="assets/css/auth.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header class="appbar">
+  <a class="brand" href="index.html"><b>Ngọc&nbsp;Đạt</b><span class="tld">/ Lớp Toán</span></a>
+  <div class="appbar-right">
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button data-lang="vi" class="active">VI</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <a class="btn" id="adminLink" href="admin.html" style="display:none" data-vi="Quản trị" data-en="Admin">Quản trị</a>
+    <span class="user-chip"><span class="dot"></span><span id="userName">…</span></span>
+    <button class="btn" id="signOutBtn" data-vi="Đăng xuất" data-en="Sign out">Đăng xuất</button>
+  </div>
+</header>
+
+<!-- loader shown until auth check completes -->
+<div id="loader" class="page-loader" data-vi="Đang tải…" data-en="Loading…">Đang tải…</div>
+
+<main class="wrap dash" id="dash" style="display:none">
+  <div class="dash-head">
+    <div class="hello" id="hello"></div>
+    <p class="sub" data-vi="Các khoá học của bạn. Nhập mã lớp để mở thêm khoá mới." data-en="Your courses. Enter a class code to unlock a new one.">Các khoá học của bạn. Nhập mã lớp để mở thêm khoá mới.</p>
+  </div>
+
+  <div class="redeem-card">
+    <div class="lbl">
+      <span data-vi="Có mã lớp?" data-en="Have a class code?">Có mã lớp?</span>
+      <span class="sub" data-vi="Nhập mã giáo viên cấp để vào lớp." data-en="Enter the code your teacher gave you.">Nhập mã giáo viên cấp để vào lớp.</span>
+    </div>
+    <form id="redeemForm">
+      <input type="text" id="codeInput" required autocomplete="off" spellcheck="false"
+             data-vi-ph="VD: TOAN9-2026" data-en-ph="e.g. MATH9-2026" placeholder="VD: TOAN9-2026" />
+      <button type="submit" class="btn primary" id="redeemBtn" data-vi="Kích hoạt" data-en="Activate">Kích hoạt</button>
+    </form>
+  </div>
+
+  <div id="courses"></div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/hoc.js"></script>
+</body>
+</html>

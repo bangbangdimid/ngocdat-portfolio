@@ -200,11 +200,13 @@ create policy "profiles self read"  on public.profiles for select using (id = au
 create policy "profiles self write" on public.profiles for update using (id = auth.uid()) with check (id = auth.uid());
 create policy "profiles admin all"  on public.profiles for all    using (public.is_admin()) with check (public.is_admin());
 
--- courses (anyone may read a published course; admin sees all)
-drop policy if exists "courses read"  on public.courses;
-drop policy if exists "courses admin" on public.courses;
-create policy "courses read"  on public.courses for select using (is_published or public.is_admin());
-create policy "courses admin" on public.courses for all    using (public.is_admin()) with check (public.is_admin());
+-- courses (published = public; enrolled students read their own; admin sees all)
+drop policy if exists "courses read"          on public.courses;
+drop policy if exists "courses enrolled read" on public.courses;
+drop policy if exists "courses admin"         on public.courses;
+create policy "courses read"          on public.courses for select using (is_published or public.is_admin());
+create policy "courses enrolled read" on public.courses for select using (public.is_enrolled(id));
+create policy "courses admin"         on public.courses for all    using (public.is_admin()) with check (public.is_admin());
 
 -- access codes (students never read this table; only admin + definer function)
 drop policy if exists "codes admin" on public.access_codes;

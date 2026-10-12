@@ -36,12 +36,14 @@ set role = 'admin'
 where id = (select id from auth.users where email = 'ngocdat2006@gmail.com');
 ```
 
-## 6. Chặn bot — Cloudflare Turnstile (miễn phí)
+## 6. Chặn bot — Cloudflare Turnstile (LÀM SAU, không bắt buộc ngay)
+> Không liên quan tới bước 7. Có thể bỏ qua ở Phase 1 — giai đoạn đầu đã có xác thực
+> email + rate-limit của Supabase + RLS. Khi nào sẵn sàng gia cố thì làm:
 1. Vào https://dash.cloudflare.com → **Turnstile** → **Add site** → nhập domain → lấy **Site Key** + **Secret Key**.
-2. Supabase → Authentication → **Attack Protection / Bot protection** → chọn **Turnstile** → dán **Secret Key**.
+2. Supabase → Authentication → **Attack Protection (CAPTCHA)** → chọn **Turnstile** → dán **Secret Key**.
 3. Gửi **Site Key** cho mình (key này công khai, dán vào frontend). **Secret Key tuyệt đối không đưa cho ai / không commit.**
 
-## 7. (Tuỳ chọn) Dọn hệ thống portfolio cũ
+## 7. (Tuỳ chọn, KHÔNG liên quan Turnstile) Dọn hệ thống portfolio cũ
 Nếu không dùng kho portfolio cũ nữa:
 ```sql
 drop table if exists public.project_files cascade;
