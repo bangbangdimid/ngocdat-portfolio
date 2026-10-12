@@ -1,0 +1,13 @@
+# Files kept in the repo but NOT published on the website.
+# Internal docs / database scripts — no need to expose the schema publicly.
+supabase/
+*.md
+RCM.txt
+.github/
+
+# Legacy portfolio files no longer linked from the site.
+Portfolio.html
+assets/art-1.jpg
+assets/art-2.jpg
+assets/art-3.jpg
+assets/hero-video.mp4

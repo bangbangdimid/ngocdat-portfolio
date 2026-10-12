@@ -78,7 +78,7 @@
   (async function () {
     const user = await window.Auth.requireAuth();
     if (!user) return; // redirected to login
-    state.profile = await window.Auth.getProfile();
+    state.profile = await window.Auth.syncProfileFromMetadata();
     $("loader").style.display = "none";
     $("dash").style.display = "";
     renderHeader();
@@ -86,11 +86,16 @@
 
     $("redeemForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+      const code = $("codeInput").value.trim();
+      if (!code || code.length > 64) { toast("Nhập mã lớp hợp lệ.", "Enter a valid class code.", true); return; }
       const btn = $("redeemBtn"); const old = btn.textContent;
       btn.disabled = true; btn.textContent = t("Đang kiểm tra…", "Checking…");
       try {
         const res = await window.Auth.redeemCode($("codeInput").value);
-        if (res && res.ok) {
+        if (res && res.ok && res.already_enrolled) {
+          $("codeInput").value = "";
+          toast("Bạn đã ở trong lớp này rồi.", "You're already enrolled in this course.");
+        } else if (res && res.ok) {
           $("codeInput").value = "";
           toast("Kích hoạt thành công! Đã mở khoá học.", "Activated! Course unlocked.");
           await loadCourses();

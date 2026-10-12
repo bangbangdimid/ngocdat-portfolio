@@ -75,6 +75,8 @@
 .msg.info{ background: var(--accent-soft); color: var(--accent-deep); border: 1px solid var(--accent-line); }
 
 .auth-card .hint { font-size: var(--text-xs); color: var(--muted); margin-top: .4rem; }
+.text-link { font-size: var(--text-sm); color: var(--accent); border-bottom: 1px solid var(--accent-line); transition: border-color var(--dur-fast); }
+.text-link:hover { border-color: var(--accent); }
 .btn.block { width: 100%; justify-content: center; }
 .turnstile-box { margin: .4rem 0 1rem; min-height: 0; }
 
@@ -119,6 +121,15 @@
   .auth-wrap { grid-template-columns: 1fr; }
   .auth-aside { display: none; }
 }
+@media (max-width: 640px) {
+  .appbar { padding: .65rem 1rem; gap: .6rem; }
+  .appbar .brand .tld, .user-chip { display: none; }
+  .appbar-right { gap: .45rem; }
+  .appbar-right .btn { padding: .5em .75em; letter-spacing: .02em; }
+  .appbar-right .lang-toggle { flex: 0 0 auto; }
+  .hide-sm { display: none !important; }
+}
+.appbar .btn, .appbar .brand { white-space: nowrap; }
 @media (max-width: 560px) {
   .redeem-card { flex-direction: column; align-items: stretch; }
   .redeem-card form { margin-left: 0; }

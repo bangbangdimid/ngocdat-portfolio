@@ -1,0 +1,60 @@
+/* ============================================================
+   landing.css — public courses + free sample lessons (index.html)
+   ============================================================ */
+
+.sub-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0 0 1.2rem; }
+.sub-head h3 { font-family: var(--serif); font-size: var(--text-xl); }
+.sub-head .muted { font-family: var(--mono); font-size: var(--text-xs); color: var(--muted); }
+.block-gap { margin-top: clamp(2.5rem, 5vw, 4rem); }
+
+/* published courses */
+.pub-courses { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; }
+.pub-course {
+  position: relative; display: flex; flex-direction: column; gap: .6rem;
+  padding: 1.5rem 1.4rem 1.3rem; border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--surface); overflow: hidden;
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal), border-color var(--dur-normal);
+}
+.pub-course::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--brass)); }
+.pub-course:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent-line); }
+.pub-course .no { font-family: var(--mono); font-size: var(--text-xs); color: var(--muted-2); }
+.pub-course h4 { font-family: var(--serif); font-size: var(--text-lg); line-height: var(--leading-snug); }
+.pub-course p { color: var(--ink-soft); font-size: var(--text-sm); flex: 1; }
+.pub-course .go { margin-top: .4rem; align-self: flex-start; }
+
+/* sample lessons */
+.samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; }
+.sample {
+  display: flex; flex-direction: column; text-align: left; width: 100%;
+  border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); overflow: hidden;
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal), border-color var(--dur-normal);
+}
+.sample:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent-line); }
+.sample:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sample .s-thumb { position: relative; aspect-ratio: 16/9; background: linear-gradient(150deg, var(--accent-deep), var(--accent)); display: grid; place-items: center; color: #fff; overflow: hidden; }
+.sample .s-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sample .s-thumb .play { position: relative; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; background: rgba(28,53,87,.88); }
+.sample .s-thumb .play svg { width: 20px; height: 20px; margin-left: 3px; }
+.sample .s-thumb .doc-ic { width: 44px; height: 44px; opacity: .9; }
+.sample .s-body { padding: 1rem 1.1rem 1.2rem; }
+.sample .s-course { font-family: var(--mono); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; color: var(--brass); }
+.sample .s-title { font-family: var(--serif); font-size: var(--text-lg); line-height: var(--leading-snug); margin-top: .3rem; }
+.sample .s-kind { margin-top: .5rem; font-family: var(--mono); font-size: var(--text-xs); color: var(--muted); }
+
+.landing-note { padding: 1.4rem 1.5rem; border: 1px dashed var(--line-strong); border-radius: var(--r-md); color: var(--muted); font-size: var(--text-sm); }
+
+/* video modal */
+.modal-card.video { max-width: 920px; padding: 0; overflow: hidden; background: #000; border: 0; }
+.modal-card.video .modal-close { color: #fff; z-index: 2; background: rgba(0,0,0,.45); }
+.modal-card.video .modal-close:hover { background: rgba(0,0,0,.7); color: #fff; }
+.video-frame { aspect-ratio: 16/9; width: 100%; }
+.video-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.video-cap { background: var(--surface); padding: 1rem 1.3rem; }
+.video-cap h3 { font-family: var(--serif); font-size: var(--text-lg); margin: 0; }
+
+.nav-right .btn.primary { white-space: nowrap; }
+@media (max-width: 440px) {
+  .nav .brand .tld { display: none; }
+  .nav-right { gap: .6rem; }
+  .nav-right .btn.primary { padding: .6em .9em; }
+}

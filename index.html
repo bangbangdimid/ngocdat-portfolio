@@ -4,13 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ngọc Đạt — Toán học & Tài chính</title>
-<meta name="description" content="Hồ sơ học thuật & giảng dạy của Ngọc Đạt — sinh viên Tài chính–Ngân hàng FTU HCMC, huy chương Olympic Toán, gia sư luyện HSG Toán." />
+<meta name="description" content="Lớp Toán của Ngọc Đạt — luyện thi HSG Toán, ôn thi vào lớp 10 chuyên. Huy chương Olympic Toán Sinh viên, cựu học sinh chuyên Tin PTNK, sinh viên FTU HCMC." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/css/tokens.css" />
 <link rel="stylesheet" href="assets/css/base.css" />
 <link rel="stylesheet" href="assets/css/components.css" />
+<link rel="stylesheet" href="assets/css/landing.css" />
 </head>
 <body>
 
@@ -21,6 +22,7 @@
     <li><a href="#about"    data-vi="Giới thiệu" data-en="About">Giới thiệu</a></li>
     <li><a href="#honors"   data-vi="Thành tích" data-en="Honours">Thành tích</a></li>
     <li><a href="#teaching" data-vi="Giảng dạy"  data-en="Teaching">Giảng dạy</a></li>
+    <li><a href="#courses"  data-vi="Khoá học"   data-en="Courses">Khoá học</a></li>
     <li><a href="#work"     data-vi="Khu học tập" data-en="Classroom">Khu học tập</a></li>
     <li><a href="#contact"  data-vi="Liên hệ"    data-en="Contact">Liên hệ</a></li>
   </ul>
@@ -52,7 +54,7 @@
     </p>
     <div class="hero-actions reveal d3">
       <a class="btn primary" href="#honors" data-vi="Xem thành tích" data-en="View honours">Xem thành tích</a>
-      <a class="btn ghost" href="#teaching" data-vi="Đăng ký học Toán" data-en="Book a maths class">Đăng ký học Toán</a>
+      <a class="btn ghost" href="#courses" data-vi="Khoá học &amp; học thử" data-en="Courses &amp; free samples">Khoá học &amp; học thử</a>
     </div>
 
     <div class="hero-stats reveal d4">
@@ -229,12 +231,44 @@
   </div>
 </section>
 
+<!-- ═══════════ Khoá học & học thử (dynamic, public) ═══════════ -->
+<section class="section" id="courses">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="titles">
+        <div class="eyebrow reveal">§04 — <span data-vi="Khoá học" data-en="Courses">Khoá học</span></div>
+        <h2 class="reveal d1"
+            data-vi="Các khoá đang mở &amp; <span class='ital'>học thử</span>."
+            data-en="Open courses &amp; <span class='ital'>free samples</span>.">
+          Các khoá đang mở &amp; <span class="ital">học thử</span>.
+        </h2>
+      </div>
+      <p class="lede reveal d2" data-vi="Phụ huynh và học sinh có thể xem trước một số bài giảng mẫu — không cần tài khoản." data-en="Parents and students can preview some sample lessons — no account needed.">Phụ huynh và học sinh có thể xem trước một số bài giảng mẫu — không cần tài khoản.</p>
+    </div>
+
+    <div id="coursesBlock" style="display:none">
+      <div class="sub-head"><h3 data-vi="Khoá học đang mở" data-en="Open courses">Khoá học đang mở</h3></div>
+      <div class="pub-courses" id="pubCourses"></div>
+    </div>
+
+    <div id="samplesBlock" class="block-gap" style="display:none">
+      <div class="sub-head">
+        <h3 data-vi="Bài giảng mẫu" data-en="Sample lessons">Bài giảng mẫu</h3>
+        <span class="muted" data-vi="Miễn phí · không cần đăng nhập" data-en="Free · no sign-in">Miễn phí · không cần đăng nhập</span>
+      </div>
+      <div class="samples" id="samplesGrid"></div>
+    </div>
+
+    <p class="landing-note" id="catalogueEmpty" style="display:none" data-vi="Danh sách khoá học và bài giảng mẫu đang được cập nhật. Liên hệ để được tư vấn lớp phù hợp." data-en="Courses and sample lessons are being updated. Get in touch to find the right class.">Danh sách khoá học và bài giảng mẫu đang được cập nhật. Liên hệ để được tư vấn lớp phù hợp.</p>
+  </div>
+</section>
+
 <!-- ═══════════ Khu học tập ═══════════ -->
 <section class="section" id="work">
   <div class="wrap">
     <div class="section-head">
       <div class="titles">
-        <div class="eyebrow reveal">§04 — <span data-vi="Khu học tập" data-en="Classroom">Khu học tập</span></div>
+        <div class="eyebrow reveal">§05 — <span data-vi="Khu học tập" data-en="Classroom">Khu học tập</span></div>
         <h2 class="reveal d1"
             data-vi="Lớp học <span class='ital'>trực tuyến</span> của mình."
             data-en="My <span class='ital'>online</span> classroom.">
@@ -255,13 +289,13 @@
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.1 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
         <h3 data-vi="Muốn đăng ký học?" data-en="Want to enrol?">Muốn đăng ký học?</h3>
         <p data-vi="Liên hệ trực tiếp để được tư vấn lộ trình và nhận mã kích hoạt lớp học." data-en="Contact me directly for guidance on the learning path and your class activation code.">Liên hệ trực tiếp để được tư vấn lộ trình và nhận mã kích hoạt lớp học.</p>
-        <a class="btn ghost" href="tel:+84909000000" style="margin-top:1rem" data-vi="Gọi: 0909 000 000" data-en="Call: 0909 000 000">Gọi: 0909 000 000</a>
+        <a class="btn ghost" data-contact href="#contact" style="margin-top:1rem" data-vi="Liên hệ đăng ký" data-en="Contact to enrol">Liên hệ đăng ký</a>
       </div>
       <div class="teach-card reveal d2">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
         <h3 data-vi="Phụ huynh muốn xem thử?" data-en="Parents — want a preview?">Phụ huynh muốn xem thử?</h3>
-        <p data-vi="Một vài bài giảng mẫu sẽ được mở công khai ngay tại đây để phụ huynh tham khảo chất lượng lớp học." data-en="A few sample lectures will be openly available here so parents can judge the quality of the class.">Một vài bài giảng mẫu sẽ được mở công khai ngay tại đây để phụ huynh tham khảo chất lượng lớp học.</p>
-        <span class="btn" style="margin-top:1rem;opacity:.6;pointer-events:none" data-vi="Bài giảng mẫu — sắp có" data-en="Sample lectures — coming soon">Bài giảng mẫu — sắp có</span>
+        <p data-vi="Một vài bài giảng mẫu được mở công khai để phụ huynh tham khảo chất lượng lớp học — không cần tài khoản." data-en="A few sample lectures are openly available so parents can judge the quality of the class — no account needed.">Một vài bài giảng mẫu được mở công khai để phụ huynh tham khảo chất lượng lớp học — không cần tài khoản.</p>
+        <a class="btn" href="#courses" style="margin-top:1rem" data-vi="Xem bài giảng mẫu" data-en="View sample lessons">Xem bài giảng mẫu</a>
       </div>
     </div>
   </div>
@@ -286,7 +320,7 @@
     <div class="foot-grid">
       <div class="reveal">
         <div class="brand-foot" style="font-family:var(--serif);font-size:1.3rem;margin-bottom:1rem;">Ngọc Đạt</div>
-        <p data-vi="Hồ sơ học thuật & giảng dạy — Toán học và Tài chính. Kho tài liệu được cập nhật thường xuyên." data-en="An academic & teaching profile — maths and finance. The archive is updated regularly.">Hồ sơ học thuật & giảng dạy — Toán học và Tài chính. Kho tài liệu được cập nhật thường xuyên.</p>
+        <p data-vi="Lớp Toán HSG &amp; ôn thi chuyên — kèm khu học tập trực tuyến với video bài giảng và tài liệu cho học sinh." data-en="Olympiad &amp; selective-school maths classes — with an online classroom of lecture videos and materials.">Lớp Toán HSG &amp; ôn thi chuyên — kèm khu học tập trực tuyến với video bài giảng và tài liệu cho học sinh.</p>
       </div>
       <div class="reveal d1">
         <h4 data-vi="Liên hệ" data-en="Contact">Liên hệ</h4>
@@ -305,6 +339,7 @@
           <li><a href="#about"    data-vi="Giới thiệu" data-en="About">Giới thiệu</a></li>
           <li><a href="#honors"   data-vi="Thành tích" data-en="Honours">Thành tích</a></li>
           <li><a href="#teaching" data-vi="Giảng dạy"  data-en="Teaching">Giảng dạy</a></li>
+          <li><a href="#courses"  data-vi="Khoá học &amp; học thử" data-en="Courses &amp; samples">Khoá học &amp; học thử</a></li>
           <li><a href="#work"     data-vi="Khu học tập" data-en="Classroom">Khu học tập</a></li>
           <li><a href="login.html" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</a></li>
         </ul>
@@ -314,33 +349,25 @@
     <div class="foot-bot">
       <div data-vi="© 2026 Ngọc Đạt — Toán học & Tài chính" data-en="© 2026 Ngọc Đạt — Maths & Finance">© 2026 Ngọc Đạt — Toán học & Tài chính</div>
       <div class="socials">
-        <a href="#" target="_blank" rel="noopener">GitHub</a>
-        <a href="#" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="login.html" data-vi="· Đăng nhập" data-en="· Sign in">· Đăng nhập</a>
+        <a href="login.html" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</a>
       </div>
     </div>
   </div>
 </footer>
 
+<!-- Sample video player -->
+<div class="modal" id="videoModal" aria-hidden="true">
+  <div class="modal-card video" role="dialog" aria-modal="true" aria-labelledby="videoTitle">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <div class="video-frame" id="videoFrame"></div>
+    <div class="video-cap"><h3 id="videoTitle"></h3></div>
+  </div>
+</div>
+
+<script src="assets/vendor/supabase-js-2.117.2.js"></script>
+<script src="assets/js/config.js"></script>
 <script src="assets/js/i18n.js"></script>
-<script>
-  /* nav scroll state + mobile burger (landing only) */
-  (function () {
-    var nav = document.getElementById("nav");
-    var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 60); };
-    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
-    var burger = document.getElementById("navBurger");
-    var links = document.getElementById("navLinks");
-    if (burger) burger.addEventListener("click", function () { links.classList.toggle("open"); });
-    document.querySelectorAll("#navLinks a").forEach(function (a) {
-      a.addEventListener("click", function () { links.classList.remove("open"); });
-    });
-    /* reveal on scroll */
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
-  })();
-</script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/landing.js"></script>
 </body>
 </html>

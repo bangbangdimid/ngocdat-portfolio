@@ -1,5 +1,5 @@
 /* ============================================================
-   login.js — sign in / sign up flow for login.html
+   login.js — sign in / sign up / forgot / reset password
    Requires: config.js, i18n.js, supabaseClient.js, auth.js
    ============================================================ */
 (function () {
@@ -8,47 +8,52 @@
   const $ = (id) => document.getElementById(id);
   const msgEl = $("msg");
 
+  const params = new URLSearchParams(location.search);
+  // recovery links land here with ?mode=reset (and a token in the hash)
+  const isRecovery = params.get("mode") === "reset" || /type=recovery/.test(location.hash);
+
   const SAFE_NEXT = new Set([CFG.ROUTES.app, CFG.ROUTES.admin]);
   function nextTarget() {
-    const n = new URLSearchParams(location.search).get("next") || "";
+    const n = params.get("next") || "";
     return SAFE_NEXT.has(n) ? n : CFG.ROUTES.app;
   }
-
-  function showMsg(kind, vi, en) {
-    msgEl.className = "msg show " + kind;
-    msgEl.textContent = t(vi, en);
+  async function goHome() {
+    location.replace((await window.Auth.isAdmin()) ? CFG.ROUTES.admin : nextTarget());
   }
+
+  function showMsg(kind, text) { msgEl.className = "msg show " + kind; msgEl.textContent = text; }
   function clearMsg() { msgEl.className = "msg"; msgEl.textContent = ""; }
 
-  // ---- tabs ----
-  const tabLogin = $("tabLogin"), tabSignup = $("tabSignup");
-  const paneLogin = $("paneLogin"), paneSignup = $("paneSignup");
-  function selectTab(which) {
-    const login = which === "login";
-    tabLogin.classList.toggle("active", login);
-    tabSignup.classList.toggle("active", !login);
-    paneLogin.classList.toggle("active", login);
-    paneSignup.classList.toggle("active", !login);
-    clearMsg();
+  // ---------- panes ----------
+  const PANES = { login: "paneLogin", signup: "paneSignup", forgot: "paneForgot", reset: "paneReset" };
+  function selectPane(name, keepMsg) {
+    Object.entries(PANES).forEach(([k, id]) => $(id).classList.toggle("active", k === name));
+    $("tabLogin").classList.toggle("active", name === "login");
+    $("tabSignup").classList.toggle("active", name === "signup");
+    document.querySelector(".auth-tabs").style.display = name === "reset" ? "none" : "";
+    if (!keepMsg) clearMsg();
   }
-  tabLogin.addEventListener("click", () => selectTab("login"));
-  tabSignup.addEventListener("click", () => selectTab("signup"));
-  if (new URLSearchParams(location.search).get("tab") === "signup") selectTab("signup");
+  $("tabLogin").addEventListener("click", () => selectPane("login"));
+  $("tabSignup").addEventListener("click", () => selectPane("signup"));
+  $("forgotLink").addEventListener("click", (e) => { e.preventDefault(); $("fgEmail").value = $("liEmail").value; selectPane("forgot"); });
+  $("backToLogin").addEventListener("click", (e) => { e.preventDefault(); selectPane("login"); });
+  if (params.get("tab") === "signup") selectPane("signup");
 
-  // ---- optional Cloudflare Turnstile ----
+  // ---------- optional Cloudflare Turnstile ----------
   const captchaTokens = new WeakMap();
+  const widgetIds = new WeakMap();
   function initTurnstile() {
-    if (!CFG.TURNSTILE_SITE_KEY) return; // disabled for now
-    const boxes = document.querySelectorAll("[data-turnstile]");
+    if (!CFG.TURNSTILE_SITE_KEY) return;
     const s = document.createElement("script");
     s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     s.async = true; s.defer = true;
-    s.onload = () => boxes.forEach((box) => {
-      window.turnstile.render(box, {
+    s.onload = () => document.querySelectorAll("[data-turnstile]").forEach((box) => {
+      const id = window.turnstile.render(box, {
         sitekey: CFG.TURNSTILE_SITE_KEY,
         callback: (token) => captchaTokens.set(box, token),
         "expired-callback": () => captchaTokens.delete(box),
       });
+      widgetIds.set(box, id);
     });
     document.head.appendChild(s);
   }
@@ -56,75 +61,114 @@
     const box = form.querySelector("[data-turnstile]");
     return box ? captchaTokens.get(box) || null : null;
   }
+  // a Turnstile token is single-use: reset after every attempt
+  function resetCaptcha(form) {
+    const box = form.querySelector("[data-turnstile]");
+    if (box && window.turnstile && widgetIds.has(box)) { window.turnstile.reset(widgetIds.get(box)); captchaTokens.delete(box); }
+  }
 
   function friendly(error) {
     const m = (error?.message || "").toLowerCase();
     if (m.includes("invalid login")) return t("Email hoặc mật khẩu không đúng.", "Invalid email or password.");
-    if (m.includes("email not confirmed")) return t("Email chưa được xác nhận — kiểm tra hộp thư.", "Email not confirmed — check your inbox.");
+    if (m.includes("email not confirmed")) return t("Email chưa được xác nhận — kiểm tra hộp thư (cả mục Spam).", "Email not confirmed — check your inbox (and spam).");
     if (m.includes("already registered") || m.includes("already been registered")) return t("Email này đã có tài khoản. Hãy đăng nhập.", "This email already has an account. Please sign in.");
+    if (m.includes("same") && m.includes("password")) return t("Mật khẩu mới phải khác mật khẩu cũ.", "New password must differ from the old one.");
     if (m.includes("password")) return t("Mật khẩu chưa đạt yêu cầu (tối thiểu 8 ký tự).", "Password too weak (min 8 characters).");
-    if (m.includes("rate") || m.includes("too many")) return t("Thử lại sau ít phút.", "Too many attempts — try again later.");
+    if (m.includes("rate") || m.includes("too many") || m.includes("security purposes")) return t("Bạn thao tác quá nhanh. Thử lại sau ít phút.", "Too many attempts — try again in a few minutes.");
     if (m.includes("captcha")) return t("Vui lòng xác minh bạn không phải robot.", "Please complete the bot check.");
-    return error?.message || t("Có lỗi xảy ra.", "Something went wrong.");
+    if (m.includes("fetch") || m.includes("network")) return t("Không kết nối được máy chủ. Kiểm tra mạng và thử lại.", "Cannot reach the server. Check your connection.");
+    return t("Có lỗi xảy ra. Vui lòng thử lại.", "Something went wrong. Please try again.");
   }
 
-  // ---- sign in ----
-  $("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    clearMsg();
-    const btn = $("liBtn"); btn.disabled = true;
-    const label = t("Đang đăng nhập…", "Signing in…"); const old = btn.textContent; btn.textContent = label;
-    try {
-      const res = await window.Auth.signIn({
-        email: $("liEmail").value.trim(),
-        password: $("liPass").value,
-        captchaToken: tokenFor($("loginForm")),
-      });
-      if (!res.ok) { showMsg("err", friendly(res.error), friendly(res.error)); return; }
-      const dest = (await window.Auth.isAdmin()) ? CFG.ROUTES.admin : nextTarget();
-      location.replace(dest);
-    } finally { btn.disabled = false; btn.textContent = old; }
+  // run an async form action with a busy button and error handling
+  async function withBusy(btn, busyText, fn) {
+    const old = btn.textContent; btn.disabled = true; btn.textContent = busyText;
+    try { await fn(); }
+    catch (err) { console.error(err); showMsg("err", friendly(err)); }
+    finally { btn.disabled = false; btn.textContent = old; }
+  }
+  const validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+  // ---------- sign in ----------
+  $("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault(); clearMsg();
+    const form = e.currentTarget;
+    const email = $("liEmail").value.trim(), password = $("liPass").value;
+    if (!validEmail(email) || !password) return showMsg("err", t("Nhập email và mật khẩu hợp lệ.", "Enter a valid email and password."));
+    withBusy($("liBtn"), t("Đang đăng nhập…", "Signing in…"), async () => {
+      const res = await window.Auth.signIn({ email, password, captchaToken: tokenFor(form) });
+      resetCaptcha(form);
+      if (!res.ok) return showMsg("err", friendly(res.error));
+      await goHome();
+    });
   });
 
-  // ---- sign up ----
-  $("signupForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    clearMsg();
-    const btn = $("suBtn"); btn.disabled = true;
-    const old = btn.textContent; btn.textContent = t("Đang tạo…", "Creating…");
-    try {
-      const res = await window.Auth.signUp({
-        fullName: $("suName").value.trim(),
-        email: $("suEmail").value.trim(),
-        phone: $("suPhone").value.trim(),
-        password: $("suPass").value,
-        captchaToken: tokenFor($("signupForm")),
-      });
-      if (!res.ok) { showMsg("err", friendly(res.error), friendly(res.error)); return; }
+  // ---------- sign up ----------
+  $("signupForm").addEventListener("submit", (e) => {
+    e.preventDefault(); clearMsg();
+    const form = e.currentTarget;
+    const fullName = $("suName").value.trim(), email = $("suEmail").value.trim();
+    const phone = $("suPhone").value.trim(), password = $("suPass").value;
+    if (fullName.length < 2) return showMsg("err", t("Vui lòng nhập họ và tên.", "Please enter your full name."));
+    if (!validEmail(email)) return showMsg("err", t("Email không hợp lệ.", "Invalid email."));
+    if (phone && !/^[+\d][\d\s.-]{7,18}$/.test(phone)) return showMsg("err", t("Số điện thoại không hợp lệ.", "Invalid phone number."));
+    if (password.length < 8) return showMsg("err", t("Mật khẩu tối thiểu 8 ký tự.", "Password must be at least 8 characters."));
+    withBusy($("suBtn"), t("Đang tạo…", "Creating…"), async () => {
+      const res = await window.Auth.signUp({ fullName, email, phone, password, captchaToken: tokenFor(form) });
+      resetCaptcha(form);
+      if (!res.ok) return showMsg("err", friendly(res.error));
       if (res.needsConfirm) {
-        showMsg("ok",
-          "Đã gửi email xác nhận. Mở email, bấm vào link rồi quay lại đăng nhập.",
-          "Confirmation email sent. Open it, click the link, then sign in.");
-        selectTabKeepMsg("login");
+        selectPane("login", true);
+        $("liEmail").value = email;
+        showMsg("ok", t("Đã gửi email xác nhận. Mở email, bấm vào link rồi quay lại đăng nhập.",
+                        "Confirmation email sent. Open it, click the link, then sign in."));
       } else {
-        location.replace(CFG.ROUTES.app);
+        await goHome();
       }
-    } finally { btn.disabled = false; btn.textContent = old; }
+    });
   });
 
-  function selectTabKeepMsg(which) {
-    const keep = { cls: msgEl.className, txt: msgEl.textContent };
-    selectTab(which);
-    msgEl.className = keep.cls; msgEl.textContent = keep.txt;
-  }
+  // ---------- forgot password ----------
+  $("forgotForm").addEventListener("submit", (e) => {
+    e.preventDefault(); clearMsg();
+    const form = e.currentTarget;
+    const email = $("fgEmail").value.trim();
+    if (!validEmail(email)) return showMsg("err", t("Email không hợp lệ.", "Invalid email."));
+    withBusy($("fgBtn"), t("Đang gửi…", "Sending…"), async () => {
+      const res = await window.Auth.requestPasswordReset(email, tokenFor(form));
+      resetCaptcha(form);
+      if (!res.ok) return showMsg("err", friendly(res.error));
+      // same message whether or not the email exists (no account enumeration)
+      showMsg("ok", t("Nếu email có tài khoản, link đặt lại mật khẩu đã được gửi. Kiểm tra hộp thư.",
+                      "If that email has an account, a reset link has been sent. Check your inbox."));
+    });
+  });
 
-  // ---- if already signed in, skip the form ----
+  // ---------- set new password ----------
+  $("resetForm").addEventListener("submit", (e) => {
+    e.preventDefault(); clearMsg();
+    const p1 = $("rsPass").value, p2 = $("rsPass2").value;
+    if (p1.length < 8) return showMsg("err", t("Mật khẩu tối thiểu 8 ký tự.", "Password must be at least 8 characters."));
+    if (p1 !== p2) return showMsg("err", t("Hai mật khẩu không khớp.", "Passwords do not match."));
+    withBusy($("rsBtn"), t("Đang lưu…", "Saving…"), async () => {
+      const user = await window.Auth.getUser();
+      if (!user) return showMsg("err", t("Link đã hết hạn. Hãy yêu cầu link mới.", "This link has expired. Request a new one."));
+      const res = await window.Auth.updatePassword(p1);
+      if (!res.ok) return showMsg("err", friendly(res.error));
+      showMsg("ok", t("Đã đổi mật khẩu. Đang chuyển vào khu học tập…", "Password updated. Taking you to your classroom…"));
+      history.replaceState(null, "", location.pathname);
+      setTimeout(goHome, 1200);
+    });
+  });
+
+  // ---------- boot ----------
+  initTurnstile();
+  window.sb.auth.onAuthStateChange((event) => {
+    if (event === "PASSWORD_RECOVERY") selectPane("reset");
+  });
   (async function () {
-    initTurnstile();
+    if (isRecovery) { selectPane("reset"); return; } // never auto-redirect mid-recovery
     const user = await window.Auth.getUser();
-    if (user) {
-      const dest = (await window.Auth.isAdmin()) ? CFG.ROUTES.admin : nextTarget();
-      location.replace(dest);
-    }
+    if (user) await goHome();
   })();
 })();

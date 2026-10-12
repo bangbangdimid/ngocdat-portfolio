@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="assets/css/components.css" />
 <link rel="stylesheet" href="assets/css/auth.css" />
 <link rel="stylesheet" href="assets/css/admin.css" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/vendor/supabase-js-2.117.2.js"></script>
 </head>
 <body>
 
@@ -102,7 +102,7 @@
             <div class="field"><label>Mô tả (tuỳ chọn)</label><input type="text" id="dmDesc" placeholder="Ghi chú ngắn" /></div>
             <div class="field">
               <label>Tệp (PDF, ảnh, Word, Excel… — tối đa 50MB)</label>
-              <div class="drop" id="docDrop"><input type="file" id="docInput" /><span id="docHint">Kéo-thả hoặc bấm để chọn tệp</span></div>
+              <div class="drop" id="docDrop"><input type="file" id="docInput" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.mp3,.mp4" /><span id="docHint">Kéo-thả hoặc bấm để chọn tệp</span></div>
               <div class="file-list" id="docPreview"></div>
             </div>
             <div class="row-3">

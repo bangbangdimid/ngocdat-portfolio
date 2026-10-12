@@ -8,6 +8,9 @@
   const BUCKET = CFG.STORAGE_BUCKET;
   const $ = (id) => document.getElementById(id);
   const state = { courses: [], current: null, pendingDoc: null };
+  const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
+  // files that a browser could execute when opened from storage
+  const BLOCKED_EXT = /\.(html?|xhtml|svg|js|mjs|php|exe|bat|cmd|sh|msi|jar|apk)$/i;
 
   // ---------- utils ----------
   function toast(msg, isErr) {
@@ -174,7 +177,7 @@
     e.preventDefault();
     const yt = parseYouTubeId($("vmYt").value);
     if (!yt) return toast("Link/ID YouTube không hợp lệ", true);
-    const btn = e.submitter; btn.disabled = true;
+    const btn = e.currentTarget.querySelector('[type="submit"]'); btn.disabled = true;
     try {
       const { error } = await sb.from("materials").insert({
         course_id: state.current.id, kind: "video", title: $("vmTitle").value.trim(),
@@ -200,6 +203,8 @@
     e.preventDefault();
     if (!state.pendingDoc) return toast("Chọn một tệp để tải lên", true);
     const f = state.pendingDoc, vis = $("dmVis").value;
+    if (f.size > MAX_UPLOAD_BYTES) return toast("Tệp quá lớn (tối đa 50MB)", true);
+    if (BLOCKED_EXT.test(f.name)) return toast("Không cho phép loại tệp này (html/svg/js/exe…)", true);
     const safe = f.name.replace(/[^\w.\-]+/g, "_");
     const folder = vis === "sample" ? "samples" : "course";
     const path = `${folder}/${state.current.id}/${Date.now()}_${safe}`;
@@ -249,7 +254,8 @@
   }
   $("codeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const code = ($("cmCode").value.trim() || randCode());
+    const code = ($("cmCode").value.trim() || randCode()).toUpperCase();
+    if (!/^[A-Z0-9-]{4,32}$/.test(code)) return toast("Mã chỉ gồm chữ, số, dấu gạch ngang (4–32 ký tự)", true);
     const payload = { course_id: state.current.id, code, max_uses: parseInt($("cmMax").value) || 1, expires_at: $("cmExp").value || null };
     const { error } = await sb.from("access_codes").insert(payload);
     if (error) return toast(error.message.includes("duplicate") ? "Mã đã tồn tại, chọn mã khác" : "Lỗi: " + error.message, true);
@@ -258,7 +264,7 @@
 
   // ---------- students ----------
   async function loadStudents() {
-    const { data: enr, error } = await sb.from("enrollments").select("user_id, created_at").eq("course_id", state.current.id).order("created_at", { ascending: false });
+    const { data: enr, error } = await sb.from("enrollments").select("id, user_id, created_at").eq("course_id", state.current.id).order("created_at", { ascending: false });
     if (error) { toast("Lỗi tải học sinh", true); return; }
     const ids = (enr || []).map((e) => e.user_id);
     $("studCount").textContent = ids.length + " học sinh";
@@ -269,12 +275,20 @@
     }
     $("studentsList").innerHTML = ids.length ? enr.map((e) => {
       const p = profiles[e.user_id] || {};
-      return `<div class="item-row">
-        <div class="ic">${(p.full_name || "?").trim().charAt(0).toUpperCase()}</div>
+      return `<div class="item-row" data-id="${e.id}" data-name="${esc(p.full_name || "")}">
+        <div class="ic">${esc((p.full_name || "?").trim().charAt(0).toUpperCase())}</div>
         <div class="meta"><div class="t">${esc(p.full_name) || "(chưa có tên)"}</div>
           <div class="s">${esc(p.phone) || "—"} · ghi danh ${new Date(e.created_at).toLocaleDateString("vi")}</div></div>
+        <div class="acts"><button class="icon-btn danger" data-kick title="Gỡ khỏi lớp">${ICONS.del}</button></div>
       </div>`;
     }).join("") : "<p class='muted'>Chưa có học sinh ghi danh.</p>";
+    $("studentsList").querySelectorAll("[data-kick]").forEach((b) => b.addEventListener("click", async () => {
+      const row = b.closest(".item-row");
+      if (!confirm(`Gỡ "${row.dataset.name || "học sinh này"}" khỏi lớp? Học sinh sẽ mất quyền xem nội dung khoá.`)) return;
+      const { error: delErr } = await sb.from("enrollments").delete().eq("id", row.dataset.id);
+      if (delErr) return toast("Lỗi: " + delErr.message, true);
+      toast("Đã gỡ khỏi lớp"); loadStudents();
+    }));
   }
 
   // ---------- init ----------

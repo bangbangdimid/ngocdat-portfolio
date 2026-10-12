@@ -1,62 +1,69 @@
-# Thiết lập nền tảng khoá học — Phase 0
+# Thiết lập Supabase cho nền tảng khoá học
 
-Phần này **chỉ bạn bấm được** (trong dashboard Supabase + Cloudflare). Làm 1 lần, ~15–20 phút. Làm xong báo mình để build Phase 1 (đăng nhập + phân quyền).
-
-> Dùng chung project Supabase hiện tại cũng được. Schema mới **thay thế** hệ thống `projects` cũ (portfolio) — bảng cũ đang trống nên bỏ qua an toàn; muốn gọn có thể xoá sau (bước 7).
+Phần này **chỉ chủ trang làm được** (trong dashboard Supabase / Cloudflare). Các bước 1–5 bắt buộc, 6–8 khuyến nghị.
 
 ---
 
 ## 1. Bật đăng nhập Email + Mật khẩu
-Dashboard → **Authentication → Providers → Email**:
-- Bật **Email**.
-- Bật **Confirm email** (bắt buộc xác thực email — chống tạo tài khoản rác).
-- (Khuyến nghị) Authentication → **Policies/Passwords**: bật **Leaked password protection**, đặt độ dài mật khẩu tối thiểu 8.
+Dashboard → **Authentication → Sign In / Providers → Email**:
+- Bật **Email**, bật **Confirm email** (chống tạo tài khoản rác).
+- Độ dài mật khẩu tối thiểu: **8**.
 
-## 2. Đặt Site URL & Redirect
+## 2. URL cho link xác nhận & đặt lại mật khẩu
 Authentication → **URL Configuration**:
-- **Site URL**: domain thật khi deploy (vd `https://ngocdat-portfolio.vercel.app`). Khi test local để `http://localhost:5500`.
-- **Redirect URLs**: thêm cả hai (local + domain thật).
+- **Site URL**: `https://ngocdat-portfolio.vercel.app`
+- **Redirect URLs** — thêm đủ 3 dòng (có `/**` ở cuối):
+  ```
+  https://ngocdat-portfolio.vercel.app/**
+  https://*-bangbangdimids-projects.vercel.app/**
+  http://localhost:5500/**
+  ```
+  Dòng 2 cho các bản preview của Vercel (đổi theo tên team Vercel của bạn nếu khác). Thiếu dòng nào thì link trong email ở môi trường đó sẽ không quay về đúng trang.
 
-## 3. Chạy schema
-SQL Editor → **New query** → **Select All (Ctrl+A)** rồi dán **toàn bộ** `schema.sql` → **Run**.
-Phải thấy "Success". File được bọc trong transaction nên nếu lỗi sẽ tự rollback sạch (không để lại trạng thái nửa vời) — cứ sửa và chạy lại, an toàn khi chạy nhiều lần.
+## 3. Chạy schema (chạy LẠI mỗi khi file `schema.sql` được cập nhật)
+SQL Editor → **New query** → **Ctrl+A** xoá trắng → dán **toàn bộ** `schema.sql` → **Run** → phải thấy *Success*.
+File an toàn khi chạy nhiều lần. Nó cũng tự tạo bucket `materials` ở chế độ **private**, giới hạn 50MB và chỉ nhận tệp an toàn (PDF, ảnh, Word, Excel, PowerPoint, ZIP…).
 
-## 4. Tạo bucket lưu tài liệu
-Storage → **New bucket**:
-- Tên: **`materials`**  (đúng tên này)
-- **Private** (KHÔNG tích public).
+> Bản mới nhất đã thêm: lưu SĐT lúc đăng ký, mã kích hoạt không phân biệt hoa/thường, giới hạn độ dài hồ sơ, giới hạn loại tệp. **Hãy chạy lại 1 lần.**
 
-Policy cho bucket đã nằm sẵn trong `schema.sql` (phần D) nên **không cần chạy lại gì thêm** — tạo bucket trước hay sau khi chạy schema đều được.
-
-## 5. Biến bạn thành admin
-Đăng ký 1 tài khoản bằng email owner (`ngocdat2006@gmail.com`) trên chính website (sau khi có Phase 1) **hoặc** tạo nhanh ở Authentication → Users → Add user. Sau đó SQL Editor chạy:
+## 4. Biến tài khoản của bạn thành admin
+Đăng ký tài khoản bằng email của bạn trên website (hoặc Authentication → Users → Add user), rồi chạy:
 ```sql
 update public.profiles
 set role = 'admin'
 where id = (select id from auth.users where email = 'ngocdat2006@gmail.com');
 ```
 
-## 6. Chặn bot — Cloudflare Turnstile (LÀM SAU, không bắt buộc ngay)
-> Không liên quan tới bước 7. Có thể bỏ qua ở Phase 1 — giai đoạn đầu đã có xác thực
-> email + rate-limit của Supabase + RLS. Khi nào sẵn sàng gia cố thì làm:
-1. Vào https://dash.cloudflare.com → **Turnstile** → **Add site** → nhập domain → lấy **Site Key** + **Secret Key**.
-2. Supabase → Authentication → **Attack Protection (CAPTCHA)** → chọn **Turnstile** → dán **Secret Key**.
-3. Gửi **Site Key** cho mình (key này công khai, dán vào frontend). **Secret Key tuyệt đối không đưa cho ai / không commit.**
+## 5. Kiểm tra nhanh
+Đăng nhập ở `/login.html` bằng email admin → phải vào thẳng trang **Quản trị**.
 
-## 7. (Tuỳ chọn, KHÔNG liên quan Turnstile) Dọn hệ thống portfolio cũ
-Nếu không dùng kho portfolio cũ nữa:
+---
+
+## 6. (Rất nên làm) Gửi email bằng SMTP riêng — miễn phí
+Email mặc định của Supabase **bị giới hạn rất thấp (chỉ vài email/giờ)** và chỉ dành để thử nghiệm. Khi nhiều học sinh đăng ký cùng lúc, email xác nhận / đặt lại mật khẩu sẽ bị nghẽn.
+1. Tạo tài khoản miễn phí ở **Resend** (3.000 email/tháng) hoặc **Brevo** (300 email/ngày).
+2. Lấy thông tin SMTP (host, port, user, password).
+3. Supabase → Authentication → **Emails → SMTP Settings** → bật **Custom SMTP**, điền thông tin.
+4. Authentication → **Rate Limits**: tăng giới hạn email/giờ cho phù hợp (vd 30).
+
+## 7. (Khuyến nghị) Chặn bot bằng Cloudflare Turnstile — miễn phí
+1. https://dash.cloudflare.com → **Turnstile** → **Add widget** → domain `ngocdat-portfolio.vercel.app` (thêm `localhost` nếu muốn test local) → chế độ **Managed** → lấy **Site Key** + **Secret Key**.
+2. Supabase → Authentication → **Attack Protection** → bật **CAPTCHA protection** → chọn **Turnstile** → dán **Secret Key**.
+3. Mở `assets/js/config.js`, điền `TURNSTILE_SITE_KEY: "Site Key của bạn"` → commit & push.
+   *Làm bước 2 và 3 cùng lúc* — nếu bật ở Supabase mà chưa điền key ở website thì đăng nhập sẽ báo lỗi CAPTCHA.
+4. **Secret Key tuyệt đối không dán vào code / không gửi ai.**
+
+## 8. Giữ database luôn "thức"
+Supabase gói Free tự tạm dừng sau ~7 ngày không có truy cập → học sinh không đăng nhập được.
+Repo đã có GitHub Action `.github/workflows/keep-supabase-awake.yml` ping mỗi ngày. Kiểm tra: GitHub → tab **Actions** → *Keep Supabase awake* → **Run workflow** → phải có dấu ✓ xanh.
+Lưu ý: GitHub tự tắt lịch chạy nếu repo không có commit nào trong 60 ngày — khi đó vào Actions bấm *Enable workflow*.
+
+---
+
+## Dọn dẹp hệ thống portfolio cũ (tuỳ chọn)
+Nếu chưa xoá, có thể bỏ bảng và bucket **public** cũ:
 ```sql
 drop table if exists public.project_files cascade;
 drop table if exists public.projects cascade;
 ```
-
----
-
-## Checklist gửi lại cho mình
-- [ ] Đã chạy `schema.sql` thành công
-- [ ] Bucket `materials` (private) đã tạo + đã chạy lại mục 7
-- [ ] Đã set role admin cho email của bạn
-- [ ] **Turnstile Site Key:** `...` (dán vào đây)
-- [ ] Site URL đang dùng: `...`
-
-Xong 4 ô trên là mình bắt tay vào Phase 1.
+Rồi Storage → bucket **`portfolio`** → xoá bucket (bucket này đang public).

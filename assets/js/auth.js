@@ -33,23 +33,56 @@
     return token ? { captchaToken: token } : {};
   }
 
+  function pageUrl(route, query) {
+    const base = window.location.origin + window.location.pathname.replace(/[^/]*$/, "");
+    return base + route + (query || "");
+  }
+
   async function signUp({ email, password, fullName, phone, captchaToken }) {
     const { data, error } = await sb.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: fullName || "" },
-        emailRedirectTo: window.location.origin + "/" + CFG.ROUTES.login,
+        // phone travels in metadata; the DB trigger copies it to profiles
+        data: { full_name: fullName || "", phone: phone || "" },
+        emailRedirectTo: pageUrl(CFG.ROUTES.login),
         ...captchaOpts(captchaToken),
       },
     });
     if (error) return { ok: false, error };
-    // store phone on the profile row if we already have a session (email confirm off)
-    if (data.user && phone) {
-      await sb.from("profiles").update({ phone }).eq("id", data.user.id);
-    }
     const needsConfirm = !data.session; // email confirmation is on
     return { ok: true, needsConfirm, user: data.user };
+  }
+
+  // Send a password-reset email that lands back on login.html in reset mode.
+  async function requestPasswordReset(email, captchaToken) {
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: pageUrl(CFG.ROUTES.login, "?mode=reset"),
+      ...captchaOpts(captchaToken),
+    });
+    return error ? { ok: false, error } : { ok: true };
+  }
+
+  async function updatePassword(password) {
+    const { error } = await sb.auth.updateUser({ password });
+    return error ? { ok: false, error } : { ok: true };
+  }
+
+  // Copy phone/name from signup metadata into the profile if the trigger
+  // ran before they were available (older accounts). Safe: own row only.
+  async function syncProfileFromMetadata() {
+    const user = await getUser();
+    const p = await getProfile();
+    if (!user || !p) return p;
+    const meta = user.user_metadata || {};
+    const patch = {};
+    if (!p.phone && meta.phone) patch.phone = meta.phone;
+    if (!p.full_name && meta.full_name) patch.full_name = meta.full_name;
+    if (!Object.keys(patch).length) return p;
+    const { data, error } = await sb.from("profiles").update(patch).eq("id", user.id).select().single();
+    if (error) { console.error(error); return p; }
+    _profile = data;
+    return data;
   }
 
   async function signIn({ email, password, captchaToken }) {
@@ -102,8 +135,8 @@
   }
 
   window.Auth = {
-    getUser, getProfile, isAdmin,
-    signUp, signIn, signOut, redeemCode, myCourses,
-    requireAuth, requireAdmin,
+    getUser, getProfile, isAdmin, syncProfileFromMetadata,
+    signUp, signIn, signOut, requestPasswordReset, updatePassword,
+    redeemCode, myCourses, requireAuth, requireAdmin,
   };
 })();

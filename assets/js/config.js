@@ -12,6 +12,11 @@ window.APP_CONFIG = {
   // for now — auth still works with Supabase email confirmation + rate limits.
   TURNSTILE_SITE_KEY: "",
 
+  // Public contact shown on the landing page. Fill CONTACT_PHONE (e.g. "0912 345 678");
+  // while it is empty the "Want to enrol?" button falls back to email.
+  CONTACT_PHONE: "",
+  CONTACT_EMAIL: "ngocdat2006@gmail.com",
+
   // where to send students after login, and admins
   ROUTES: { home: "index.html", login: "login.html", app: "hoc.html", admin: "admin.html" },
 };

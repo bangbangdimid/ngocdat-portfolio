@@ -1,38 +1,54 @@
-# Ngọc Đạt — Personal Website
+# Ngọc Đạt — Lớp Toán & khu học tập trực tuyến
 
-Trang cá nhân **song ngữ Việt–Anh** theo hướng *academic tối giản*: hồ sơ học thuật (Olympic Toán, thành tích), giới thiệu giảng dạy, và một **kho tài liệu** công khai. Ai cũng xem & tải được; **chỉ owner** (đăng nhập bằng magic link) mới thêm/sửa/xoá tài liệu.
+Website song ngữ (VI/EN) gồm 3 phần:
 
-## Cấu trúc
+| Ai | Thấy gì |
+|---|---|
+| **Khách / phụ huynh** (không đăng nhập) | Trang giới thiệu, thành tích, các khoá đang mở, **bài giảng mẫu** miễn phí |
+| **Học sinh** (email + mật khẩu, kích hoạt bằng mã lớp) | Video bài giảng + tài liệu của **đúng khoá đã ghi danh** |
+| **Admin** (chủ trang) | Tạo khoá, thêm video YouTube, upload tài liệu, phát mã, quản lý học sinh |
+
+Hướng dẫn dùng cho admin: **[GUIDE.md](GUIDE.md)** · Thiết lập Supabase: **[supabase/SETUP.md](supabase/SETUP.md)**
+
+## Kiến trúc
+
+- **Frontend tĩnh** (HTML/CSS/JS thuần, không build) deploy trên **Vercel**.
+- **Supabase**: Auth (email + mật khẩu), Postgres với **Row Level Security**, Storage (bucket private `materials`).
+- **Video**: YouTube chế độ *Unlisted*, chỉ nhúng cho người có quyền (miễn phí, chịu tải lớn).
 
 ```
-index.html              nội dung trang (markup song ngữ VI/EN)
-assets/css/tokens.css   design tokens — màu, font, spacing
-assets/css/base.css     reset, typography, nav, hero, section, footer
-assets/css/components.css  lưới tài liệu, thẻ, modal, form
-assets/js/app.js        JS + CONFIG Supabase + hệ thống song ngữ
-supabase-setup.sql      script tạo database & policy (chạy 1 lần)
-GUIDE.md                hướng dẫn setup đầy đủ (đọc file này để deploy)
+index.html            trang công khai (giới thiệu, khoá học, bài mẫu)
+login.html            đăng nhập / đăng ký / quên & đặt lại mật khẩu
+hoc.html              khu học tập của học sinh (nhập mã lớp, danh sách khoá)
+khoahoc.html          xem bài học của một khoá (video + tài liệu)
+admin.html            quản trị (chỉ admin)
+assets/css/           tokens · base · components · landing · auth · admin
+assets/js/            config · i18n · supabaseClient · auth · landing · login · hoc · khoahoc · admin
+assets/vendor/        supabase-js 2.117.2 (tự host, đã pin phiên bản)
+supabase/schema.sql   bảng, RLS, hàm kích hoạt mã, chính sách storage
+vercel.json           header bảo mật (CSP, HSTS, chống clickjacking…)
+.github/workflows/    keep-alive giữ Supabase không bị tạm dừng
 ```
 
-Không cần build/npm. Deploy tĩnh (Vercel/Netlify/GitHub Pages). Khi chạy local phải qua web server (`http://`), không mở bằng `file://` — magic-link auth cần origin http.
+## Mô hình bảo mật
 
-## Bắt đầu nhanh
+- **Phân quyền ở server** bằng RLS: học sinh chỉ đọc được nội dung khoá mình ghi danh; anon chỉ đọc nội dung đánh dấu *mẫu*; chỉ admin được ghi. Kiểm tra trong JS chỉ để điều hướng — tắt JS hay sửa code trên trình duyệt cũng không lấy được dữ liệu.
+- **Mã kích hoạt** kiểm tra trong hàm server `redeem_access_code` (giới hạn 10 lần thử / 10 phút, có log). Học sinh không thể tự ghi danh nếu không có mã hợp lệ, không thể tự nâng quyền admin.
+- **Tài liệu** nằm trong bucket private, chỉ phát **signed URL hết hạn sau 1 giờ** cho người có quyền. Bucket giới hạn 50MB và chỉ nhận loại tệp an toàn.
+- **CSP chặt**: chỉ chạy script của chính site (+ Cloudflare Turnstile); không script inline; chặn nhúng site vào iframe lạ.
+- Anon key trong `config.js` là **khoá công khai theo thiết kế** của Supabase — an toàn vì mọi quyền do RLS quyết định. Không bao giờ đưa *service_role key* vào code.
+- Chặn bot: xác nhận email + rate limit của Supabase; tuỳ chọn bật Cloudflare Turnstile (xem SETUP bước 7).
 
-1. **Xem trước:** chạy một static server trong thư mục này, ví dụ `npx serve` hoặc `python -m http.server 5500`, rồi mở `http://localhost:5500`.
-2. **Backend Supabase:** đã cấu hình sẵn trong `assets/js/app.js` (block `CONFIG` ở đầu file). Owner email hiện là `ngocdat2006@gmail.com`. Chi tiết tạo project + chạy SQL: xem [GUIDE.md](GUIDE.md).
-3. **Đăng nhập owner:** footer → *Đăng nhập* → nhập email owner → mở magic link trong hộp thư → banner "Chế độ chủ trang" hiện lên → thêm tài liệu bằng ô **+**.
+Giới hạn cần biết: video YouTube Unlisted chỉ được *ẩn*, học sinh đã có quyền vẫn có thể copy link chia sẻ. Muốn chống triệt để cần dịch vụ video trả phí (Bunny/Cloudflare Stream) — kiến trúc đã tách sẵn nên đổi sau không phải làm lại.
 
-## Song ngữ
+## Chạy thử ở máy
 
-Nút **VI / EN** ở góc phải nav. Mỗi đoạn text có thuộc tính `data-vi` và `data-en` trong `index.html`; muốn đổi nội dung nhớ sửa cả hai. Lựa chọn ngôn ngữ được lưu trong `localStorage`.
+```bash
+npx serve -l 5500
+```
 
-## Tuỳ biến
+Mở `http://localhost:5500` (phải qua `http://`, không mở file trực tiếp). Nhớ thêm `http://localhost:5500/**` vào Redirect URLs của Supabase.
 
-Xem bảng "Customize nhanh" trong [GUIDE.md](GUIDE.md). Nhanh nhất:
-- Đổi tên: find-replace `Ngọc Đạt` trong `index.html`.
-- Đổi màu/nền/font: sửa biến trong `assets/css/tokens.css`.
-- Đổi thành tích: sửa các `.ledger-row` trong `index.html`.
+## Deploy
 
-## Bảo mật
-
-RLS (Row Level Security) ở Supabase đảm bảo chỉ email owner mới INSERT/UPDATE/DELETE được — anon key để lộ cũng không sao vì policy chặn ở server. Magic-link: không có mật khẩu để bị lộ.
+Push lên `main` → Vercel tự deploy. Các file nội bộ (SQL, tài liệu, file portfolio cũ) được loại khỏi bản deploy qua `.vercelignore`.

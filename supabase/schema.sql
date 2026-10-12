@@ -28,6 +28,15 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now()
 );
 alter table public.profiles enable row level security;
+-- students may edit their own row, so bound the free-text fields server-side
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'profiles_name_len') then
+    alter table public.profiles add constraint profiles_name_len check (char_length(full_name) <= 120);
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'profiles_phone_len') then
+    alter table public.profiles add constraint profiles_phone_len check (char_length(phone) <= 30);
+  end if;
+end $$;
 
 -- A2. Courses
 create table if not exists public.courses (
@@ -109,8 +118,12 @@ $$;
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  insert into public.profiles (id, full_name)
-  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', ''))
+  insert into public.profiles (id, full_name, phone)
+  values (
+    new.id,
+    left(coalesce(new.raw_user_meta_data->>'full_name', ''), 120),
+    nullif(left(coalesce(new.raw_user_meta_data->>'phone', ''), 30), '')
+  )
   on conflict (id) do nothing;
   return new;
 end;
@@ -133,6 +146,7 @@ returns jsonb language plpgsql security definer set search_path = public as $$
 declare
   v_code   public.access_codes%rowtype;
   v_recent int;
+  v_new    int;
 begin
   if auth.uid() is null then
     return jsonb_build_object('ok', false, 'error', 'not_authenticated');
@@ -148,7 +162,7 @@ begin
   end if;
 
   select * into v_code from public.access_codes
-    where code = p_code and active = true
+    where upper(code) = upper(trim(coalesce(p_code, ''))) and active = true
       and (expires_at is null or expires_at > now())
       and used_count < max_uses
     for update;
@@ -162,13 +176,18 @@ begin
   insert into public.enrollments(user_id, course_id)
     values (auth.uid(), v_code.course_id)
     on conflict (user_id, course_id) do nothing;
+  get diagnostics v_new = row_count;
 
-  update public.access_codes set used_count = used_count + 1 where id = v_code.id;
+  -- only consume a use when this actually enrolled someone new,
+  -- so re-entering a code cannot burn the class's remaining uses
+  if v_new > 0 then
+    update public.access_codes set used_count = used_count + 1 where id = v_code.id;
+  end if;
 
   insert into public.code_redeem_log(user_id, attempted_code, success)
     values (auth.uid(), left(coalesce(p_code,''),64), true);
 
-  return jsonb_build_object('ok', true, 'course_id', v_code.course_id);
+  return jsonb_build_object('ok', true, 'course_id', v_code.course_id, 'already_enrolled', v_new = 0);
 end;
 $$;
 revoke all on function public.redeem_access_code(text) from public, anon;
@@ -222,7 +241,11 @@ create policy "enroll admin"     on public.enrollments for all    using (public.
 drop policy if exists "materials sample"   on public.materials;
 drop policy if exists "materials enrolled" on public.materials;
 drop policy if exists "materials admin"    on public.materials;
-create policy "materials sample"   on public.materials for select using (visibility = 'sample');
+-- samples are public only while their course is published
+create policy "materials sample"   on public.materials for select using (
+  visibility = 'sample'
+  and exists (select 1 from public.courses c where c.id = course_id and c.is_published)
+);
 create policy "materials enrolled" on public.materials for select using (public.is_enrolled(course_id) or public.is_admin());
 create policy "materials admin"    on public.materials for all    using (public.is_admin()) with check (public.is_admin());
 
@@ -230,23 +253,54 @@ create policy "materials admin"    on public.materials for all    using (public.
 drop policy if exists "log admin read" on public.code_redeem_log;
 create policy "log admin read" on public.code_redeem_log for select using (public.is_admin());
 
--- storage bucket 'materials' (create the PRIVATE bucket in Dashboard -> Storage).
+-- storage bucket 'materials': make sure it exists, is PRIVATE, and only
+-- accepts safe document/image types up to 50 MB (enforced by Storage).
+insert into storage.buckets (id, name, public)
+values ('materials', 'materials', false)
+on conflict (id) do update set public = false;
+
+update storage.buckets
+set file_size_limit = 52428800,
+    allowed_mime_types = array[
+      'application/pdf', 'text/plain', 'text/csv',
+      'image/png', 'image/jpeg', 'image/webp', 'image/gif',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/zip', 'application/x-zip-compressed',
+      'audio/mpeg', 'video/mp4'
+    ]
+where id = 'materials';
+
+-- storage bucket 'materials' policies.
 -- Path convention (admin UI enforces it):
---   samples/<file>              -> readable by everyone (parent previews)
+--   samples/<course_id>/<file>  -> readable by everyone while the course is published
 --   course/<course_id>/<file>   -> readable only by enrolled users / admin
+-- Course ids are compared as text so a malformed path can never raise a cast error.
 drop policy if exists "storage sample read"   on storage.objects;
 drop policy if exists "storage enrolled read" on storage.objects;
+drop policy if exists "storage admin read"    on storage.objects;
 drop policy if exists "storage admin insert"  on storage.objects;
 drop policy if exists "storage admin update"  on storage.objects;
 drop policy if exists "storage admin delete"  on storage.objects;
 create policy "storage sample read" on storage.objects for select
-  using (bucket_id = 'materials' and (storage.foldername(name))[1] = 'samples');
+  using (
+    bucket_id = 'materials'
+    and (storage.foldername(name))[1] = 'samples'
+    and exists (select 1 from public.courses c
+                where c.id::text = (storage.foldername(name))[2] and c.is_published)
+  );
 create policy "storage enrolled read" on storage.objects for select
   using (
     bucket_id = 'materials'
     and (storage.foldername(name))[1] = 'course'
-    and (public.is_admin() or public.is_enrolled( nullif((storage.foldername(name))[2], '')::uuid ))
+    and exists (select 1 from public.enrollments e
+                where e.user_id = auth.uid() and e.course_id::text = (storage.foldername(name))[2])
   );
+create policy "storage admin read" on storage.objects for select using (bucket_id = 'materials' and public.is_admin());
 create policy "storage admin insert" on storage.objects for insert with check (bucket_id = 'materials' and public.is_admin());
 create policy "storage admin update" on storage.objects for update using       (bucket_id = 'materials' and public.is_admin());
 create policy "storage admin delete" on storage.objects for delete using       (bucket_id = 'materials' and public.is_admin());

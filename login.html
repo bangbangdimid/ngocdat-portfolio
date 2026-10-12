@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="assets/css/base.css" />
 <link rel="stylesheet" href="assets/css/components.css" />
 <link rel="stylesheet" href="assets/css/auth.css" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/vendor/supabase-js-2.117.2.js"></script>
 </head>
 <body>
 <div class="auth-wrap">
@@ -65,6 +65,41 @@
           </div>
           <div class="turnstile-box" data-turnstile></div>
           <button type="submit" class="btn primary block" id="liBtn" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</button>
+          <p style="margin-top:1rem;text-align:center">
+            <a href="#" class="text-link" id="forgotLink" data-vi="Quên mật khẩu?" data-en="Forgot password?">Quên mật khẩu?</a>
+          </p>
+        </form>
+      </section>
+
+      <!-- FORGOT PASSWORD -->
+      <section class="auth-pane" id="paneForgot">
+        <form id="forgotForm" novalidate>
+          <p class="sub" data-vi="Nhập email tài khoản. Bạn sẽ nhận được link để đặt mật khẩu mới." data-en="Enter your account email. We'll send you a link to set a new password.">Nhập email tài khoản. Bạn sẽ nhận được link để đặt mật khẩu mới.</p>
+          <div class="field">
+            <label for="fgEmail" data-vi="Email" data-en="Email">Email</label>
+            <input type="email" id="fgEmail" autocomplete="email" required placeholder="you@example.com" />
+          </div>
+          <div class="turnstile-box" data-turnstile></div>
+          <button type="submit" class="btn primary block" id="fgBtn" data-vi="Gửi link đặt lại" data-en="Send reset link">Gửi link đặt lại</button>
+          <p style="margin-top:1rem;text-align:center">
+            <a href="#" class="text-link" id="backToLogin" data-vi="← Quay lại đăng nhập" data-en="← Back to sign in">← Quay lại đăng nhập</a>
+          </p>
+        </form>
+      </section>
+
+      <!-- SET NEW PASSWORD (after clicking the email link) -->
+      <section class="auth-pane" id="paneReset">
+        <form id="resetForm" novalidate>
+          <p class="sub" data-vi="Đặt mật khẩu mới cho tài khoản của bạn." data-en="Choose a new password for your account.">Đặt mật khẩu mới cho tài khoản của bạn.</p>
+          <div class="field">
+            <label for="rsPass" data-vi="Mật khẩu mới" data-en="New password">Mật khẩu mới</label>
+            <input type="password" id="rsPass" autocomplete="new-password" required minlength="8" placeholder="••••••••" />
+          </div>
+          <div class="field">
+            <label for="rsPass2" data-vi="Nhập lại mật khẩu" data-en="Confirm password">Nhập lại mật khẩu</label>
+            <input type="password" id="rsPass2" autocomplete="new-password" required minlength="8" placeholder="••••••••" />
+          </div>
+          <button type="submit" class="btn primary block" id="rsBtn" data-vi="Lưu mật khẩu mới" data-en="Save new password">Lưu mật khẩu mới</button>
         </form>
       </section>
 
