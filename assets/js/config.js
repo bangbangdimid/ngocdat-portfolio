@@ -10,7 +10,7 @@ window.APP_CONFIG = {
 
   // Cloudflare Turnstile site key (public). Leave "" to disable the widget
   // for now — auth still works with Supabase email confirmation + rate limits.
-  TURNSTILE_SITE_KEY: "",
+  TURNSTILE_SITE_KEY: "0x4AAAAAAFU3R9-jhWGso78h",
 
   // Public contact shown on the landing page. Fill CONTACT_PHONE (e.g. "0912 345 678");
   // while it is empty the "Want to enrol?" button falls back to email.
