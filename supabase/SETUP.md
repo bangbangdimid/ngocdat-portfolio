@@ -18,14 +18,15 @@ Authentication → **URL Configuration**:
 - **Redirect URLs**: thêm cả hai (local + domain thật).
 
 ## 3. Chạy schema
-SQL Editor → **New query** → dán toàn bộ **`schema.sql`** → **Run**.
-Phải thấy "Success". (Chạy lại nhiều lần vẫn an toàn.)
+SQL Editor → **New query** → **Select All (Ctrl+A)** rồi dán **toàn bộ** `schema.sql` → **Run**.
+Phải thấy "Success". File được bọc trong transaction nên nếu lỗi sẽ tự rollback sạch (không để lại trạng thái nửa vời) — cứ sửa và chạy lại, an toàn khi chạy nhiều lần.
 
 ## 4. Tạo bucket lưu tài liệu
 Storage → **New bucket**:
 - Tên: **`materials`**  (đúng tên này)
 - **Private** (KHÔNG tích public).
-- Tạo xong, quay lại SQL Editor chạy lại **mục 7** trong `schema.sql` (hoặc chạy cả file lần nữa) để gắn policy cho bucket.
+
+Policy cho bucket đã nằm sẵn trong `schema.sql` (phần D) nên **không cần chạy lại gì thêm** — tạo bucket trước hay sau khi chạy schema đều được.
 
 ## 5. Biến bạn thành admin
 Đăng ký 1 tài khoản bằng email owner (`ngocdat2006@gmail.com`) trên chính website (sau khi có Phase 1) **hoặc** tạo nhanh ở Authentication → Users → Add user. Sau đó SQL Editor chạy:
