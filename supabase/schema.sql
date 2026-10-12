@@ -8,13 +8,12 @@
 --
 -- How to run: Supabase Dashboard -> SQL Editor -> New query ->
 --             SELECT ALL + paste this whole file -> Run.
--- Ordering: TABLES first, then FUNCTIONS, then TRIGGERS/POLICIES, so
--- nothing references an object that does not exist yet. Wrapped in a
--- transaction: if anything fails, the whole thing rolls back cleanly.
--- Safe to re-run (idempotent).
+-- Ordering: TABLES first, then FUNCTIONS, then TRIGGERS/POLICIES.
+-- check_function_bodies is turned off so function creation never fails
+-- on forward references. Safe to re-run (idempotent).
 -- ============================================================
 
-begin;
+set check_function_bodies = off;
 
 -- ============================================================
 -- A. TABLES
@@ -249,7 +248,5 @@ create policy "storage enrolled read" on storage.objects for select
 create policy "storage admin insert" on storage.objects for insert with check (bucket_id = 'materials' and public.is_admin());
 create policy "storage admin update" on storage.objects for update using       (bucket_id = 'materials' and public.is_admin());
 create policy "storage admin delete" on storage.objects for delete using       (bucket_id = 'materials' and public.is_admin());
-
-commit;
 
 -- Done. Next: SETUP.md step 5 to make yourself admin.
