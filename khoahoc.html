@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Khoá học — Ngọc Đạt</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/tokens.css" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/components.css" />
+<link rel="stylesheet" href="assets/css/auth.css" />
+<link rel="stylesheet" href="assets/css/admin.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header class="appbar">
+  <a class="brand" href="hoc.html"><b>Ngọc&nbsp;Đạt</b><span class="tld">/ Lớp Toán</span></a>
+  <div class="appbar-right">
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button data-lang="vi" class="active">VI</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <a class="btn" href="hoc.html" data-vi="← Khoá của tôi" data-en="← My courses">← Khoá của tôi</a>
+    <button class="btn" id="signOutBtn" data-vi="Đăng xuất" data-en="Sign out">Đăng xuất</button>
+  </div>
+</header>
+
+<div id="loader" class="page-loader" data-vi="Đang tải…" data-en="Loading…">Đang tải…</div>
+
+<!-- access denied / not enrolled -->
+<main class="wrap" id="denied" style="display:none">
+  <div class="v-empty" style="min-height:60vh">
+    <div>
+      <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.3" style="color:var(--accent-line);margin-bottom:1rem"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 118 0v4"/></svg>
+      <h2 class="v-title" data-vi="Bạn chưa ghi danh khoá này" data-en="You're not enrolled in this course">Bạn chưa ghi danh khoá này</h2>
+      <p class="v-desc" data-vi="Nhập mã kích hoạt ở trang Khoá của tôi để mở khoá học." data-en="Enter your activation code on the My Courses page to unlock it.">Nhập mã kích hoạt ở trang Khoá của tôi để mở khoá học.</p>
+      <a class="btn primary" href="hoc.html" style="margin-top:1.2rem" data-vi="Về Khoá của tôi" data-en="Back to My Courses">Về Khoá của tôi</a>
+    </div>
+  </div>
+</main>
+
+<main class="wrap viewer" id="viewer" style="display:none">
+  <aside class="v-side">
+    <div class="v-course-title" id="courseTitle"></div>
+    <div class="v-course-desc" id="courseDesc"></div>
+    <div class="lesson-list" id="lessonList"></div>
+  </aside>
+  <section class="v-main" id="vMain"></section>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/khoahoc.js"></script>
+</body>
+</html>

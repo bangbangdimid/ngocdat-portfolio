@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quản trị — Ngọc Đạt</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/tokens.css" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/components.css" />
+<link rel="stylesheet" href="assets/css/auth.css" />
+<link rel="stylesheet" href="assets/css/admin.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header class="appbar">
+  <a class="brand" href="index.html"><b>Ngọc&nbsp;Đạt</b><span class="tld">/ Quản trị</span></a>
+  <div class="appbar-right">
+    <a class="btn" href="hoc.html" data-vi="Khu học tập" data-en="Classroom">Khu học tập</a>
+    <span class="user-chip"><span class="dot"></span><span id="userName">…</span></span>
+    <button class="btn" id="signOutBtn" data-vi="Đăng xuất" data-en="Sign out">Đăng xuất</button>
+  </div>
+</header>
+
+<div id="loader" class="page-loader">Đang tải…</div>
+
+<main class="wrap admin" id="admin" style="display:none">
+
+  <!-- ===== Courses list view ===== -->
+  <section id="coursesView">
+    <div class="admin-head">
+      <div>
+        <h1>Quản trị <span class="ital">khoá học</span></h1>
+        <p class="sub">Tạo khoá, thêm video &amp; tài liệu, phát mã kích hoạt cho học sinh.</p>
+      </div>
+      <button class="btn primary" id="newCourseBtn">+ Khoá học mới</button>
+    </div>
+    <div class="admin-courses" id="coursesList"></div>
+  </section>
+
+  <!-- ===== Single course view ===== -->
+  <section id="courseView" style="display:none">
+    <div class="crumbs">
+      <a href="#" id="backToCourses">← Tất cả khoá học</a>
+      <span>/</span><span id="crumbTitle"></span>
+    </div>
+
+    <div class="admin-head">
+      <div>
+        <h1 id="cvTitle"></h1>
+        <p class="sub" id="cvDesc"></p>
+      </div>
+      <div style="display:flex; gap:.5rem; flex-wrap:wrap">
+        <button class="btn" id="cvPublishBtn">Xuất bản</button>
+        <button class="btn" id="cvEditBtn">Sửa</button>
+        <button class="btn danger" id="cvDeleteBtn">Xoá khoá</button>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button data-tab="materials" class="active">Bài giảng &amp; tài liệu</button>
+      <button data-tab="codes">Mã kích hoạt</button>
+      <button data-tab="students">Học sinh</button>
+    </div>
+
+    <!-- Materials tab -->
+    <div class="tabpane active" id="tab-materials">
+      <div class="panel">
+        <div class="ph"><h3>Thêm nội dung</h3></div>
+        <div class="pb">
+          <div class="admin-tabs" style="margin-bottom:1.2rem">
+            <button data-mtype="video" class="active">Video (YouTube)</button>
+            <button data-mtype="doc">Tài liệu (tệp)</button>
+          </div>
+
+          <form class="inline-form" id="videoForm" data-mpane="video">
+            <div class="row-2">
+              <div class="field"><label>Tiêu đề</label><input type="text" id="vmTitle" required placeholder="VD: Buổi 01 — Bất đẳng thức AM-GM" /></div>
+              <div class="field"><label>Link hoặc ID YouTube (unlisted)</label><input type="text" id="vmYt" required placeholder="https://youtu.be/XXXX hoặc XXXX" /></div>
+            </div>
+            <div class="field"><label>Mô tả (tuỳ chọn)</label><input type="text" id="vmDesc" placeholder="Nội dung buổi học" /></div>
+            <div class="row-3">
+              <div class="field"><label>Quyền xem</label>
+                <select id="vmVis"><option value="enrolled">Chỉ học sinh đã ghi danh</option><option value="sample">Công khai (mẫu — phụ huynh xem)</option></select>
+              </div>
+              <div class="field"><label>Thứ tự</label><input type="number" id="vmOrder" value="0" /></div>
+              <div class="field" style="display:flex;align-items:flex-end"><button class="btn primary block" type="submit">+ Thêm video</button></div>
+            </div>
+          </form>
+
+          <form class="inline-form" id="docForm" data-mpane="doc" style="display:none">
+            <div class="row-2">
+              <div class="field"><label>Tiêu đề</label><input type="text" id="dmTitle" required placeholder="VD: Đề luyện số 03 + lời giải" /></div>
+              <div class="field"><label>Quyền xem</label>
+                <select id="dmVis"><option value="enrolled">Chỉ học sinh đã ghi danh</option><option value="sample">Công khai (mẫu)</option></select>
+              </div>
+            </div>
+            <div class="field"><label>Mô tả (tuỳ chọn)</label><input type="text" id="dmDesc" placeholder="Ghi chú ngắn" /></div>
+            <div class="field">
+              <label>Tệp (PDF, ảnh, Word, Excel… — tối đa 50MB)</label>
+              <div class="drop" id="docDrop"><input type="file" id="docInput" /><span id="docHint">Kéo-thả hoặc bấm để chọn tệp</span></div>
+              <div class="file-list" id="docPreview"></div>
+            </div>
+            <div class="row-3">
+              <div class="field"><label>Thứ tự</label><input type="number" id="dmOrder" value="0" /></div>
+              <div></div>
+              <div class="field" style="display:flex;align-items:flex-end"><button class="btn primary block" type="submit" id="docSubmit">+ Tải lên</button></div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><h3>Danh sách nội dung</h3><span class="muted" id="matCount"></span></div>
+        <div class="pb"><div id="materialsList"></div></div>
+      </div>
+    </div>
+
+    <!-- Codes tab -->
+    <div class="tabpane" id="tab-codes">
+      <div class="panel">
+        <div class="ph"><h3>Phát mã kích hoạt</h3></div>
+        <div class="pb">
+          <form class="inline-form" id="codeForm">
+            <div class="row-3">
+              <div class="field"><label>Mã (để trống = tự sinh)</label><input type="text" id="cmCode" placeholder="VD: TOAN9-2026" /></div>
+              <div class="field"><label>Số lượt dùng tối đa</label><input type="number" id="cmMax" value="1" min="1" /></div>
+              <div class="field"><label>Hết hạn (tuỳ chọn)</label><input type="date" id="cmExp" /></div>
+            </div>
+            <div><button class="btn primary" type="submit">+ Tạo mã</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Mã đã phát</h3></div>
+        <div class="pb"><div id="codesList"></div></div>
+      </div>
+    </div>
+
+    <!-- Students tab -->
+    <div class="tabpane" id="tab-students">
+      <div class="panel">
+        <div class="ph"><h3>Học sinh đã ghi danh</h3><span class="muted" id="studCount"></span></div>
+        <div class="pb"><div id="studentsList"></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Course create/edit modal -->
+<div class="modal" id="courseModal" aria-hidden="true">
+  <div class="modal-card">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <h3 id="courseModalTitle">Khoá học <span class="ital">mới</span></h3>
+    <form id="courseForm">
+      <input type="hidden" id="ccId" />
+      <div class="field"><label>Tên khoá</label><input type="text" id="ccTitle" required placeholder="VD: Luyện thi HSG Toán 9" /></div>
+      <div class="field"><label>Mô tả</label><textarea id="ccDesc" placeholder="Giới thiệu ngắn về khoá học"></textarea></div>
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer">
+          <input type="checkbox" id="ccPub" style="width:auto" /> Xuất bản (hiện công khai trên trang chủ)
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" data-close>Huỷ</button>
+        <button type="submit" class="btn primary" id="ccSave">Lưu khoá</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
