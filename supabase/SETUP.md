@@ -11,10 +11,10 @@ Dashboard → **Authentication → Sign In / Providers → Email**:
 
 ## 2. URL cho link xác nhận & đặt lại mật khẩu
 Authentication → **URL Configuration**:
-- **Site URL**: `https://ngocdat-portfolio.vercel.app`
+- **Site URL**: `https://ngocdat.vercel.app`
 - **Redirect URLs** — thêm đủ 3 dòng (có `/**` ở cuối):
   ```
-  https://ngocdat-portfolio.vercel.app/**
+  https://ngocdat.vercel.app/**
   https://*-bangbangdimids-projects.vercel.app/**
   http://localhost:5500/**
   ```
@@ -47,7 +47,7 @@ Email mặc định của Supabase **bị giới hạn rất thấp (chỉ vài 
 4. Authentication → **Rate Limits**: tăng giới hạn email/giờ cho phù hợp (vd 30).
 
 ## 7. (Khuyến nghị) Chặn bot bằng Cloudflare Turnstile — miễn phí
-1. https://dash.cloudflare.com → **Turnstile** → **Add widget** → domain `ngocdat-portfolio.vercel.app` (thêm `localhost` nếu muốn test local) → chế độ **Managed** → lấy **Site Key** + **Secret Key**.
+1. https://dash.cloudflare.com → **Turnstile** → **Add widget** → domain `ngocdat.vercel.app` (thêm `localhost` nếu muốn test local) → chế độ **Managed** → lấy **Site Key** + **Secret Key**.
 2. Supabase → Authentication → **Attack Protection** → bật **CAPTCHA protection** → chọn **Turnstile** → dán **Secret Key**.
 3. Mở `assets/js/config.js`, điền `TURNSTILE_SITE_KEY: "Site Key của bạn"` → commit & push.
    *Làm bước 2 và 3 cùng lúc* — nếu bật ở Supabase mà chưa điền key ở website thì đăng nhập sẽ báo lỗi CAPTCHA.
