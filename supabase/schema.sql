@@ -1,10 +1,10 @@
 -- ============================================================
--- COURSE PLATFORM — Supabase schema (Postgres + Row Level Security)
+-- COURSE PLATFORM - Supabase schema (Postgres + Row Level Security)
 --
 -- Roles:
---   admin   : you — full control (set manually, see SETUP.md step 5)
+--   admin   : you - full control (set manually, see SETUP.md step 5)
 --   student : signs up with email+password, enrolls via an access code
---   public  : not logged in — can only see 'sample' content
+--   public  : not logged in - can only see 'sample' content
 --
 -- How to run: Supabase Dashboard -> SQL Editor -> New query ->
 --             SELECT ALL + paste this whole file -> Run.
@@ -104,15 +104,23 @@ alter table public.code_redeem_log enable row level security;
 -- B. FUNCTIONS (all referenced tables now exist)
 -- ============================================================
 
-create or replace function public.is_admin()
-returns boolean language sql stable security definer set search_path = public as $$
+-- Policy helpers live in a PRIVATE schema: Row Level Security can call them,
+-- but they are not exposed as /rest/v1/rpc endpoints (schema is not in the API).
+create schema if not exists private;
+grant usage on schema private to anon, authenticated;
+
+create or replace function private.is_admin()
+returns boolean language sql stable security definer set search_path = '' as $$
   select exists (select 1 from public.profiles where id = auth.uid() and role = 'admin');
 $$;
 
-create or replace function public.is_enrolled(p_course uuid)
-returns boolean language sql stable security definer set search_path = public as $$
+create or replace function private.is_enrolled(p_course uuid)
+returns boolean language sql stable security definer set search_path = '' as $$
   select exists (select 1 from public.enrollments where user_id = auth.uid() and course_id = p_course);
 $$;
+-- RLS is evaluated as the calling role, so both API roles must be able to execute them
+revoke all on function private.is_admin(), private.is_enrolled(uuid) from public;
+grant execute on function private.is_admin(), private.is_enrolled(uuid) to anon, authenticated;
 
 -- auto-create a profile on signup
 create or replace function public.handle_new_user()
@@ -133,7 +141,7 @@ $$;
 create or replace function public.prevent_role_change()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  if new.role is distinct from old.role and not public.is_admin() then
+  if new.role is distinct from old.role and not private.is_admin() then
     new.role := old.role;
   end if;
   return new;
@@ -190,6 +198,10 @@ begin
   return jsonb_build_object('ok', true, 'course_id', v_code.course_id, 'already_enrolled', v_new = 0);
 end;
 $$;
+-- trigger functions are never called directly; firing a trigger does not need EXECUTE
+revoke all on function public.handle_new_user()     from public, anon, authenticated;
+revoke all on function public.prevent_role_change() from public, anon, authenticated;
+-- the ONLY function the website calls: signed-in students redeem a class code
 revoke all on function public.redeem_access_code(text) from public, anon;
 grant execute on function public.redeem_access_code(text) to authenticated;
 
@@ -215,27 +227,27 @@ create trigger trg_prevent_role_change
 drop policy if exists "profiles self read"  on public.profiles;
 drop policy if exists "profiles self write" on public.profiles;
 drop policy if exists "profiles admin all"  on public.profiles;
-create policy "profiles self read"  on public.profiles for select using (id = auth.uid() or public.is_admin());
+create policy "profiles self read"  on public.profiles for select using (id = auth.uid() or private.is_admin());
 create policy "profiles self write" on public.profiles for update using (id = auth.uid()) with check (id = auth.uid());
-create policy "profiles admin all"  on public.profiles for all    using (public.is_admin()) with check (public.is_admin());
+create policy "profiles admin all"  on public.profiles for all    using (private.is_admin()) with check (private.is_admin());
 
 -- courses (published = public; enrolled students read their own; admin sees all)
 drop policy if exists "courses read"          on public.courses;
 drop policy if exists "courses enrolled read" on public.courses;
 drop policy if exists "courses admin"         on public.courses;
-create policy "courses read"          on public.courses for select using (is_published or public.is_admin());
-create policy "courses enrolled read" on public.courses for select using (public.is_enrolled(id));
-create policy "courses admin"         on public.courses for all    using (public.is_admin()) with check (public.is_admin());
+create policy "courses read"          on public.courses for select using (is_published or private.is_admin());
+create policy "courses enrolled read" on public.courses for select using (private.is_enrolled(id));
+create policy "courses admin"         on public.courses for all    using (private.is_admin()) with check (private.is_admin());
 
 -- access codes (students never read this table; only admin + definer function)
 drop policy if exists "codes admin" on public.access_codes;
-create policy "codes admin" on public.access_codes for all using (public.is_admin()) with check (public.is_admin());
+create policy "codes admin" on public.access_codes for all using (private.is_admin()) with check (private.is_admin());
 
--- enrollments (students read own; no direct insert — only via redeem_access_code)
+-- enrollments (students read own; no direct insert - only via redeem_access_code)
 drop policy if exists "enroll self read" on public.enrollments;
 drop policy if exists "enroll admin"     on public.enrollments;
-create policy "enroll self read" on public.enrollments for select using (user_id = auth.uid() or public.is_admin());
-create policy "enroll admin"     on public.enrollments for all    using (public.is_admin()) with check (public.is_admin());
+create policy "enroll self read" on public.enrollments for select using (user_id = auth.uid() or private.is_admin());
+create policy "enroll admin"     on public.enrollments for all    using (private.is_admin()) with check (private.is_admin());
 
 -- materials (sample rows world-readable; enrolled rows only to enrolled/admin)
 drop policy if exists "materials sample"   on public.materials;
@@ -246,12 +258,12 @@ create policy "materials sample"   on public.materials for select using (
   visibility = 'sample'
   and exists (select 1 from public.courses c where c.id = course_id and c.is_published)
 );
-create policy "materials enrolled" on public.materials for select using (public.is_enrolled(course_id) or public.is_admin());
-create policy "materials admin"    on public.materials for all    using (public.is_admin()) with check (public.is_admin());
+create policy "materials enrolled" on public.materials for select using (private.is_enrolled(course_id) or private.is_admin());
+create policy "materials admin"    on public.materials for all    using (private.is_admin()) with check (private.is_admin());
 
 -- redeem log (admin reads; only the definer function writes)
 drop policy if exists "log admin read" on public.code_redeem_log;
-create policy "log admin read" on public.code_redeem_log for select using (public.is_admin());
+create policy "log admin read" on public.code_redeem_log for select using (private.is_admin());
 
 -- storage bucket 'materials': make sure it exists, is PRIVATE, and only
 -- accepts safe document/image types up to 50 MB (enforced by Storage).
@@ -300,9 +312,43 @@ create policy "storage enrolled read" on storage.objects for select
     and exists (select 1 from public.enrollments e
                 where e.user_id = auth.uid() and e.course_id::text = (storage.foldername(name))[2])
   );
-create policy "storage admin read" on storage.objects for select using (bucket_id = 'materials' and public.is_admin());
-create policy "storage admin insert" on storage.objects for insert with check (bucket_id = 'materials' and public.is_admin());
-create policy "storage admin update" on storage.objects for update using       (bucket_id = 'materials' and public.is_admin());
-create policy "storage admin delete" on storage.objects for delete using       (bucket_id = 'materials' and public.is_admin());
+create policy "storage admin read" on storage.objects for select using (bucket_id = 'materials' and private.is_admin());
+create policy "storage admin insert" on storage.objects for insert with check (bucket_id = 'materials' and private.is_admin());
+create policy "storage admin update" on storage.objects for update using       (bucket_id = 'materials' and private.is_admin());
+create policy "storage admin delete" on storage.objects for delete using       (bucket_id = 'materials' and private.is_admin());
 
--- Done. Next: SETUP.md step 5 to make yourself admin.
+-- ============================================================
+-- E. CLEAN-UP (old public helpers + legacy portfolio objects)
+-- ============================================================
+
+-- old copies of the helpers in the public schema (were callable via the API).
+-- If a leftover policy from the old portfolio still uses one, keep it and say so.
+do $$ begin
+  drop function if exists public.is_admin();
+exception when dependent_objects_still_exist then
+  raise notice 'public.is_admin() is still used by an old policy - kept';
+end $$;
+do $$ begin
+  drop function if exists public.is_enrolled(uuid);
+exception when dependent_objects_still_exist then
+  raise notice 'public.is_enrolled(uuid) is still used by an old policy - kept';
+end $$;
+
+do $$
+declare r record;
+begin
+  -- legacy trigger helper from the old portfolio: pin its search_path
+  for r in select p.oid::regprocedure as fn from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+           where n.nspname = 'public' and p.proname = 'set_updated_at' loop
+    execute format('alter function %s set search_path = public', r.fn);
+  end loop;
+  -- legacy public bucket 'portfolio': drop the SELECT policies that let anyone LIST
+  -- its files. Public file URLs keep working; nobody can enumerate the bucket.
+  for r in select policyname from pg_policies
+           where schemaname = 'storage' and tablename = 'objects' and cmd = 'SELECT'
+             and coalesce(qual, '') ilike '%portfolio%' loop
+    execute format('drop policy %I on storage.objects', r.policyname);
+  end loop;
+end $$;
+
+-- Done. Next: SETUP.md step 4 to make yourself admin.

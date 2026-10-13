@@ -24,7 +24,7 @@ Authentication → **URL Configuration**:
 SQL Editor → **New query** → **Ctrl+A** xoá trắng → dán **toàn bộ** `schema.sql` → **Run** → phải thấy *Success*.
 File an toàn khi chạy nhiều lần. Nó cũng tự tạo bucket `materials` ở chế độ **private**, giới hạn 50MB và chỉ nhận tệp an toàn (PDF, ảnh, Word, Excel, PowerPoint, ZIP…).
 
-> Bản mới nhất đã thêm: lưu SĐT lúc đăng ký, mã kích hoạt không phân biệt hoa/thường, giới hạn độ dài hồ sơ, giới hạn loại tệp. **Hãy chạy lại 1 lần.**
+> Bản mới nhất (10/2026): chuyển các hàm kiểm tra quyền sang schema riêng `private` (không gọi được từ ngoài API), khoá các hàm trigger, chặn liệt kê file của bucket cũ `portfolio`. Xử lý các cảnh báo trong **Security Advisor**. **Hãy chạy lại 1 lần.**
 
 ## 4. Biến tài khoản của bạn thành admin
 Đăng ký tài khoản bằng email của bạn trên website (hoặc Authentication → Users → Add user), rồi chạy:
