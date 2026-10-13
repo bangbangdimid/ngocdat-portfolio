@@ -137,11 +137,13 @@ begin
 end;
 $$;
 
--- a student can never escalate their own role (only admin/SQL can)
+-- a student can never escalate their own role (only admin/SQL can).
+-- Requests from the website always carry a user id (auth.uid()); the SQL Editor
+-- and the service role do not, so those may change roles (e.g. SETUP step 4).
 create or replace function public.prevent_role_change()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  if new.role is distinct from old.role and not private.is_admin() then
+  if new.role is distinct from old.role and auth.uid() is not null and not private.is_admin() then
     new.role := old.role;
   end if;
   return new;
