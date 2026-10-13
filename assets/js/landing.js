@@ -1,147 +1,274 @@
 /* ============================================================
-   landing.js — public home page behaviour (index.html)
-   - nav scroll state, mobile menu, reveal-on-scroll
-   - contact button (phone from config, email fallback)
-   - published courses + free sample lessons for parents
-   Sample content is readable by anonymous visitors only because RLS
-   allows visibility='sample'; everything else stays hidden server-side.
-   Requires: config.js, i18n.js (+ supabaseClient.js for the catalogue)
+   landing.js - home page behaviour (index.html)
+   Motion follows the ocean-kit starter: fish cursor + bubble trail,
+   click ripples, scroll-driven dive (frame sequence on canvas),
+   gentle parallax. Everything degrades for touch / reduced motion.
+   Requires: config.js
    ============================================================ */
 (function () {
   const CFG = window.APP_CONFIG || {};
-  const t = window.I18N.t;
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = matchMedia("(pointer: fine)").matches;
+  const isNarrow = () => innerWidth <= 680;
 
-  /* ---------- nav / menu / reveal ---------- */
-  const nav = $("nav");
-  const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 60);
-  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  /* ---------- contact links: config is the single source of truth ---------- */
+  const phone = (CFG.CONTACT_PHONE || "").replace(/[^\d+]/g, "");
+  if (phone) document.querySelectorAll("[data-call]").forEach((a) => (a.href = "tel:" + phone));
+  if (CFG.ZALO_URL) document.querySelectorAll("[data-zalo]").forEach((a) => (a.href = CFG.ZALO_URL));
 
-  const links = $("navLinks");
-  $("navBurger")?.addEventListener("click", () => links.classList.toggle("open"));
-  links.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => links.classList.remove("open")));
+  /* ---------- navigation: burger + scroll-spy ---------- */
+  const links = $("navLinks"), burger = $("navBurger");
+  burger.addEventListener("click", () => {
+    const open = links.classList.toggle("open");
+    burger.setAttribute("aria-expanded", String(open));
+  });
+  links.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+    links.classList.remove("open"); burger.setAttribute("aria-expanded", "false");
+  }));
+  const navMap = new Map([...links.querySelectorAll('a[href^="#"]')].map((a) => [a.getAttribute("href").slice(1), a]));
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      navMap.forEach((a) => a.removeAttribute("aria-current"));
+      navMap.get(e.target.id)?.setAttribute("aria-current", "true");
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  navMap.forEach((_, id) => { const s = $(id); if (s) spy.observe(s); });
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  /* ---------- reveal on scroll ---------- */
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); revealIO.unobserve(e.target); } });
   }, { threshold: 0.12 });
-  const observeReveals = (root) => (root || document).querySelectorAll(".reveal:not(.in)").forEach((el) => io.observe(el));
+  const observeReveals = (root) => (root || document).querySelectorAll(".reveal:not(.in)").forEach((el) => revealIO.observe(el));
   observeReveals();
 
-  /* ---------- contact button ---------- */
-  function wireContact() {
-    const phone = (CFG.CONTACT_PHONE || "").trim();
-    const email = CFG.CONTACT_EMAIL || "";
-    document.querySelectorAll("[data-contact]").forEach((a) => {
-      if (phone) {
-        a.href = "tel:" + phone.replace(/[^\d+]/g, "");
-        a.dataset.vi = "Gọi: " + phone;
-        a.dataset.en = "Call: " + phone;
-      } else {
-        a.href = "mailto:" + email + "?subject=" + encodeURIComponent("Đăng ký học Toán");
-        a.dataset.vi = "Nhắn email đăng ký";
-        a.dataset.en = "Email to enrol";
-      }
+  /* ---------- parallax for decorative sea creatures ---------- */
+  // uses the individual `translate` property so it composes with CSS bob animations
+  const parallaxEls = reduceMotion ? [] : [...document.querySelectorAll("[data-parallax]")];
+  let parallaxQueued = false;
+  function updateParallax() {
+    parallaxQueued = false;
+    const mid = innerHeight / 2;
+    parallaxEls.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > innerHeight + 200) return;
+      el.style.translate = `0 ${((r.top + r.height / 2 - mid) * parseFloat(el.dataset.parallax)).toFixed(1)}px`;
     });
-    window.I18N.apply();
   }
-  wireContact();
-
-  /* ---------- catalogue (courses + samples) ---------- */
-  const state = { courses: [], samples: [], loaded: false };
-  const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-  const ICON_DOC = '<svg class="doc-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>';
-
-  function renderCourses() {
-    const box = $("pubCourses"), wrap = $("coursesBlock");
-    if (!state.courses.length) { wrap.style.display = "none"; return; }
-    wrap.style.display = "";
-    box.innerHTML = state.courses.map((c, i) => `
-      <article class="pub-course reveal">
-        <span class="no">${String(i + 1).padStart(2, "0")}</span>
-        <h4>${esc(c.title)}</h4>
-        <p>${esc(c.description) || t("Lộ trình chi tiết sẽ được tư vấn trực tiếp.", "Details are shared during consultation.")}</p>
-        <a class="btn ghost go" href="#work">${t("Đăng ký khoá này", "Enrol in this course")}</a>
-      </article>`).join("");
-    observeReveals(box);
+  if (parallaxEls.length) {
+    addEventListener("scroll", () => { if (!parallaxQueued) { parallaxQueued = true; requestAnimationFrame(updateParallax); } }, { passive: true });
+    updateParallax();
   }
 
-  function renderSamples() {
-    const box = $("samplesGrid"), wrap = $("samplesBlock");
-    if (!state.samples.length) { wrap.style.display = "none"; return; }
-    wrap.style.display = "";
-    box.innerHTML = state.samples.map((m, i) => {
-      const isVideo = m.kind === "video";
-      const thumb = isVideo && m.youtube_id
-        ? `<img src="https://i.ytimg.com/vi/${encodeURIComponent(m.youtube_id)}/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" /><span class="play">${ICON_PLAY}</span>`
-        : ICON_DOC;
-      return `
-        <button type="button" class="sample reveal" data-idx="${i}">
-          <span class="s-thumb">${thumb}</span>
-          <span class="s-body">
-            <span class="s-course">${esc(m.courses?.title || "")}</span>
-            <span class="s-title" style="display:block">${esc(m.title)}</span>
-            <span class="s-kind" style="display:block">${isVideo ? t("Video bài giảng mẫu", "Sample lecture video") : t("Tài liệu mẫu", "Sample document")}</span>
-          </span>
-        </button>`;
-    }).join("");
-    box.querySelectorAll(".sample").forEach((b) => b.addEventListener("click", () => openSample(state.samples[+b.dataset.idx], b)));
-    observeReveals(box);
+  /* ---------- background videos: play only while visible ---------- */
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  const videoIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      const v = e.target;
+      if (e.isIntersecting) {
+        if (v.dataset.lazyVideo !== undefined && v.preload === "none") { v.preload = "auto"; v.load(); }
+        v.play().catch(() => {});
+      } else v.pause();
+    });
+  }, { rootMargin: "200px 0px" });
+  if (!reduceMotion) {
+    document.querySelectorAll(".hero-video, [data-lazy-video]").forEach((v) => {
+      if (v.dataset.alpha !== undefined && isSafari) { v.remove(); return; } // Safari: no alpha WebM
+      videoIO.observe(v);
+    });
   }
 
-  function renderCatalogue() {
-    renderCourses();
-    renderSamples();
-    $("catalogueEmpty").style.display = state.loaded && !state.courses.length && !state.samples.length ? "" : "none";
-  }
-
-  /* ---------- sample viewers ---------- */
-  const modal = $("videoModal");
-  function closeVideo() { modal.classList.remove("on"); $("videoFrame").innerHTML = ""; }
-  modal.addEventListener("click", (e) => { if (e.target === modal) closeVideo(); });
-  modal.querySelector("[data-close]").addEventListener("click", closeVideo);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("on")) closeVideo(); });
-
-  async function openSample(m, btn) {
-    if (m.kind === "video") {
-      $("videoFrame").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(m.youtube_id)}?rel=0&modestbranding=1&autoplay=1"
-        title="${esc(m.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
-      $("videoTitle").textContent = m.title;
-      modal.classList.add("on");
-      return;
+  /* ---------- fish cursor: bubble ring, trail, click ripple ---------- */
+  if (finePointer && !reduceMotion) {
+    const ring = $("cursorRing");
+    let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my, lastTrail = 0, active = false;
+    addEventListener("mousemove", (e) => {
+      mx = e.clientX; my = e.clientY;
+      const now = performance.now();
+      if (now - lastTrail > 70) {
+        lastTrail = now;
+        const b = document.createElement("div");
+        b.className = "cursor-trail"; b.style.left = mx + 10 + "px"; b.style.top = my + 12 + "px";
+        document.body.appendChild(b); setTimeout(() => b.remove(), 900);
+      }
+      if (!active) { active = true; requestAnimationFrame(loop); }
+    }, { passive: true });
+    addEventListener("click", (e) => {
+      const r = document.createElement("div");
+      r.className = "cursor-ripple"; r.style.left = e.clientX + "px"; r.style.top = e.clientY + "px";
+      document.body.appendChild(r); setTimeout(() => r.remove(), 700);
+    });
+    document.addEventListener("mouseover", (e) => ring.classList.toggle("big", !!e.target.closest("a, button, [role='button']")));
+    function loop() { // lerp gives a "floating in water" lag
+      rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+      const s = ring.offsetWidth / 2;
+      ring.style.transform = `translate(${rx - s}px, ${ry - s}px)`;
+      if (Math.abs(mx - rx) + Math.abs(my - ry) > 0.5) requestAnimationFrame(loop); else active = false;
     }
-    // document: short-lived signed URL (anon is allowed only for samples/)
-    btn.disabled = true;
-    try {
-      const { data, error } = await window.sb.storage.from(CFG.STORAGE_BUCKET).createSignedUrl(m.storage_path, 600);
-      if (error || !data?.signedUrl) throw error || new Error("no url");
+  } else {
+    document.body.classList.remove("ocean-cursor");
+    $("cursorRing")?.remove();
+  }
+
+  /* ---------- scroll dive: 180 frames drawn on a sticky canvas ---------- */
+  (function dive() {
+    const section = $("dive"), canvas = $("diveCanvas");
+    const captions = [...section.querySelectorAll(".dive-caption")];
+    if (reduceMotion || isNarrow()) return; // CSS shows the static image + stacked captions
+    const ctx = canvas.getContext("2d");
+    const N = 180, frames = new Array(N);
+    let loaded = false, current = -1, queued = false;
+    const src = (i) => `assets/ocean/frames/dive_${String(i).padStart(3, "0")}.webp`;
+    function load() {
+      if (loaded) return; loaded = true;
+      for (let i = 0; i < N; i++) { const img = new Image(); img.decoding = "async"; img.src = src(i); frames[i] = img; }
+      frames[0].onload = () => draw(0);
+    }
+    function draw(i) {
+      const img = frames[i];
+      if (!img || !img.complete || !img.naturalWidth) return false;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height); current = i; return true;
+    }
+    function update() {
+      queued = false;
+      const r = section.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+      const i = Math.round(p * (N - 1));
+      if (i !== current && !draw(i)) { for (let k = i; k >= 0; k--) if (draw(k)) break; } // nearest decoded frame
+      const step = p < 0.04 || p > 0.97 ? -1 : Math.min(2, Math.floor(p * 3));
+      captions.forEach((c, k) => c.classList.toggle("on", k === step));
+    }
+    new IntersectionObserver((es) => { if (es[0].isIntersecting) load(); }, { rootMargin: "100% 0px" }).observe(section);
+    addEventListener("scroll", () => { if (loaded && !queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  })();
+
+  /* ---------- modals ---------- */
+  let lastFocus = null;
+  function openModal(m) { lastFocus = document.activeElement; m.classList.add("on"); m.querySelector("[data-close]")?.focus(); document.body.style.overflow = "hidden"; }
+  function closeModal(m) {
+    m.classList.remove("on"); document.body.style.overflow = "";
+    if (m.id === "videoModal") { const v = $("videoPlayer"); v.pause(); v.removeAttribute("src"); v.load(); m.querySelector("iframe")?.remove(); v.hidden = false; }
+    if (m.id === "docModal") $("docFrame").removeAttribute("src");
+    lastFocus?.focus?.();
+  }
+  document.querySelectorAll(".modal").forEach((m) => {
+    m.addEventListener("click", (e) => { if (e.target === m) closeModal(m); });
+    m.querySelector("[data-close]").addEventListener("click", () => closeModal(m));
+  });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".modal.on").forEach(closeModal); });
+
+  // document preview: phones and tablets handle PDFs better in their own viewer
+  function openDoc(url, title) {
+    if (!finePointer || innerWidth < 900) { window.open(url, "_blank", "noopener"); return; }
+    $("docTitle").textContent = title;
+    $("docDownload").href = url;
+    $("docFrame").src = url + "#view=FitH";
+    openModal($("docModal"));
+  }
+  function openVideo(src, title) {
+    $("videoTitle").textContent = title;
+    const v = $("videoPlayer"); v.src = src;
+    openModal($("videoModal")); v.play().catch(() => {});
+  }
+  function openYouTube(id, title) {
+    const m = $("videoModal"), v = $("videoPlayer");
+    $("videoTitle").textContent = title; v.hidden = true;
+    const f = document.createElement("iframe");
+    f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0&modestbranding=1&autoplay=1`;
+    f.title = title; f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true;
+    f.style.cssText = "width:100%;aspect-ratio:16/9;border:0";
+    m.querySelector(".modal-box").appendChild(f);
+    openModal(m);
+  }
+  document.addEventListener("click", (e) => {
+    const d = e.target.closest("[data-doc]");
+    if (d) { e.preventDefault(); openDoc(d.dataset.doc, d.dataset.title || ""); return; }
+    const v = e.target.closest("[data-video]");
+    if (v) { e.preventDefault(); openVideo(v.dataset.video, v.dataset.title || ""); return; }
+    const y = e.target.closest("[data-youtube]");
+    if (y) { e.preventDefault(); openYouTube(y.dataset.youtube, y.dataset.title || ""); }
+  });
+
+  /* ---------- testimonials (only real quotes from config) ---------- */
+  (function testimonials() {
+    const list = (CFG.TESTIMONIALS || []).filter((t) => t && t.name && t.quote && t.quote.trim());
+    if (!list.length) return;
+    $("quotes").innerHTML = list.map((t, i) => `
+      <figure class="quote-card reveal d${i % 3}">
+        <blockquote class="quote-bubble sketch-card"><span class="mark" aria-hidden="true">“</span><p>${esc(t.quote)}</p></blockquote>
+        <figcaption class="quote-who">
+          <span class="avatar" aria-hidden="true">${esc(t.name.trim().split(/\s+/).pop().charAt(0))}</span>
+          <span><span class="name">${esc(t.name)}</span><br />${t.badge ? `<span class="badge">${esc(t.badge)}</span>` : ""}</span>
+        </figcaption>
+      </figure>`).join("");
+    $("cam-nhan").hidden = false;
+    $("navQuotes").hidden = false;
+    navMap.set("cam-nhan", $("navQuotes").querySelector("a")); spy.observe($("cam-nhan"));
+    observeReveals($("cam-nhan"));
+  })();
+
+  /* ---------- extra samples published by the admin (lazy Supabase) ---------- */
+  // Free samples the teacher marks "Công khai (mẫu)" in the admin panel are appended
+  // here. Supabase is loaded only when the visitor scrolls near this section.
+  (function classroomSamples() {
+    const section = $("mau");
+    if (!section || !CFG.SUPABASE_URL) return;
+    const io = new IntersectionObserver(async (es) => {
+      if (!es[0].isIntersecting) return;
+      io.disconnect();
+      try {
+        await loadScript("assets/vendor/supabase-js-2.117.2.js");
+        const sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+        const { data, error } = await sb.from("materials")
+          .select("id,kind,title,description,youtube_id,storage_path,sort_order,courses(title,is_published)")
+          .eq("visibility", "sample").order("sort_order").order("created_at");
+        if (error) throw error;
+        const items = (data || []).filter((m) => m.courses && m.courses.is_published);
+        renderExtraSamples(items, sb);
+      } catch (err) { console.error("classroom samples:", err); }
+    }, { rootMargin: "600px 0px" });
+    io.observe(section);
+  })();
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (window.supabase) return resolve();
+      const s = document.createElement("script"); s.src = src; s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function renderExtraSamples(items, sb) {
+    const videos = items.filter((m) => m.kind === "video" && m.youtube_id);
+    const docs = items.filter((m) => m.kind === "doc" && m.storage_path);
+    const lessons = $("lessons");
+    videos.forEach((m) => lessons.insertAdjacentHTML("beforeend", `
+      <button class="lesson-card reveal" type="button" data-youtube="${esc(m.youtube_id)}" data-title="${esc(m.title)}">
+        <div class="phone" style="aspect-ratio:16/10"><img src="https://i.ytimg.com/vi/${encodeURIComponent(m.youtube_id)}/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" /><span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="lesson-meta"><span class="for">${esc(m.courses.title)}</span><h4>${esc(m.title)}</h4>${m.description ? `<p>${esc(m.description)}</p>` : ""}</div>
+      </button>`));
+    const docsGrid = document.querySelector(".docs");
+    docs.forEach((m) => {
+      docsGrid.insertAdjacentHTML("beforeend", `
+        <article class="doc sketch-card reveal">
+          <div class="doc-body">
+            <span class="for">${esc(m.courses.title)}</span>
+            <h4>${esc(m.title)}</h4>${m.description ? `<p>${esc(m.description)}</p>` : "<p></p>"}
+            <div class="doc-actions"><button class="btn primary sm" type="button" data-storage="${esc(m.storage_path)}" data-title="${esc(m.title)}">Mở tài liệu</button></div>
+          </div>
+        </article>`);
+    });
+    docsGrid.addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-storage]");
+      if (!b) return;
+      b.disabled = true;
+      const { data, error } = await sb.storage.from(CFG.STORAGE_BUCKET).createSignedUrl(b.dataset.storage, 600);
+      b.disabled = false;
+      if (error || !data?.signedUrl) { alert("Không mở được tài liệu. Vui lòng thử lại."); return; }
       window.open(data.signedUrl, "_blank", "noopener");
-    } catch (e) {
-      console.error(e);
-      alert(t("Không mở được tài liệu mẫu. Vui lòng thử lại.", "Could not open the sample. Please try again."));
-    } finally { btn.disabled = false; }
+    });
+    observeReveals($("mau"));
   }
-
-  async function loadCatalogue() {
-    if (!window.sb) { state.loaded = true; renderCatalogue(); return; }
-    try {
-      const [cRes, mRes] = await Promise.all([
-        window.sb.from("courses").select("id,title,description,sort_order").eq("is_published", true)
-          .order("sort_order").order("created_at", { ascending: false }),
-        window.sb.from("materials").select("id,kind,title,youtube_id,storage_path,sort_order,courses(title,is_published)")
-          .eq("visibility", "sample").order("sort_order").order("created_at"),
-      ]);
-      state.courses = cRes.error ? [] : (cRes.data || []);
-      // hide samples whose course is unpublished (RLS returns courses = null for those)
-      state.samples = mRes.error ? [] : (mRes.data || []).filter((m) => m.courses && m.courses.is_published);
-      if (cRes.error || mRes.error) console.error(cRes.error || mRes.error);
-    } catch (e) {
-      console.error(e);
-    }
-    state.loaded = true;
-    renderCatalogue();
-  }
-
-  document.addEventListener("langchange", () => { wireContact(); renderCatalogue(); });
-  loadCatalogue();
 })();

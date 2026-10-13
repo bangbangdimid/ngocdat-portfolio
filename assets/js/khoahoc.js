@@ -1,13 +1,12 @@
 /* ============================================================
-   khoahoc.js — student course viewer for khoahoc.html
+   khoahoc.js - student course viewer for khoahoc.html
    Access is enforced by RLS: a non-enrolled user simply receives
    no enrolled rows. We also check enrollment for a clear message.
-   Requires: config.js, i18n.js, supabaseClient.js, auth.js
+   Requires: config.js, supabaseClient.js, auth.js
    ============================================================ */
 (function () {
   const CFG = window.APP_CONFIG;
   const BUCKET = CFG.STORAGE_BUCKET;
-  const t = window.I18N.t;
   const $ = (id) => document.getElementById(id);
   const state = { course: null, materials: [], activeIdx: 0 };
 
@@ -23,7 +22,7 @@
         <div class="lic">${m.kind === "video"
           ? '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'
           : '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/></svg>'}</div>
-        <div class="lt">${esc(m.title)}<span class="s">${m.kind === "video" ? t("Video", "Video") : t("Tài liệu", "Document")}${m.visibility === "sample" ? " · " + t("mẫu", "sample") : ""}</span></div>
+        <div class="lt">${esc(m.title)}<span class="s">${m.kind === "video" ? "Video" : "Tài liệu"}${m.visibility === "sample" ? " · " + "mẫu" : ""}</span></div>
       </div>`).join("");
     el.querySelectorAll(".lesson").forEach((l) => l.addEventListener("click", () => { state.activeIdx = +l.dataset.idx; renderLessons(); renderMain(); }));
   }
@@ -31,7 +30,7 @@
   async function renderMain() {
     const m = state.materials[state.activeIdx];
     const main = $("vMain");
-    if (!m) { main.innerHTML = `<div class="v-empty"><p>${t("Khoá học chưa có nội dung.", "No content yet.")}</p></div>`; return; }
+    if (!m) { main.innerHTML = `<div class="v-empty"><p>Khoá học chưa có nội dung.</p></div>`; return; }
     if (m.kind === "video") {
       main.innerHTML = `
         <div class="v-video">
@@ -48,16 +47,16 @@
           <svg class="dic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/></svg>
           <h1 class="v-title">${esc(m.title)}</h1>
           <p class="v-desc">${esc(m.description)}</p>
-          <button class="btn primary" id="openDoc" style="margin-top:1.2rem">${t("Mở / Tải tài liệu", "Open / Download")}</button>
+          <button class="btn primary" id="openDoc" style="margin-top:1.2rem">Mở / Tải tài liệu</button>
         </div>`;
       $("openDoc").addEventListener("click", async () => {
-        const btn = $("openDoc"); btn.disabled = true; const old = btn.textContent; btn.textContent = t("Đang mở…", "Opening…");
+        const btn = $("openDoc"); btn.disabled = true; const old = btn.textContent; btn.textContent = "Đang mở…";
         try {
           const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(m.storage_path, 3600);
           if (error || !data?.signedUrl) throw error || new Error("no url");
           window.open(data.signedUrl, "_blank", "noopener");
         } catch (e) {
-          btn.textContent = t("Không mở được tài liệu", "Could not open");
+          btn.textContent = "Không mở được tài liệu";
           setTimeout(() => { btn.textContent = old; btn.disabled = false; }, 1800);
           return;
         }
@@ -92,6 +91,5 @@
     renderMain();
 
     $("signOutBtn").addEventListener("click", async () => { await window.Auth.signOut(); location.replace(CFG.ROUTES.home); });
-    document.addEventListener("langchange", () => { renderLessons(); renderMain(); });
   })();
 })();

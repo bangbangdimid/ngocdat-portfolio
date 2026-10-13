@@ -1,79 +1,83 @@
 /* ============================================================
-   Design tokens — Academic Minimal
-   Deliberate palette + type system for a maths / finance profile.
-   Restrained, editorial, precise. One accent (ink-blue) + one
-   honour tone (muted brass). Serif display · sans body · mono data.
+   Design tokens - Ocean Sketchbook
+   Palette taken from the ocean-kit (riso ink #2B3F6C + sky / sea /
+   foam / sand / coral). Fonts chosen for full Vietnamese support:
+   Cormorant Garamond (display), Be Vietnam Pro (body),
+   Patrick Hand (hand-drawn accents), JetBrains Mono (small labels).
    ============================================================ */
 :root {
-  /* ---- Surfaces & ink ---- */
-  --paper:        #fcfbf8;   /* page background — warm scholarly white */
-  --surface:      #ffffff;   /* cards / raised panels                 */
-  --surface-2:    #f4f2ec;   /* subtle inset / alt rows               */
-  --ink:          #16181d;   /* primary text                          */
-  --ink-soft:     #3f444e;   /* secondary text                        */
-  --muted:        #838a95;   /* captions, meta                        */
-  --muted-2:      #a9afb8;   /* faint labels                          */
+  /* ---- Ocean palette ---- */
+  --ink:        #2b3f6c;   /* riso ink: outlines, primary text  */
+  --sky:        #7fa9de;
+  --deep:       #5b86c5;
+  --sea:        #a8d8d2;
+  --foam:       #eef6fc;
+  --sand:       #f5e6c8;
+  --coral:      #f3a9a0;
 
-  /* ---- Lines ---- */
-  --line:         rgba(20, 24, 32, .10);
-  --line-strong:  rgba(20, 24, 32, .18);
-  --line-ink:     rgba(20, 24, 32, .82);
+  /* ---- Semantic surfaces & text ---- */
+  --paper:      #f4f9fd;   /* page background                      */
+  --surface:    #ffffff;
+  --surface-2:  #e6f1fa;
+  --ink-soft:   #46598a;
+  --muted:      #66789f;
+  --muted-2:    #98a6c4;
 
-  /* ---- Accent (ink-blue) + honour (brass) ---- */
-  --accent:       #274a76;
-  --accent-deep:  #1c3557;
-  --accent-soft:  #eaf0f7;
-  --accent-line:  rgba(39, 74, 118, .22);
-  --brass:        #9a6a2c;
-  --brass-soft:   #f3ead9;
+  --line:        rgba(43, 63, 108, .14);
+  --line-strong: rgba(43, 63, 108, .28);
+  --line-ink:    #2b3f6c;
+
+  --accent:      #3d6bb3;  /* buttons/links - AA on white          */
+  --accent-deep: #2b3f6c;
+  --accent-soft: #dceaf8;
+  --accent-line: rgba(61, 107, 179, .32);
+  --brass:       #b8523f;  /* honours / highlights (coral, darkened for contrast) */
+  --brass-soft:  #fde6e1;
+  --success:     #2f7d5b;
+  --danger:      #b23a30;
 
   /* ---- Typography ---- */
-  --serif: "Newsreader", Georgia, "Times New Roman", serif;
-  --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --mono:  "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --sans:  "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --hand:  "Patrick Hand", "Comic Sans MS", cursive;
+  --mono:  "JetBrains Mono", ui-monospace, Menlo, monospace;
 
-  --text-xs:    clamp(0.72rem, 0.70rem + 0.10vw, 0.78rem);
-  --text-sm:    clamp(0.82rem, 0.80rem + 0.12vw, 0.90rem);
-  --text-base:  clamp(0.98rem, 0.94rem + 0.20vw, 1.08rem);
-  --text-lg:    clamp(1.16rem, 1.08rem + 0.40vw, 1.40rem);
-  --text-xl:    clamp(1.5rem,  1.30rem + 1.0vw,  2.1rem);
-  --text-2xl:   clamp(2.0rem,  1.55rem + 2.2vw,  3.2rem);
-  --text-hero:  clamp(2.6rem,  1.7rem  + 4.3vw,  5.4rem);
+  --text-xs:   clamp(0.74rem, 0.72rem + 0.10vw, 0.80rem);
+  --text-sm:   clamp(0.86rem, 0.84rem + 0.12vw, 0.94rem);
+  --text-base: clamp(0.98rem, 0.95rem + 0.18vw, 1.06rem);
+  --text-lg:   clamp(1.14rem, 1.06rem + 0.40vw, 1.36rem);
+  --text-xl:   clamp(1.5rem,  1.28rem + 1.0vw,  2.1rem);
+  --text-2xl:  clamp(2.1rem,  1.6rem  + 2.4vw,  3.4rem);
+  --text-hero: clamp(3rem,    1.6rem  + 6.4vw,  7.4rem);
 
-  --leading-tight: 1.08;
-  --leading-snug:  1.28;
-  --leading-body:  1.68;
-
-  --tracking-label: .22em;
-  --tracking-wide:  .06em;
+  --leading-tight: 1.05;
+  --leading-snug:  1.3;
+  --leading-body:  1.7;
+  --tracking-label: .14em;
+  --tracking-wide:  .04em;
 
   /* ---- Spacing ---- */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-section: clamp(4.5rem, 3rem + 6vw, 9rem);
-
+  --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
+  --space-5: 1.5rem; --space-6: 2rem; --space-7: 3rem; --space-8: 4rem;
+  --space-section: clamp(4.5rem, 3rem + 6vw, 8.5rem);
   --maxw: 1180px;
   --maxw-narrow: 780px;
 
-  /* ---- Radius & elevation (small, disciplined) ---- */
-  --r-sm: 4px;
-  --r-md: 8px;
-  --r-lg: 14px;
-  --shadow-sm: 0 1px 2px rgba(20, 24, 32, .05),
-               0 8px 24px -18px rgba(20, 24, 32, .28);
-  --shadow-md: 0 2px 6px rgba(20, 24, 32, .06),
-               0 26px 50px -30px rgba(20, 24, 32, .40);
+  /* ---- Shape & depth (riso: hard offset shadow, no blur) ---- */
+  --r-sm: 10px;
+  --r-md: 18px;
+  --r-lg: 28px;
+  --stroke: 2px solid var(--ink);
+  --riso:    3px 3px 0 var(--ink);
+  --riso-lg: 6px 6px 0 var(--ink);
+  --shadow-sm: 0 1px 2px rgba(43,63,108,.06), 0 10px 24px -18px rgba(43,63,108,.35);
+  --shadow-md: 0 2px 6px rgba(43,63,108,.08), 0 28px 50px -30px rgba(43,63,108,.45);
 
   /* ---- Motion ---- */
-  --dur-fast:   150ms;
-  --dur-normal: 300ms;
-  --dur-slow:   620ms;
+  --dur-fast:   160ms;
+  --dur-normal: 320ms;
+  --dur-slow:   700ms;
   --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
   --ease-std:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bob:   cubic-bezier(0.45, 0, 0.55, 1);
 }

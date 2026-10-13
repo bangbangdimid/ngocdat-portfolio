@@ -1,5 +1,5 @@
 /* ============================================================
-   admin.js — admin panel (courses, materials, access codes)
+   admin.js - admin panel (courses, materials, access codes)
    Admin-only. Requires: config.js, supabaseClient.js, auth.js
    All writes are also guarded server-side by RLS (admin-only).
    ============================================================ */
@@ -255,7 +255,7 @@
   $("codeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const code = ($("cmCode").value.trim() || randCode()).toUpperCase();
-    if (!/^[A-Z0-9-]{4,32}$/.test(code)) return toast("Mã chỉ gồm chữ, số, dấu gạch ngang (4–32 ký tự)", true);
+    if (!/^[A-Z0-9-]{4,32}$/.test(code)) return toast("Mã chỉ gồm chữ, số, dấu gạch ngang (4-32 ký tự)", true);
     const payload = { course_id: state.current.id, code, max_uses: parseInt($("cmMax").value) || 1, expires_at: $("cmExp").value || null };
     const { error } = await sb.from("access_codes").insert(payload);
     if (error) return toast(error.message.includes("duplicate") ? "Mã đã tồn tại, chọn mã khác" : "Lỗi: " + error.message, true);
@@ -278,7 +278,7 @@
       return `<div class="item-row" data-id="${e.id}" data-name="${esc(p.full_name || "")}">
         <div class="ic">${esc((p.full_name || "?").trim().charAt(0).toUpperCase())}</div>
         <div class="meta"><div class="t">${esc(p.full_name) || "(chưa có tên)"}</div>
-          <div class="s">${esc(p.phone) || "—"} · ghi danh ${new Date(e.created_at).toLocaleDateString("vi")}</div></div>
+          <div class="s">${esc(p.phone) || "-"} · ghi danh ${new Date(e.created_at).toLocaleDateString("vi")}</div></div>
         <div class="acts"><button class="icon-btn danger" data-kick title="Gỡ khỏi lớp">${ICONS.del}</button></div>
       </div>`;
     }).join("") : "<p class='muted'>Chưa có học sinh ghi danh.</p>";

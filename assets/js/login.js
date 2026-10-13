@@ -1,10 +1,9 @@
 /* ============================================================
-   login.js — sign in / sign up / forgot / reset password
-   Requires: config.js, i18n.js, supabaseClient.js, auth.js
+   login.js - sign in / sign up / forgot / reset password
+   Requires: config.js, supabaseClient.js, auth.js
    ============================================================ */
 (function () {
   const CFG = window.APP_CONFIG;
-  const t = window.I18N.t;
   const $ = (id) => document.getElementById(id);
   const msgEl = $("msg");
 
@@ -51,7 +50,8 @@
     if (!box || widgetIds.has(box)) return;
     const id = window.turnstile.render(box, {
       sitekey: CFG.TURNSTILE_SITE_KEY,
-      language: window.I18N.getLang(),
+      language: "vi",
+      theme: "light",
       callback: (token) => captchaTokens.set(box, token),
       "expired-callback": () => captchaTokens.delete(box),
       "error-callback": () => { captchaTokens.delete(box); },
@@ -73,8 +73,7 @@
   // true if we may submit; otherwise tells the user to finish the bot check
   function captchaReady(form) {
     if (!CAPTCHA_ON || tokenFor(form)) return true;
-    showMsg("err", t("Vui lòng đợi ô xác minh chống robot (Cloudflare) hoàn tất rồi bấm lại.",
-                     "Please wait for the Cloudflare bot check to finish, then try again."));
+    showMsg("err", "Vui lòng đợi ô xác minh chống robot (Cloudflare) hoàn tất rồi bấm lại.");
     return false;
   }
   // a Turnstile token is single-use: reset after every attempt
@@ -85,15 +84,15 @@
 
   function friendly(error) {
     const m = (error?.message || "").toLowerCase();
-    if (m.includes("invalid login")) return t("Email hoặc mật khẩu không đúng.", "Invalid email or password.");
-    if (m.includes("email not confirmed")) return t("Email chưa được xác nhận — kiểm tra hộp thư (cả mục Spam).", "Email not confirmed — check your inbox (and spam).");
-    if (m.includes("already registered") || m.includes("already been registered")) return t("Email này đã có tài khoản. Hãy đăng nhập.", "This email already has an account. Please sign in.");
-    if (m.includes("same") && m.includes("password")) return t("Mật khẩu mới phải khác mật khẩu cũ.", "New password must differ from the old one.");
-    if (m.includes("password")) return t("Mật khẩu chưa đạt yêu cầu (tối thiểu 8 ký tự).", "Password too weak (min 8 characters).");
-    if (m.includes("rate") || m.includes("too many") || m.includes("security purposes")) return t("Bạn thao tác quá nhanh. Thử lại sau ít phút.", "Too many attempts — try again in a few minutes.");
-    if (m.includes("captcha")) return t("Vui lòng xác minh bạn không phải robot.", "Please complete the bot check.");
-    if (m.includes("fetch") || m.includes("network")) return t("Không kết nối được máy chủ. Kiểm tra mạng và thử lại.", "Cannot reach the server. Check your connection.");
-    return t("Có lỗi xảy ra. Vui lòng thử lại.", "Something went wrong. Please try again.");
+    if (m.includes("invalid login")) return "Email hoặc mật khẩu không đúng.";
+    if (m.includes("email not confirmed")) return "Email chưa được xác nhận - kiểm tra hộp thư (cả mục Spam).";
+    if (m.includes("already registered") || m.includes("already been registered")) return "Email này đã có tài khoản. Hãy đăng nhập.";
+    if (m.includes("same") && m.includes("password")) return "Mật khẩu mới phải khác mật khẩu cũ.";
+    if (m.includes("password")) return "Mật khẩu chưa đạt yêu cầu (tối thiểu 8 ký tự).";
+    if (m.includes("rate") || m.includes("too many") || m.includes("security purposes")) return "Bạn thao tác quá nhanh. Thử lại sau ít phút.";
+    if (m.includes("captcha")) return "Vui lòng xác minh bạn không phải robot.";
+    if (m.includes("fetch") || m.includes("network")) return "Không kết nối được máy chủ. Kiểm tra mạng và thử lại.";
+    return "Có lỗi xảy ra. Vui lòng thử lại.";
   }
 
   // run an async form action with a busy button and error handling
@@ -110,9 +109,9 @@
     e.preventDefault(); clearMsg();
     const form = e.currentTarget;
     const email = $("liEmail").value.trim(), password = $("liPass").value;
-    if (!validEmail(email) || !password) return showMsg("err", t("Nhập email và mật khẩu hợp lệ.", "Enter a valid email and password."));
+    if (!validEmail(email) || !password) return showMsg("err", "Nhập email và mật khẩu hợp lệ.");
     if (!captchaReady(form)) return;
-    withBusy($("liBtn"), t("Đang đăng nhập…", "Signing in…"), async () => {
+    withBusy($("liBtn"), "Đang đăng nhập…", async () => {
       const res = await window.Auth.signIn({ email, password, captchaToken: tokenFor(form) });
       resetCaptcha(form);
       if (!res.ok) return showMsg("err", friendly(res.error));
@@ -126,20 +125,19 @@
     const form = e.currentTarget;
     const fullName = $("suName").value.trim(), email = $("suEmail").value.trim();
     const phone = $("suPhone").value.trim(), password = $("suPass").value;
-    if (fullName.length < 2) return showMsg("err", t("Vui lòng nhập họ và tên.", "Please enter your full name."));
-    if (!validEmail(email)) return showMsg("err", t("Email không hợp lệ.", "Invalid email."));
-    if (phone && !/^[+\d][\d\s.-]{7,18}$/.test(phone)) return showMsg("err", t("Số điện thoại không hợp lệ.", "Invalid phone number."));
-    if (password.length < 8) return showMsg("err", t("Mật khẩu tối thiểu 8 ký tự.", "Password must be at least 8 characters."));
+    if (fullName.length < 2) return showMsg("err", "Vui lòng nhập họ và tên.");
+    if (!validEmail(email)) return showMsg("err", "Email không hợp lệ.");
+    if (phone && !/^[+\d][\d\s.-]{7,18}$/.test(phone)) return showMsg("err", "Số điện thoại không hợp lệ.");
+    if (password.length < 8) return showMsg("err", "Mật khẩu tối thiểu 8 ký tự.");
     if (!captchaReady(form)) return;
-    withBusy($("suBtn"), t("Đang tạo…", "Creating…"), async () => {
+    withBusy($("suBtn"), "Đang tạo…", async () => {
       const res = await window.Auth.signUp({ fullName, email, phone, password, captchaToken: tokenFor(form) });
       resetCaptcha(form);
       if (!res.ok) return showMsg("err", friendly(res.error));
       if (res.needsConfirm) {
         selectPane("login", true);
         $("liEmail").value = email;
-        showMsg("ok", t("Đã gửi email xác nhận. Mở email, bấm vào link rồi quay lại đăng nhập.",
-                        "Confirmation email sent. Open it, click the link, then sign in."));
+        showMsg("ok", "Đã gửi email xác nhận. Mở email, bấm vào link rồi quay lại đăng nhập.");
       } else {
         await goHome();
       }
@@ -151,15 +149,14 @@
     e.preventDefault(); clearMsg();
     const form = e.currentTarget;
     const email = $("fgEmail").value.trim();
-    if (!validEmail(email)) return showMsg("err", t("Email không hợp lệ.", "Invalid email."));
+    if (!validEmail(email)) return showMsg("err", "Email không hợp lệ.");
     if (!captchaReady(form)) return;
-    withBusy($("fgBtn"), t("Đang gửi…", "Sending…"), async () => {
+    withBusy($("fgBtn"), "Đang gửi…", async () => {
       const res = await window.Auth.requestPasswordReset(email, tokenFor(form));
       resetCaptcha(form);
       if (!res.ok) return showMsg("err", friendly(res.error));
       // same message whether or not the email exists (no account enumeration)
-      showMsg("ok", t("Nếu email có tài khoản, link đặt lại mật khẩu đã được gửi. Kiểm tra hộp thư.",
-                      "If that email has an account, a reset link has been sent. Check your inbox."));
+      showMsg("ok", "Nếu email có tài khoản, link đặt lại mật khẩu đã được gửi. Kiểm tra hộp thư.");
     });
   });
 
@@ -167,14 +164,14 @@
   $("resetForm").addEventListener("submit", (e) => {
     e.preventDefault(); clearMsg();
     const p1 = $("rsPass").value, p2 = $("rsPass2").value;
-    if (p1.length < 8) return showMsg("err", t("Mật khẩu tối thiểu 8 ký tự.", "Password must be at least 8 characters."));
-    if (p1 !== p2) return showMsg("err", t("Hai mật khẩu không khớp.", "Passwords do not match."));
-    withBusy($("rsBtn"), t("Đang lưu…", "Saving…"), async () => {
+    if (p1.length < 8) return showMsg("err", "Mật khẩu tối thiểu 8 ký tự.");
+    if (p1 !== p2) return showMsg("err", "Hai mật khẩu không khớp.");
+    withBusy($("rsBtn"), "Đang lưu…", async () => {
       const user = await window.Auth.getUser();
-      if (!user) return showMsg("err", t("Link đã hết hạn. Hãy yêu cầu link mới.", "This link has expired. Request a new one."));
+      if (!user) return showMsg("err", "Link đã hết hạn. Hãy yêu cầu link mới.");
       const res = await window.Auth.updatePassword(p1);
       if (!res.ok) return showMsg("err", friendly(res.error));
-      showMsg("ok", t("Đã đổi mật khẩu. Đang chuyển vào khu học tập…", "Password updated. Taking you to your classroom…"));
+      showMsg("ok", "Đã đổi mật khẩu. Đang chuyển vào khu học tập…");
       history.replaceState(null, "", location.pathname);
       setTimeout(goHome, 1200);
     });

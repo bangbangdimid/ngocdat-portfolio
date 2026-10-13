@@ -1,5 +1,5 @@
 /* ============================================================
-   Components — archive grid, cards, thumbnails, modals, forms
+   Components - archive grid, cards, thumbnails, modals, forms
    Class names here are also produced by assets/js/app.js render*
    ============================================================ */
 
@@ -103,7 +103,7 @@ body.owner-on .add-tile { display: flex; }
 /* ---- Modals ---------------------------------------------- */
 .modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 1.2rem; background: rgba(22,24,29,.42); backdrop-filter: blur(4px); }
 .modal.on { display: flex; }
-.modal-card { width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-md); padding: clamp(1.5rem, 4vw, 2.4rem); position: relative; }
+.modal-card { width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; background: var(--surface); border: 3px solid var(--ink); border-radius: var(--r-lg); box-shadow: var(--riso-lg); padding: clamp(1.5rem, 4vw, 2.4rem); position: relative; }
 .modal-card.wide { max-width: 680px; }
 .modal-card h3 { font-family: var(--serif); font-size: var(--text-xl); margin-bottom: .4rem; }
 .modal-card h3 .ital { font-style: italic; color: var(--accent); }
@@ -113,14 +113,15 @@ body.owner-on .add-tile { display: flex; }
 
 /* Forms */
 .field { margin-bottom: 1.1rem; }
-.field label { display: block; font-family: var(--mono); font-size: var(--text-xs); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+.field label { display: block; font-family: var(--sans); font-size: var(--text-sm); font-weight: 600; color: var(--ink-soft); margin-bottom: .45rem; }
 .field input, .field textarea, .field select {
   width: 100%; font: inherit; font-size: var(--text-sm); color: var(--ink);
-  padding: .7em .85em; background: var(--paper);
-  border: 1px solid var(--line-strong); border-radius: var(--r-sm);
+  padding: .75em .95em; background: #fff;
+  border: 2px solid var(--ink); border-radius: 12px; box-shadow: 2px 2px 0 var(--line-strong);
   transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
 }
-.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.field input::placeholder, .field textarea::placeholder { color: var(--muted-2); }
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft), 2px 2px 0 var(--ink); }
 .field textarea { min-height: 84px; resize: vertical; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
@@ -146,6 +147,6 @@ body.owner-on .add-tile { display: flex; }
 .detail-files .file-list { gap: .5rem; }
 
 /* Toast */
-.toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 20px); z-index: 120; padding: .8em 1.3em; background: var(--ink); color: var(--paper); border-radius: var(--r-sm); font-family: var(--mono); font-size: var(--text-sm); opacity: 0; pointer-events: none; transition: opacity var(--dur-normal), transform var(--dur-normal) var(--ease-out); }
+.toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 20px); z-index: 120; padding: .8em 1.3em; background: var(--ink); color: var(--paper); border: 2px solid var(--ink); border-radius: 999px; box-shadow: var(--riso); font-family: var(--sans); font-weight: 500; font-size: var(--text-sm); opacity: 0; pointer-events: none; transition: opacity var(--dur-normal), transform var(--dur-normal) var(--ease-out); }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 .toast.err { background: #a3392f; }

@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quản trị — Ngọc Đạt</title>
+<title>Quản trị - Ngọc Đạt</title>
 <meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Patrick+Hand&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/css/tokens.css" />
 <link rel="stylesheet" href="assets/css/base.css" />
 <link rel="stylesheet" href="assets/css/components.css" />
@@ -18,11 +18,11 @@
 <body>
 
 <header class="appbar">
-  <a class="brand" href="index.html"><b>Ngọc&nbsp;Đạt</b><span class="tld">/ Quản trị</span></a>
+  <a class="brand" href="index.html"><img src="assets/ocean/svg/whale-mascot.svg" alt="" />Lớp Toán Ngọc Đạt<span class="tld">quản trị</span></a>
   <div class="appbar-right">
-    <a class="btn" href="hoc.html" data-vi="Khu học tập" data-en="Classroom">Khu học tập</a>
+    <a class="btn" href="hoc.html">Khu học tập</a>
     <span class="user-chip"><span class="dot"></span><span id="userName">…</span></span>
-    <button class="btn" id="signOutBtn" data-vi="Đăng xuất" data-en="Sign out">Đăng xuất</button>
+    <button class="btn" id="signOutBtn">Đăng xuất</button>
   </div>
 </header>
 
@@ -79,13 +79,13 @@
 
           <form class="inline-form" id="videoForm" data-mpane="video">
             <div class="row-2">
-              <div class="field"><label>Tiêu đề</label><input type="text" id="vmTitle" required placeholder="VD: Buổi 01 — Bất đẳng thức AM-GM" /></div>
+              <div class="field"><label>Tiêu đề</label><input type="text" id="vmTitle" required placeholder="VD: Buổi 01 - Bất đẳng thức AM-GM" /></div>
               <div class="field"><label>Link hoặc ID YouTube (unlisted)</label><input type="text" id="vmYt" required placeholder="https://youtu.be/XXXX hoặc XXXX" /></div>
             </div>
             <div class="field"><label>Mô tả (tuỳ chọn)</label><input type="text" id="vmDesc" placeholder="Nội dung buổi học" /></div>
             <div class="row-3">
               <div class="field"><label>Quyền xem</label>
-                <select id="vmVis"><option value="enrolled">Chỉ học sinh đã ghi danh</option><option value="sample">Công khai (mẫu — phụ huynh xem)</option></select>
+                <select id="vmVis"><option value="enrolled">Chỉ học sinh đã ghi danh</option><option value="sample">Công khai (mẫu - phụ huynh xem)</option></select>
               </div>
               <div class="field"><label>Thứ tự</label><input type="number" id="vmOrder" value="0" /></div>
               <div class="field" style="display:flex;align-items:flex-end"><button class="btn primary block" type="submit">+ Thêm video</button></div>
@@ -101,7 +101,7 @@
             </div>
             <div class="field"><label>Mô tả (tuỳ chọn)</label><input type="text" id="dmDesc" placeholder="Ghi chú ngắn" /></div>
             <div class="field">
-              <label>Tệp (PDF, ảnh, Word, Excel… — tối đa 50MB)</label>
+              <label>Tệp (PDF, ảnh, Word, Excel… - tối đa 50MB)</label>
               <div class="drop" id="docDrop"><input type="file" id="docInput" accept=".pdf,.txt,.csv,.png,.jpg,.jpeg,.webp,.gif,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.mp3,.mp4" /><span id="docHint">Kéo-thả hoặc bấm để chọn tệp</span></div>
               <div class="file-list" id="docPreview"></div>
             </div>
@@ -176,7 +176,6 @@
 <div class="toast" id="toast"></div>
 
 <script src="assets/js/config.js"></script>
-<script src="assets/js/i18n.js"></script>
 <script src="assets/js/supabaseClient.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/admin.js"></script>

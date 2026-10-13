@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Đăng nhập — Ngọc Đạt</title>
+<title>Đăng nhập - Ngọc Đạt</title>
 <meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Patrick+Hand&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/css/tokens.css" />
 <link rel="stylesheet" href="assets/css/base.css" />
 <link rel="stylesheet" href="assets/css/components.css" />
@@ -19,35 +19,31 @@
 
   <!-- Left: brand / selling points -->
   <aside class="auth-aside">
-    <div class="a-brand">Ngọc Đạt <span style="opacity:.6">/ Lớp Toán</span></div>
+    <div class="a-brand">Lớp Toán Ngọc Đạt</div>
     <div>
-      <h2 data-vi="Khu học tập <span class='ital'>trực tuyến</span>" data-en="Your <span class='ital'>learning</span> space">Khu học tập <span class="ital">trực tuyến</span></h2>
+      <h2>Khu học tập <span class="ital">trực tuyến</span></h2>
       <ul class="pts">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="20 6 9 17 4 12"/></svg><span data-vi="Xem lại video bài giảng mọi lúc" data-en="Re-watch lecture videos anytime">Xem lại video bài giảng mọi lúc</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="20 6 9 17 4 12"/></svg><span data-vi="Tải tài liệu, đề &amp; lời giải của lớp" data-en="Download your class materials & solutions">Tải tài liệu, đề &amp; lời giải của lớp</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="20 6 9 17 4 12"/></svg><span data-vi="Kích hoạt bằng mã lớp của bạn" data-en="Activate with your class code">Kích hoạt bằng mã lớp của bạn</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="20 6 9 17 4 12"/></svg><span>Xem lại video bài giảng mọi lúc</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="20 6 9 17 4 12"/></svg><span>Tải tài liệu, đề &amp; lời giải của lớp</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="20 6 9 17 4 12"/></svg><span>Kích hoạt bằng mã lớp của bạn</span></li>
       </ul>
     </div>
-    <div class="foot-note" data-vi="Phụ huynh có thể xem bài giảng mẫu tại trang chủ — không cần đăng nhập." data-en="Parents can preview sample lectures on the home page — no login needed.">Phụ huynh có thể xem bài giảng mẫu tại trang chủ — không cần đăng nhập.</div>
+    <div class="foot-note">Phụ huynh có thể xem bài giảng mẫu tại trang chủ - không cần đăng nhập.</div>
   </aside>
 
   <!-- Right: forms -->
   <main class="auth-main">
     <div class="auth-card">
       <div class="top">
-        <div class="lang-toggle" role="group" aria-label="Language">
-          <button data-lang="vi" class="active">VI</button>
-          <button data-lang="en">EN</button>
-        </div>
-        <a class="home" href="index.html" data-vi="← Trang chủ" data-en="← Home">← Trang chủ</a>
+        <a class="home" href="index.html">← Trang chủ</a>
       </div>
 
-      <h1 data-vi="Chào mừng trở lại" data-en="Welcome back">Chào mừng trở lại</h1>
-      <p class="sub" data-vi="Đăng nhập để vào khu học tập, hoặc tạo tài khoản mới." data-en="Sign in to your learning space, or create an account.">Đăng nhập để vào khu học tập, hoặc tạo tài khoản mới.</p>
+      <h1>Chào mừng trở lại</h1>
+      <p class="sub">Đăng nhập để vào khu học tập, hoặc tạo tài khoản mới.</p>
 
       <div class="auth-tabs">
-        <button id="tabLogin" class="active" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</button>
-        <button id="tabSignup" data-vi="Đăng ký" data-en="Sign up">Đăng ký</button>
+        <button id="tabLogin" class="active">Đăng nhập</button>
+        <button id="tabSignup">Đăng ký</button>
       </div>
 
       <div id="msg" class="msg" role="alert"></div>
@@ -56,17 +52,17 @@
       <section class="auth-pane active" id="paneLogin">
         <form id="loginForm" novalidate>
           <div class="field">
-            <label for="liEmail" data-vi="Email" data-en="Email">Email</label>
+            <label for="liEmail">Email</label>
             <input type="email" id="liEmail" autocomplete="email" required placeholder="you@example.com" />
           </div>
           <div class="field">
-            <label for="liPass" data-vi="Mật khẩu" data-en="Password">Mật khẩu</label>
+            <label for="liPass">Mật khẩu</label>
             <input type="password" id="liPass" autocomplete="current-password" required placeholder="••••••••" />
           </div>
           <div class="turnstile-box" data-turnstile></div>
-          <button type="submit" class="btn primary block" id="liBtn" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</button>
+          <button type="submit" class="btn primary block" id="liBtn">Đăng nhập</button>
           <p style="margin-top:1rem;text-align:center">
-            <a href="#" class="text-link" id="forgotLink" data-vi="Quên mật khẩu?" data-en="Forgot password?">Quên mật khẩu?</a>
+            <a href="#" class="text-link" id="forgotLink">Quên mật khẩu?</a>
           </p>
         </form>
       </section>
@@ -74,15 +70,15 @@
       <!-- FORGOT PASSWORD -->
       <section class="auth-pane" id="paneForgot">
         <form id="forgotForm" novalidate>
-          <p class="sub" data-vi="Nhập email tài khoản. Bạn sẽ nhận được link để đặt mật khẩu mới." data-en="Enter your account email. We'll send you a link to set a new password.">Nhập email tài khoản. Bạn sẽ nhận được link để đặt mật khẩu mới.</p>
+          <p class="sub">Nhập email tài khoản. Bạn sẽ nhận được link để đặt mật khẩu mới.</p>
           <div class="field">
-            <label for="fgEmail" data-vi="Email" data-en="Email">Email</label>
+            <label for="fgEmail">Email</label>
             <input type="email" id="fgEmail" autocomplete="email" required placeholder="you@example.com" />
           </div>
           <div class="turnstile-box" data-turnstile></div>
-          <button type="submit" class="btn primary block" id="fgBtn" data-vi="Gửi link đặt lại" data-en="Send reset link">Gửi link đặt lại</button>
+          <button type="submit" class="btn primary block" id="fgBtn">Gửi link đặt lại</button>
           <p style="margin-top:1rem;text-align:center">
-            <a href="#" class="text-link" id="backToLogin" data-vi="← Quay lại đăng nhập" data-en="← Back to sign in">← Quay lại đăng nhập</a>
+            <a href="#" class="text-link" id="backToLogin">← Quay lại đăng nhập</a>
           </p>
         </form>
       </section>
@@ -90,16 +86,16 @@
       <!-- SET NEW PASSWORD (after clicking the email link) -->
       <section class="auth-pane" id="paneReset">
         <form id="resetForm" novalidate>
-          <p class="sub" data-vi="Đặt mật khẩu mới cho tài khoản của bạn." data-en="Choose a new password for your account.">Đặt mật khẩu mới cho tài khoản của bạn.</p>
+          <p class="sub">Đặt mật khẩu mới cho tài khoản của bạn.</p>
           <div class="field">
-            <label for="rsPass" data-vi="Mật khẩu mới" data-en="New password">Mật khẩu mới</label>
+            <label for="rsPass">Mật khẩu mới</label>
             <input type="password" id="rsPass" autocomplete="new-password" required minlength="8" placeholder="••••••••" />
           </div>
           <div class="field">
-            <label for="rsPass2" data-vi="Nhập lại mật khẩu" data-en="Confirm password">Nhập lại mật khẩu</label>
+            <label for="rsPass2">Nhập lại mật khẩu</label>
             <input type="password" id="rsPass2" autocomplete="new-password" required minlength="8" placeholder="••••••••" />
           </div>
-          <button type="submit" class="btn primary block" id="rsBtn" data-vi="Lưu mật khẩu mới" data-en="Save new password">Lưu mật khẩu mới</button>
+          <button type="submit" class="btn primary block" id="rsBtn">Lưu mật khẩu mới</button>
         </form>
       </section>
 
@@ -107,25 +103,25 @@
       <section class="auth-pane" id="paneSignup">
         <form id="signupForm" novalidate>
           <div class="field">
-            <label for="suName" data-vi="Họ và tên" data-en="Full name">Họ và tên</label>
-            <input type="text" id="suName" autocomplete="name" required data-vi-ph="Nguyễn Văn A" data-en-ph="Your full name" placeholder="Nguyễn Văn A" />
+            <label for="suName">Họ và tên</label>
+            <input type="text" id="suName" autocomplete="name" required placeholder="Nguyễn Văn A" />
           </div>
           <div class="field">
-            <label for="suEmail" data-vi="Email" data-en="Email">Email</label>
+            <label for="suEmail">Email</label>
             <input type="email" id="suEmail" autocomplete="email" required placeholder="you@example.com" />
           </div>
           <div class="field">
-            <label for="suPhone" data-vi="Số điện thoại (tuỳ chọn)" data-en="Phone (optional)">Số điện thoại (tuỳ chọn)</label>
+            <label for="suPhone">Số điện thoại (tuỳ chọn)</label>
             <input type="tel" id="suPhone" autocomplete="tel" placeholder="09xx xxx xxx" />
           </div>
           <div class="field">
-            <label for="suPass" data-vi="Mật khẩu" data-en="Password">Mật khẩu</label>
+            <label for="suPass">Mật khẩu</label>
             <input type="password" id="suPass" autocomplete="new-password" required minlength="8" placeholder="••••••••" />
-            <div class="hint" data-vi="Tối thiểu 8 ký tự." data-en="At least 8 characters.">Tối thiểu 8 ký tự.</div>
+            <div class="hint">Tối thiểu 8 ký tự.</div>
           </div>
           <div class="turnstile-box" data-turnstile></div>
-          <button type="submit" class="btn primary block" id="suBtn" data-vi="Tạo tài khoản" data-en="Create account">Tạo tài khoản</button>
-          <p class="hint" style="margin-top:.9rem" data-vi="Sau khi đăng ký, kiểm tra email để xác nhận tài khoản." data-en="After signing up, check your email to confirm your account.">Sau khi đăng ký, kiểm tra email để xác nhận tài khoản.</p>
+          <button type="submit" class="btn primary block" id="suBtn">Tạo tài khoản</button>
+          <p class="hint" style="margin-top:.9rem">Sau khi đăng ký, kiểm tra email để xác nhận tài khoản.</p>
         </form>
       </section>
     </div>
@@ -133,7 +129,6 @@
 </div>
 
 <script src="assets/js/config.js"></script>
-<script src="assets/js/i18n.js"></script>
 <script src="assets/js/supabaseClient.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/login.js"></script>

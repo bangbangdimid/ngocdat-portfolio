@@ -45,17 +45,34 @@ Gửi mã cho học sinh (Zalo/tin nhắn). Mã **không phân biệt hoa thư�
 Tab **Học sinh** của từng khoá: tên, SĐT, ngày ghi danh.
 **Gỡ khỏi lớp** (🗑) → học sinh mất quyền xem khoá **ngay lập tức** (dùng khi học sinh nghỉ học / hết hạn học phí). Muốn cho học lại thì phát mã mới.
 
-## 8. Đổi thông tin liên hệ trên trang chủ
-Mở `assets/js/config.js`:
+## 8. Sửa nội dung trang chủ
+Mọi chỗ có thể sửa nhanh đều nằm trong `assets/js/config.js`, sửa xong commit & push là website tự cập nhật.
+
+**Hotline / Zalo** (dùng cho mọi nút gọi, nút Zalo và nút nổi góc màn hình):
 ```js
-CONTACT_PHONE: "0912 345 678",   // để trống "" thì nút đăng ký dùng email
-CONTACT_EMAIL: "ngocdat2006@gmail.com",
+CONTACT_PHONE: "0775118240",
+ZALO_URL:      "https://zalo.me/0775118240",
 ```
-Commit & push là xong. Các nội dung chữ khác nằm trong `index.html` — mỗi đoạn có `data-vi` (tiếng Việt) và `data-en` (tiếng Anh), nhớ sửa cả hai.
+
+**Cảm nhận của học sinh**: phần này **tự ẩn** cho tới khi có ít nhất một lời cảm nhận. Dán đúng lời học sinh viết (không tự soạn thay):
+```js
+TESTIMONIALS: [
+  { name: "Đông Nghi",  badge: "HSG Toán 9 - 2025", quote: "Lời cảm nhận của Nghi..." },
+  { name: "Hải Đăng",   badge: "Ôn thi 10 chuyên",  quote: "..." },
+  { name: "Quang Khôi", badge: "",                  quote: "..." },
+],
+```
+
+**Tài liệu & bài giảng mẫu** có 2 nguồn:
+- *Mẫu cố định* (4 tài liệu PDF + 3 video): tệp trong `assets/samples/` và `assets/lessons/`, khai báo trong `index.html` ở phần `id="mau"`.
+- *Mẫu đăng từ trang Quản trị*: mọi video/tài liệu bạn đặt quyền xem **Công khai (mẫu)**, thuộc khoá **đã xuất bản**, sẽ tự hiện thêm vào cuối phần này. Không cần sửa code.
+
+Các đoạn chữ khác (giới thiệu, thành tích, lớp học) sửa trực tiếp trong `index.html`. Quy ước: chỉ tiếng Việt, dùng dấu gạch ngắn "-", không dùng dấu "—".
 
 ## 9. Câu hỏi thường gặp
 - **Học sinh báo "Email chưa được xác nhận"** → bảo em kiểm tra Spam; nếu email không tới, xem SETUP bước 6 (SMTP).
 - **Học sinh báo "Mã không đúng"** → kiểm tra mã còn *Đang bật*, còn lượt (*Đã dùng x/y*) và chưa hết hạn.
 - **Video không phát** → video trên YouTube phải ở chế độ *Unlisted* và cho phép nhúng.
+- **Thêm video bài giảng mẫu tự quay (mp4) vào trang chủ** → nén về 720p (khổ dọc 9:16), đặt vào `assets/lessons/` kèm ảnh poster `.jpg` cùng tên, rồi thêm một khối `lesson-card` trong `index.html`. Video quá 20MB nên đưa lên YouTube và đăng qua trang Quản trị.
 - **Không ai đăng nhập được** → Supabase có thể đang bị tạm dừng: vào dashboard bấm *Resume*, rồi kiểm tra GitHub Action keep-alive (SETUP bước 8).
 - **Muốn thêm admin khác** → chạy câu SQL ở SETUP bước 4 với email của người đó.

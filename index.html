@@ -3,371 +3,463 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ngọc Đạt — Toán học & Tài chính</title>
-<meta name="description" content="Lớp Toán của Ngọc Đạt — luyện thi HSG Toán, ôn thi vào lớp 10 chuyên. Huy chương Olympic Toán Sinh viên, cựu học sinh chuyên Tin PTNK, sinh viên FTU HCMC." />
+<title>Lớp Toán Ngọc Đạt - Đào tạo Toán học chuyên sâu</title>
+<meta name="description" content="Lớp Toán Ngọc Đạt: luyện thi HSG Toán THCS lớp 6-9, Toán cơ bản lớp 6-12, ôn thi vào lớp 10 chuyên và các kỳ thi Toán quốc tế AMC, AMO, IKMC. Hotline/Zalo 0775 118 240." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Lớp Toán Ngọc Đạt - Đào tạo Toán học chuyên sâu" />
+<meta property="og:description" content="Luyện thi HSG THCS, ôn thi lớp 10 chuyên, Toán quốc tế AMC, AMO, IKMC. Hotline/Zalo 0775 118 240." />
+<meta property="og:image" content="https://ngocdat.vercel.app/assets/img/portrait.jpg" />
+<meta name="theme-color" content="#7fa9de" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Patrick+Hand&display=swap" rel="stylesheet" />
+<link rel="preload" as="image" href="assets/ocean/video/sky-clouds-poster.jpg" />
 <link rel="stylesheet" href="assets/css/tokens.css" />
 <link rel="stylesheet" href="assets/css/base.css" />
-<link rel="stylesheet" href="assets/css/components.css" />
 <link rel="stylesheet" href="assets/css/landing.css" />
 </head>
-<body>
+<body class="ocean-cursor">
 
-<!-- ═══════════ Nav ═══════════ -->
-<nav class="nav" id="nav">
-  <a class="brand" href="#top"><b>Ngọc&nbsp;Đạt</b><span class="tld">/ FTU</span></a>
+<!-- ═════════ Điều hướng ═════════ -->
+<nav class="nav" id="nav" aria-label="Điều hướng chính">
+  <button class="nav-burger" id="navBurger" aria-label="Mở menu" aria-expanded="false" aria-controls="navLinks">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#about"    data-vi="Giới thiệu" data-en="About">Giới thiệu</a></li>
-    <li><a href="#honors"   data-vi="Thành tích" data-en="Honours">Thành tích</a></li>
-    <li><a href="#teaching" data-vi="Giảng dạy"  data-en="Teaching">Giảng dạy</a></li>
-    <li><a href="#courses"  data-vi="Khoá học"   data-en="Courses">Khoá học</a></li>
-    <li><a href="#work"     data-vi="Khu học tập" data-en="Classroom">Khu học tập</a></li>
-    <li><a href="#contact"  data-vi="Liên hệ"    data-en="Contact">Liên hệ</a></li>
+    <li><a href="#giao-vien">Giáo viên</a></li>
+    <li><a href="#chuong-trinh">Chương trình</a></li>
+    <li><a href="#lop-hoc">Lớp học</a></li>
+    <li><a href="#mau">Tài liệu mẫu</a></li>
+    <li id="navQuotes" hidden><a href="#cam-nhan">Cảm nhận</a></li>
+    <li><a href="#lien-he">Liên hệ</a></li>
   </ul>
-  <div class="nav-right">
-    <a class="btn primary" href="login.html" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</a>
-    <div class="lang-toggle" role="group" aria-label="Language">
-      <button data-lang="vi" class="active">VI</button>
-      <button data-lang="en">EN</button>
-    </div>
-    <button class="nav-burger" id="navBurger" aria-label="Menu">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    </button>
-  </div>
+  <a class="btn primary" href="login.html">Đăng nhập</a>
 </nav>
 
-<!-- ═══════════ Hero ═══════════ -->
-<header class="hero" id="top">
-  <div class="wrap">
-    <div class="eyebrow hero-eyebrow reveal" data-vi="Sinh viên Tài chính–Ngân hàng · FTU HCMC" data-en="Finance &amp; Banking student · FTU HCMC">Sinh viên Tài chính–Ngân hàng · FTU HCMC</div>
-    <h1 class="reveal d1"
-        data-vi="Tư duy <span class='ital'>Toán học</span>,<br/>ứng dụng vào <span class='ital'>Tài chính</span>."
-        data-en="A <span class='ital'>mathematical</span> mind,<br/>applied to <span class='ital'>finance</span>.">
-      Tư duy <span class="ital">Toán học</span>,<br/>ứng dụng vào <span class="ital">Tài chính</span>.
-    </h1>
-    <p class="hero-sub reveal d2"
-       data-vi="Mình là Ngọc Đạt — dân chuyên Tin, huy chương Olympic Toán, hiện học Tài chính–Ngân hàng. Trang này lưu thành tích, tài liệu và các lớp Toán mình đang dạy."
-       data-en="I'm Ngọc Đạt — a competitive-maths background now studying Finance &amp; Banking. This page keeps my honours, teaching materials, and the maths classes I run.">
-      Mình là Ngọc Đạt — dân chuyên Tin, huy chương Olympic Toán, hiện học Tài chính–Ngân hàng. Trang này lưu thành tích, tài liệu và các lớp Toán mình đang dạy.
-    </p>
-    <div class="hero-actions reveal d3">
-      <a class="btn primary" href="#honors" data-vi="Xem thành tích" data-en="View honours">Xem thành tích</a>
-      <a class="btn ghost" href="#courses" data-vi="Khoá học &amp; học thử" data-en="Courses &amp; free samples">Khoá học &amp; học thử</a>
-    </div>
+<main id="top">
+<!-- ═════════ 1. Hero ═════════ -->
+<header class="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/ocean/video/sky-clouds-poster.jpg" aria-hidden="true">
+    <source src="assets/ocean/video/sky-clouds-loop.mp4" type="video/mp4" />
+  </video>
+  <img class="corner tl" src="assets/ocean/svg/corner-wave.svg" alt="" />
+  <img class="corner br" src="assets/ocean/svg/corner-wave.svg" alt="" />
+  <img class="deco float" data-parallax="-0.25" src="assets/ocean/svg/seagulls.svg" alt="" style="width:clamp(90px,11vw,170px); left:10%; top:20%" />
+  <img class="deco float" data-parallax="0.15" src="assets/ocean/svg/paper-boat.svg" alt="" style="width:clamp(70px,8vw,120px); right:11%; top:62%; animation-delay:-1.4s" />
+  <img class="deco" data-parallax="-0.4" src="assets/ocean/svg/sparkles.svg" alt="" style="width:64px; right:20%; top:18%" />
 
-    <div class="hero-stats reveal d4">
-      <div class="stat">
-        <span class="n">2<sup>×</sup></span>
-        <span class="l" data-vi="HC Olympic Toán Sinh viên" data-en="Student Maths Olympiad medals">HC Olympic Toán Sinh viên</span>
-      </div>
-      <div class="stat">
-        <span class="n">4<sup>×</sup></span>
-        <span class="l" data-vi="HCV IKMC · AMC · AMO" data-en="Golds — IKMC · AMC · AMO">HCV IKMC · AMC · AMO</span>
-      </div>
-      <div class="stat">
-        <span class="n serif">PTNK</span>
-        <span class="l" data-vi="Chuyên Tin, PT Năng khiếu" data-en="Gifted CS track, high school">Chuyên Tin, PT Năng khiếu</span>
-      </div>
-      <div class="stat">
-        <span class="n serif">FTU</span>
-        <span class="l" data-vi="Tài chính–Ngân hàng, CS HCM" data-en="Finance &amp; Banking, HCMC">Tài chính–Ngân hàng, CS HCM</span>
-      </div>
+  <div class="hero-inner">
+    <p class="kicker rise">Lớp Toán Ngọc Đạt</p>
+    <h1 class="rise d1">Đào tạo Toán học<br /><em>chuyên sâu</em></h1>
+    <p class="hero-sub rise d2">Luyện thi HSG THCS, ôn thi vào lớp 10 chuyên và các kỳ thi Toán quốc tế. Học để hiểu bản chất, không học thuộc dạng.</p>
+    <div class="hero-actions rise d3">
+      <a class="btn zalo" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.6 1.4 5 3.7 6.5L5 21l3.6-1.8c1.1.3 2.2.4 3.4.4 5.5 0 10-3.8 10-8.6S17.5 3 12 3z"/></svg>
+        Nhắn Zalo tư vấn
+      </a>
+      <a class="btn sand" data-call href="tel:0775118240">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
+        Gọi 0775 118 240
+      </a>
+      <a class="btn" href="#lop-hoc">Xem các lớp học</a>
+    </div>
+    <div class="hero-badges rise d4">
+      <span class="badge-pill"><img src="assets/ocean/svg/starfish.svg" alt="" />HC Bạc Olympic Toán Sinh viên 2026</span>
+      <span class="badge-pill"><img src="assets/ocean/svg/shell-scallop.svg" alt="" />Cựu học sinh chuyên Tin PTNK</span>
+      <span class="badge-pill"><img src="assets/ocean/svg/anchor.svg" alt="" />Sinh viên Đại học Ngoại thương</span>
     </div>
   </div>
+  <img class="scroll-hint float" src="assets/ocean/svg/scroll-hint.svg" alt="" />
 </header>
 
-<!-- ═══════════ About ═══════════ -->
-<section class="section" id="about">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="titles">
-        <div class="eyebrow reveal">§01 — <span data-vi="Giới thiệu" data-en="About">Giới thiệu</span></div>
-        <h2 class="reveal d1"
-            data-vi="Học Toán để <span class='ital'>hiểu</span>,<br/>dạy Toán để <span class='ital'>chia sẻ</span>."
-            data-en="Learn maths to <span class='ital'>understand</span>,<br/>teach it to <span class='ital'>share</span>.">
-          Học Toán để <span class="ital">hiểu</span>,<br/>dạy Toán để <span class="ital">chia sẻ</span>.
-        </h2>
+<!-- ═════════ Lặn xuống biển (scroll dive) ═════════ -->
+<section class="dive" id="dive" aria-label="Phương pháp học">
+  <div class="dive-stage">
+    <canvas id="diveCanvas" width="1280" height="720" aria-hidden="true"></canvas>
+    <img class="dive-fallback" src="assets/ocean/video/dive-key-090.jpg" alt="" loading="lazy" />
+    <div class="dive-captions">
+      <div class="dive-caption" data-step="0">
+        <span class="n">01 · Nền tảng</span>
+        <h3>Hiểu tận gốc khái niệm</h3>
+        <p>Mỗi chuyên đề bắt đầu từ lý thuyết cốt lõi và ví dụ có lời giải chi tiết từng bước.</p>
+      </div>
+      <div class="dive-caption" data-step="1">
+        <span class="n">02 · Tư duy</span>
+        <h3>Rèn kỹ thuật, không học mẹo</h3>
+        <p>Phân dạng rõ ràng, luyện cách suy nghĩ để tự xử lý được cả những bài toán lạ.</p>
+      </div>
+      <div class="dive-caption" data-step="2">
+        <span class="n">03 · Bứt phá</span>
+        <h3>Sẵn sàng cho kỳ thi</h3>
+        <p>Luyện đề sát cấu trúc thi HSG, tuyển sinh 10 chuyên và các kỳ thi Toán quốc tế.</p>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="about-grid">
-      <div class="about-body">
-        <p class="lead reveal"
-           data-vi="Mình lớn lên cùng những kỳ thi Toán — từ HSG cấp thành phố, IKMC, AMC/AMO cho tới Olympic Toán Sinh viên. Chính sự chặt chẽ của Toán học đã dẫn mình đến Tài chính định lượng."
-           data-en="I grew up through maths competitions — city-level olympiads, IKMC, AMC/AMO, and the national Student Maths Olympiad. The rigour of maths is what drew me toward quantitative finance.">
-          Mình lớn lên cùng những kỳ thi Toán — từ HSG cấp thành phố, IKMC, AMC/AMO cho tới Olympic Toán Sinh viên. Chính sự chặt chẽ của Toán học đã dẫn mình đến Tài chính định lượng.
-        </p>
-        <p class="reveal d1"
-           data-vi="Cấp 3 mình học chuyên Tin tại trường Phổ thông Năng khiếu, nơi rèn cho mình tư duy thuật toán và thói quen giải quyết vấn đề từ gốc. Hiện mình là sinh viên năm hai ngành Tài chính–Ngân hàng, Đại học Ngoại thương cơ sở TP.HCM."
-           data-en="In high school I studied Computer Science at the Gifted High School (PTNK), which shaped my algorithmic thinking and first-principles habits. I'm now a second-year Finance &amp; Banking student at Foreign Trade University, HCMC campus.">
-          Cấp 3 mình học chuyên Tin tại trường Phổ thông Năng khiếu, nơi rèn cho mình tư duy thuật toán và thói quen giải quyết vấn đề từ gốc. Hiện mình là sinh viên năm hai ngành Tài chính–Ngân hàng, Đại học Ngoại thương cơ sở TP.HCM.
-        </p>
-        <p class="reveal d2"
-           data-vi="Song song việc học, mình dạy Toán cho học sinh ôn thi HSG và thi vào lớp 10 chuyên. Với mình, dạy tốt là giúp học sinh hiểu tại sao một lời giải hoạt động — chứ không chỉ học thuộc."
-           data-en="Alongside my studies, I tutor students preparing for maths olympiads and entrance exams to specialised high schools. To me, good teaching means helping students see why a solution works — not just memorising it.">
-          Song song việc học, mình dạy Toán cho học sinh ôn thi HSG và thi vào lớp 10 chuyên. Với mình, dạy tốt là giúp học sinh hiểu tại sao một lời giải hoạt động — chứ không chỉ học thuộc.
-        </p>
-        <div class="about-sign reveal d3">— Ngọc Đạt</div>
+<!-- ═════════ 2. Giáo viên & thành tích ═════════ -->
+<section class="sec tone-1" id="giao-vien">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Giáo viên giảng dạy</span>
+      <h2 class="reveal d1">Thầy <em>Ngọc Đạt</em></h2>
+    </div>
+
+    <div class="teacher">
+      <div class="portrait-wrap reveal">
+        <div class="portrait-blob" aria-hidden="true"></div>
+        <div class="portrait"><img src="assets/img/portrait.jpg" alt="Thầy Ngọc Đạt" width="720" height="900" /></div>
+        <span class="name-tag">Thầy Ngọc Đạt</span>
+        <img class="deco whale float" src="assets/ocean/svg/whale-mascot.svg" alt="" />
+        <img class="deco bubbles float" src="assets/ocean/svg/bubbles-cluster.svg" alt="" style="animation-delay:-1.2s" />
       </div>
 
-      <aside class="about-aside reveal d2">
-        <div class="aside-head">
-          <span data-vi="Hồ sơ nhanh" data-en="Quick facts">Hồ sơ nhanh</span>
-          <span>§</span>
+      <div>
+        <div class="info-block reveal d1">
+          <h3>Thông tin giáo viên</h3>
+          <ul class="checks">
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Sinh viên ngành <b>Tài chính - Ngân hàng</b>, Trường Đại học Ngoại thương, cơ sở TP. Hồ Chí Minh.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Cựu học sinh <b>chuyên Tin, Trường Phổ thông Năng khiếu</b> - ĐHQG TP. Hồ Chí Minh.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Học sinh từng kèm đạt <b>Giải Nhất HSG Toán lớp 9</b> và <b>đỗ lớp chuyên Tin PTNK</b>.</span></li>
+          </ul>
         </div>
-        <div class="fact-row"><span class="k" data-vi="Đại học" data-en="University">Đại học</span><span class="v">ĐH Ngoại thương (FTU) — CS HCM</span></div>
-        <div class="fact-row"><span class="k" data-vi="Ngành" data-en="Major">Ngành</span><span class="v" data-vi="Tài chính – Ngân hàng" data-en="Finance &amp; Banking">Tài chính – Ngân hàng</span></div>
-        <div class="fact-row"><span class="k" data-vi="Năm học" data-en="Year">Năm học</span><span class="v" data-vi="Sinh viên năm 2" data-en="Second year">Sinh viên năm 2</span></div>
-        <div class="fact-row"><span class="k" data-vi="Cấp 3" data-en="High school">Cấp 3</span><span class="v" data-vi="Chuyên Tin — PT Năng khiếu" data-en="CS — Gifted High School (PTNK)">Chuyên Tin — PT Năng khiếu</span></div>
-        <div class="fact-row"><span class="k" data-vi="Thế mạnh" data-en="Focus">Thế mạnh</span><span class="v" data-vi="Toán · Định lượng · Giảng dạy" data-en="Maths · Quant · Teaching">Toán · Định lượng · Giảng dạy</span></div>
-      </aside>
-    </div>
-  </div>
-</section>
 
-<!-- ═══════════ Honours ═══════════ -->
-<section class="section" id="honors">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="titles">
-        <div class="eyebrow reveal">§02 — <span data-vi="Thành tích" data-en="Honours">Thành tích</span></div>
-        <h2 class="reveal d1"
-            data-vi="Một chặng đường <span class='ital'>tranh tài</span> Toán học."
-            data-en="A record of <span class='ital'>competing</span> in maths.">
-          Một chặng đường <span class="ital">tranh tài</span> Toán học.
-        </h2>
-      </div>
-      <p class="lede reveal d2" data-vi="Các giải thưởng và huy chương từ bậc THCS đến đại học, sắp theo mốc thời gian." data-en="Awards and medals from lower-secondary school through university, in chronological order.">Các giải thưởng và huy chương từ bậc THCS đến đại học, sắp theo mốc thời gian.</p>
-    </div>
-
-    <div class="ledger">
-      <div class="ledger-row reveal">
-        <span class="yr">2026</span>
-        <span class="title" data-vi="Olympic Toán Sinh viên toàn quốc<span class='sub'>Môn Đại số</span>" data-en="National Student Maths Olympiad<span class='sub'>Algebra</span>">Olympic Toán Sinh viên toàn quốc<span class="sub">Môn Đại số</span></span>
-        <span class="medal silver" data-vi="Huy chương Bạc" data-en="Silver medal">Huy chương Bạc</span>
-      </div>
-      <div class="ledger-row reveal">
-        <span class="yr">2025</span>
-        <span class="title" data-vi="Olympic Toán Sinh viên toàn quốc<span class='sub'>Bảng đại số</span>" data-en="National Student Maths Olympiad<span class='sub'>Algebra section</span>">Olympic Toán Sinh viên toàn quốc<span class="sub">Bảng đại số</span></span>
-        <span class="medal bronze" data-vi="Huy chương Đồng" data-en="Bronze medal">Huy chương Đồng</span>
-      </div>
-      <div class="ledger-row reveal">
-        <span class="yr">2023–24</span>
-        <span class="title" data-vi="IKMC — International Kangaroo Math<span class='sub'>Lớp 11 &amp; 12</span>" data-en="IKMC — International Kangaroo Math<span class='sub'>Grades 11 &amp; 12</span>">IKMC — International Kangaroo Math<span class="sub">Lớp 11 &amp; 12</span></span>
-        <span class="medal gold" data-vi="2× Huy chương Vàng" data-en="2× Gold">2× Huy chương Vàng</span>
-      </div>
-      <div class="ledger-row reveal">
-        <span class="yr">2024</span>
-        <span class="title" data-vi="AMC — American Mathematics Competitions<span class='sub'>Lớp 12</span>" data-en="AMC — American Mathematics Competitions<span class='sub'>Grade 12</span>">AMC — American Mathematics Competitions<span class="sub">Lớp 12</span></span>
-        <span class="medal gold" data-vi="Huy chương Vàng" data-en="Gold">Huy chương Vàng</span>
-      </div>
-      <div class="ledger-row reveal">
-        <span class="yr">2024</span>
-        <span class="title" data-vi="AMO — American Mathematical Olympiad<span class='sub'>Lớp 12</span>" data-en="AMO — American Mathematical Olympiad<span class='sub'>Grade 12</span>">AMO — American Mathematical Olympiad<span class="sub">Lớp 12</span></span>
-        <span class="medal gold" data-vi="Huy chương Vàng" data-en="Gold">Huy chương Vàng</span>
-      </div>
-      <div class="ledger-row reveal">
-        <span class="yr">2024</span>
-        <span class="title" data-vi="HSG Toán cấp Thành phố<span class='sub'>Lớp 12</span>" data-en="City Maths Olympiad<span class='sub'>Grade 12</span>">HSG Toán cấp Thành phố<span class="sub">Lớp 12</span></span>
-        <span class="medal bronze" data-vi="Giải Ba" data-en="Third prize">Giải Ba</span>
-      </div>
-      <div class="ledger-row reveal">
-        <span class="yr">2021</span>
-        <span class="title" data-vi="HSG Toán cấp Thành phố<span class='sub'>Lớp 9</span>" data-en="City Maths Olympiad<span class='sub'>Grade 9</span>">HSG Toán cấp Thành phố<span class="sub">Lớp 9</span></span>
-        <span class="medal first" data-vi="Giải Nhất" data-en="First prize">Giải Nhất</span>
-      </div>
-      <div class="ledger-row reveal">
-        <span class="yr">2021</span>
-        <span class="title" data-vi="Giải toán trên Máy tính cầm tay — cấp TP<span class='sub'>Lớp 9</span>" data-en="Calculator Maths — city level<span class='sub'>Grade 9</span>">Giải toán trên Máy tính cầm tay — cấp TP<span class="sub">Lớp 9</span></span>
-        <span class="medal first" data-vi="Giải Nhất" data-en="First prize">Giải Nhất</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ Teaching ═══════════ -->
-<section class="section" id="teaching">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="titles">
-        <div class="eyebrow reveal">§03 — <span data-vi="Giảng dạy" data-en="Teaching">Giảng dạy</span></div>
-        <h2 class="reveal d1"
-            data-vi="Đồng hành cùng <span class='ital'>học sinh giỏi</span> Toán."
-            data-en="Coaching students toward <span class='ital'>maths excellence</span>.">
-          Đồng hành cùng <span class="ital">học sinh giỏi</span> Toán.
-        </h2>
-      </div>
-      <p class="lede reveal d2" data-vi="Mình nhận kèm Toán theo lộ trình cá nhân hoá, tập trung vào tư duy và nền tảng vững." data-en="I tutor maths on a personalised path, focused on reasoning and a solid foundation.">Mình nhận kèm Toán theo lộ trình cá nhân hoá, tập trung vào tư duy và nền tảng vững.</p>
-    </div>
-
-    <div class="teach-grid">
-      <div class="teach-card reveal">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
-        <h3 data-vi="Luyện thi HSG Toán" data-en="Maths olympiad prep">Luyện thi HSG Toán</h3>
-        <p data-vi="Ôn HSG Toán lớp 6–12: đại số, số học, tổ hợp, hình học. Phân dạng, kỹ thuật và luyện đề." data-en="Olympiad training for grades 6–12: algebra, number theory, combinatorics, geometry — by topic, technique, and past papers.">Ôn HSG Toán lớp 6–12: đại số, số học, tổ hợp, hình học. Phân dạng, kỹ thuật và luyện đề.</p>
-      </div>
-      <div class="teach-card reveal d1">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
-        <h3 data-vi="Ôn thi vào lớp 10 chuyên" data-en="Specialised grade-10 entrance">Ôn thi vào lớp 10 chuyên</h3>
-        <p data-vi="Luyện thi vào các lớp chuyên Toán / chuyên Tin (PTNK và các trường chuyên), sát đề và cấu trúc thi." data-en="Entrance prep for specialised Maths / CS classes (PTNK and other selective schools), matched to the real exam format.">Luyện thi vào các lớp chuyên Toán / chuyên Tin (PTNK và các trường chuyên), sát đề và cấu trúc thi.</p>
-      </div>
-      <div class="teach-card reveal d2">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        <h3 data-vi="Toán tư duy & định lượng" data-en="Reasoning &amp; quant maths">Toán tư duy &amp; định lượng</h3>
-        <p data-vi="Xây nền tảng tư duy logic, giải quyết vấn đề và Toán ứng dụng — hữu ích cho cả học thuật lẫn tài chính." data-en="Building logical reasoning, problem-solving, and applied maths — useful for academics and finance alike.">Xây nền tảng tư duy logic, giải quyết vấn đề và Toán ứng dụng — hữu ích cho cả học thuật lẫn tài chính.</p>
-      </div>
-    </div>
-
-    <div class="teach-proof reveal d1">
-      <p class="quote"
-         data-vi="“Học sinh mình từng kèm đã đạt <span class='ital'>Giải Nhất HSG Toán lớp 9</span> và <span class='ital'>đỗ chuyên Tin PT Năng khiếu</span>.”"
-         data-en="“Students I've coached have won <span class='ital'>First Prize in the Grade-9 Maths Olympiad</span> and <span class='ital'>passed into PTNK's CS track</span>.”">
-        “Học sinh mình từng kèm đã đạt <span class="ital">Giải Nhất HSG Toán lớp 9</span> và <span class="ital">đỗ chuyên Tin PT Năng khiếu</span>.”
-      </p>
-      <a class="btn primary" href="#contact" data-vi="Đăng ký học" data-en="Book a class">Đăng ký học</a>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ Khoá học & học thử (dynamic, public) ═══════════ -->
-<section class="section" id="courses">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="titles">
-        <div class="eyebrow reveal">§04 — <span data-vi="Khoá học" data-en="Courses">Khoá học</span></div>
-        <h2 class="reveal d1"
-            data-vi="Các khoá đang mở &amp; <span class='ital'>học thử</span>."
-            data-en="Open courses &amp; <span class='ital'>free samples</span>.">
-          Các khoá đang mở &amp; <span class="ital">học thử</span>.
-        </h2>
-      </div>
-      <p class="lede reveal d2" data-vi="Phụ huynh và học sinh có thể xem trước một số bài giảng mẫu — không cần tài khoản." data-en="Parents and students can preview some sample lessons — no account needed.">Phụ huynh và học sinh có thể xem trước một số bài giảng mẫu — không cần tài khoản.</p>
-    </div>
-
-    <div id="coursesBlock" style="display:none">
-      <div class="sub-head"><h3 data-vi="Khoá học đang mở" data-en="Open courses">Khoá học đang mở</h3></div>
-      <div class="pub-courses" id="pubCourses"></div>
-    </div>
-
-    <div id="samplesBlock" class="block-gap" style="display:none">
-      <div class="sub-head">
-        <h3 data-vi="Bài giảng mẫu" data-en="Sample lessons">Bài giảng mẫu</h3>
-        <span class="muted" data-vi="Miễn phí · không cần đăng nhập" data-en="Free · no sign-in">Miễn phí · không cần đăng nhập</span>
-      </div>
-      <div class="samples" id="samplesGrid"></div>
-    </div>
-
-    <p class="landing-note" id="catalogueEmpty" style="display:none" data-vi="Danh sách khoá học và bài giảng mẫu đang được cập nhật. Liên hệ để được tư vấn lớp phù hợp." data-en="Courses and sample lessons are being updated. Get in touch to find the right class.">Danh sách khoá học và bài giảng mẫu đang được cập nhật. Liên hệ để được tư vấn lớp phù hợp.</p>
-  </div>
-</section>
-
-<!-- ═══════════ Khu học tập ═══════════ -->
-<section class="section" id="work">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="titles">
-        <div class="eyebrow reveal">§05 — <span data-vi="Khu học tập" data-en="Classroom">Khu học tập</span></div>
-        <h2 class="reveal d1"
-            data-vi="Lớp học <span class='ital'>trực tuyến</span> của mình."
-            data-en="My <span class='ital'>online</span> classroom.">
-          Lớp học <span class="ital">trực tuyến</span> của mình.
-        </h2>
-      </div>
-      <p class="lede reveal d2" data-vi="Học sinh của lớp đăng nhập để xem lại video bài giảng và tải tài liệu, đề, lời giải — mọi lúc, mọi nơi." data-en="Enrolled students sign in to re-watch lecture videos and download materials, problem sets and solutions — anytime.">Học sinh của lớp đăng nhập để xem lại video bài giảng và tải tài liệu, đề, lời giải — mọi lúc, mọi nơi.</p>
-    </div>
-
-    <div class="teach-grid">
-      <div class="teach-card reveal">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M11 8.5l3.5 2-3.5 2z" fill="currentColor"/></svg>
-        <h3 data-vi="Đã là học sinh của lớp?" data-en="Already enrolled?">Đã là học sinh của lớp?</h3>
-        <p data-vi="Đăng nhập bằng tài khoản của bạn để vào kho video &amp; tài liệu của khoá đã kích hoạt." data-en="Sign in with your account to open the video & material library of your activated course.">Đăng nhập bằng tài khoản của bạn để vào kho video &amp; tài liệu của khoá đã kích hoạt.</p>
-        <a class="btn primary" href="login.html" style="margin-top:1rem" data-vi="Vào khu học tập" data-en="Enter classroom">Vào khu học tập</a>
-      </div>
-      <div class="teach-card reveal d1">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.1 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
-        <h3 data-vi="Muốn đăng ký học?" data-en="Want to enrol?">Muốn đăng ký học?</h3>
-        <p data-vi="Liên hệ trực tiếp để được tư vấn lộ trình và nhận mã kích hoạt lớp học." data-en="Contact me directly for guidance on the learning path and your class activation code.">Liên hệ trực tiếp để được tư vấn lộ trình và nhận mã kích hoạt lớp học.</p>
-        <a class="btn ghost" data-contact href="#contact" style="margin-top:1rem" data-vi="Liên hệ đăng ký" data-en="Contact to enrol">Liên hệ đăng ký</a>
-      </div>
-      <div class="teach-card reveal d2">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
-        <h3 data-vi="Phụ huynh muốn xem thử?" data-en="Parents — want a preview?">Phụ huynh muốn xem thử?</h3>
-        <p data-vi="Một vài bài giảng mẫu được mở công khai để phụ huynh tham khảo chất lượng lớp học — không cần tài khoản." data-en="A few sample lectures are openly available so parents can judge the quality of the class — no account needed.">Một vài bài giảng mẫu được mở công khai để phụ huynh tham khảo chất lượng lớp học — không cần tài khoản.</p>
-        <a class="btn" href="#courses" style="margin-top:1rem" data-vi="Xem bài giảng mẫu" data-en="View sample lessons">Xem bài giảng mẫu</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ Footer ═══════════ -->
-<footer class="foot" id="contact">
-  <div class="wrap">
-    <div class="foot-cta">
-      <div class="eyebrow reveal" data-vi="Liên hệ" data-en="Get in touch">Liên hệ</div>
-      <h2 class="reveal d1"
-          data-vi="Cùng nhau <span class='ital'>chinh phục</span> Toán."
-          data-en="Let's <span class='ital'>master</span> maths together.">
-        Cùng nhau <span class="ital">chinh phục</span> Toán.
-      </h2>
-      <a class="foot-contact reveal d2" href="mailto:ngocdat2006@gmail.com">
-        ngocdat2006@gmail.com
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-    </div>
-
-    <div class="foot-grid">
-      <div class="reveal">
-        <div class="brand-foot" style="font-family:var(--serif);font-size:1.3rem;margin-bottom:1rem;">Ngọc Đạt</div>
-        <p data-vi="Lớp Toán HSG &amp; ôn thi chuyên — kèm khu học tập trực tuyến với video bài giảng và tài liệu cho học sinh." data-en="Olympiad &amp; selective-school maths classes — with an online classroom of lecture videos and materials.">Lớp Toán HSG &amp; ôn thi chuyên — kèm khu học tập trực tuyến với video bài giảng và tài liệu cho học sinh.</p>
-      </div>
-      <div class="reveal d1">
-        <h4 data-vi="Liên hệ" data-en="Contact">Liên hệ</h4>
-        <div class="foot-contact-row">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 7l9 6 9-6"/></svg>
-          <a href="mailto:ngocdat2006@gmail.com">ngocdat2006@gmail.com</a>
+        <div class="info-block reveal d2">
+          <h3>Thành tích cá nhân</h3>
+          <ul class="checks">
+            <li><span class="tick medal-silver">2</span><span><b>Huy chương Bạc</b> Olympic Toán học Sinh viên toàn quốc 2026 - môn Đại số.</span></li>
+            <li><span class="tick medal-bronze">3</span><span><b>Huy chương Đồng</b> Olympic Toán học Sinh viên toàn quốc 2025 - môn Đại số.</span></li>
+            <li><span class="tick medal-gold">1</span><span><b>Huy chương Vàng IKMC</b> lớp 11 và lớp 12.</span></li>
+            <li><span class="tick medal-gold">1</span><span><b>Huy chương Vàng AMC</b> và <b>AMO</b> lớp 12.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Giải Ba</b> HSG Toán cấp Thành phố lớp 12.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Giải Nhất</b> HSG Toán và <b>Giải Nhất</b> Giải toán trên Máy tính cầm tay cấp Thành phố lớp 9.</span></li>
+          </ul>
         </div>
-        <div class="foot-contact-row">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span data-vi="TP. Hồ Chí Minh, Việt Nam" data-en="Ho Chi Minh City, Vietnam">TP. Hồ Chí Minh, Việt Nam</span>
+
+        <div class="info-block reveal d3">
+          <h3>Phong cách giảng dạy</h3>
+          <ul class="checks">
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Đi vào bản chất: hiểu vì sao lời giải đúng, không học mẹo máy móc.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Lộ trình theo chuyên đề, đi từ nền tảng đến nâng cao, phù hợp trình độ từng học sinh.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Tài liệu tự biên soạn, lời giải chi tiết, bám sát cấu trúc đề thi.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Video bài giảng xem lại bất cứ lúc nào trong lớp học trực tuyến.</span></li>
+          </ul>
         </div>
       </div>
-      <div class="reveal d2">
-        <h4 data-vi="Điều hướng" data-en="Navigate">Điều hướng</h4>
-        <ul>
-          <li><a href="#about"    data-vi="Giới thiệu" data-en="About">Giới thiệu</a></li>
-          <li><a href="#honors"   data-vi="Thành tích" data-en="Honours">Thành tích</a></li>
-          <li><a href="#teaching" data-vi="Giảng dạy"  data-en="Teaching">Giảng dạy</a></li>
-          <li><a href="#courses"  data-vi="Khoá học &amp; học thử" data-en="Courses &amp; samples">Khoá học &amp; học thử</a></li>
-          <li><a href="#work"     data-vi="Khu học tập" data-en="Classroom">Khu học tập</a></li>
-          <li><a href="login.html" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</a></li>
-        </ul>
-      </div>
     </div>
 
-    <div class="foot-bot">
-      <div data-vi="© 2026 Ngọc Đạt — Toán học & Tài chính" data-en="© 2026 Ngọc Đạt — Maths & Finance">© 2026 Ngọc Đạt — Toán học & Tài chính</div>
-      <div class="socials">
-        <a href="login.html" data-vi="Đăng nhập" data-en="Sign in">Đăng nhập</a>
+    <div class="journey">
+      <figure class="reveal"><img src="assets/img/hanh-trinh-olympic-31.jpg" alt="Đoàn tham dự kỳ thi Olympic Toán học Sinh viên và Học sinh lần thứ 31" loading="lazy" width="1200" height="900" /><figcaption>Olympic Toán học Sinh viên và Học sinh lần thứ 31</figcaption></figure>
+      <figure class="reveal d1"><img src="assets/img/hanh-trinh-ftu.jpg" alt="Nhận giấy khen tại Trường Đại học Ngoại thương" loading="lazy" width="1200" height="900" /><figcaption>Nhận giấy khen tại Đại học Ngoại thương</figcaption></figure>
+      <figure class="reveal d2"><img src="assets/img/hanh-trinh-rise-ptnk.jpg" alt="Thuyết trình dự án tại RiSE, Trường Phổ thông Năng khiếu" loading="lazy" width="1200" height="800" /><figcaption>Thuyết trình dự án tại RiSE - PTNK</figcaption></figure>
+      <figure class="reveal d3"><img src="assets/img/hanh-trinh-ptnk-20-11.jpg" alt="Lễ kỷ niệm Ngày Nhà giáo Việt Nam 20/11 tại Trường Phổ thông Năng khiếu" loading="lazy" width="1200" height="900" /><figcaption>Ngày Nhà giáo 20/11 tại Phổ thông Năng khiếu</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 3. Định hướng chương trình ═════════ -->
+<section class="sec tone-2" id="chuong-trinh">
+  <div class="wave-top" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Định hướng đào tạo</span>
+      <h2 class="reveal d1">Bốn hướng <em>chương trình</em></h2>
+      <p class="lede reveal d2">Từ củng cố kiến thức trên lớp đến bồi dưỡng đội tuyển và các kỳ thi quốc tế.</p>
+    </div>
+    <div class="programs">
+      <article class="program sketch-card reveal">
+        <img class="art float" src="assets/ocean/svg/starfish.svg" alt="" />
+        <h3>Luyện thi HSG Toán THCS</h3>
+        <p>Bồi dưỡng học sinh giỏi theo chuyên đề: số học, đại số, hình học, tổ hợp và đề thi các cấp.</p>
+        <span class="tag">Lớp 6-9</span>
+      </article>
+      <article class="program sketch-card reveal d1">
+        <img class="art float" src="assets/ocean/svg/shell-scallop.svg" alt="" style="animation-delay:-.8s" />
+        <h3>Toán cơ bản</h3>
+        <p>Củng cố kiến thức trên lớp, lấp lỗ hổng, học chắc để làm tốt bài kiểm tra theo chương trình mới.</p>
+        <span class="tag">Lớp 6-12</span>
+      </article>
+      <article class="program sketch-card reveal d2">
+        <img class="art float" src="assets/ocean/svg/paper-boat.svg" alt="" style="animation-delay:-1.6s" />
+        <h3>Ôn thi vào lớp 10 chuyên</h3>
+        <p>Luyện đề tuyển sinh 10 và đề vào lớp chuyên Toán, chuyên Tin của PTNK và các trường chuyên.</p>
+        <span class="tag">Lớp 9</span>
+      </article>
+      <article class="program sketch-card reveal d3">
+        <img class="art float" src="assets/ocean/svg/message-bottle.svg" alt="" style="animation-delay:-2.2s" />
+        <h3>Toán quốc tế</h3>
+        <p>Làm quen dạng đề, cách tư duy và thuật ngữ Toán tiếng Anh cho các kỳ thi quốc tế.</p>
+        <span class="tag">AMC · AMO · IKMC</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 4. Lớp học ═════════ -->
+<section class="sec tone-3" id="lop-hoc">
+  <div class="wave-top" aria-hidden="true"></div>
+  <img class="deco float" data-parallax="0.12" src="assets/ocean/svg/fish-sky.svg" alt="" style="width:110px; left:3%; top:14%" />
+  <img class="deco float" data-parallax="-0.1" src="assets/ocean/svg/fish-seafoam.svg" alt="" style="width:80px; right:4%; top:40%; animation-delay:-1s" />
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Lớp học đang mở</span>
+      <h2 class="reveal d1">Chọn <em>lớp học</em> phù hợp</h2>
+      <p class="lede reveal d2">Lịch học, hình thức và học phí được tư vấn riêng theo trình độ từng học sinh. Nhắn Zalo hoặc gọi <a href="tel:0775118240" data-call style="border-bottom:2px solid var(--accent-line)">0775 118 240</a>.</p>
+    </div>
+
+    <div class="courses">
+      <article class="course sketch-card tint-sky reveal">
+        <div class="course-top">
+          <span class="level">Lớp 9</span>
+          <h3>Lớp 9 định hướng ôn thi tuyển sinh</h3>
+          <img class="art" src="assets/ocean/svg/paper-boat.svg" alt="" />
+        </div>
+        <dl class="course-body">
+          <div class="course-row"><dt>Đối tượng</dt><dd>Học sinh lớp 9 chuẩn bị thi vào lớp 10, cả trường thường và trường chuyên.</dd></div>
+          <div class="course-row"><dt>Mục tiêu</dt><dd>Nắm chắc mọi dạng bài trong đề tuyển sinh, trình bày chặt chẽ, không mất điểm đáng tiếc.</dd></div>
+          <div class="course-row"><dt>Nội dung</dt><dd class="topics"><span>Rút gọn căn thức</span><span>Hàm số y = ax²</span><span>PT bậc hai, Viète</span><span>Toán thực tế</span><span>Đường tròn</span><span>Hệ thức lượng</span><span>BĐT, cực trị</span><span>Bộ đề ôn PTNK</span></dd></div>
+          <div class="course-row"><dt>Tài liệu</dt><dd>Bộ 25 chuyên đề có lời giải chi tiết, kèm đề tự luyện cuối mỗi chuyên đề.</dd></div>
+        </dl>
+        <div class="course-cta">
+          <a class="btn zalo sm" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener">Đăng ký qua Zalo</a>
+          <a class="btn sm" data-call href="tel:0775118240">Gọi tư vấn</a>
+        </div>
+      </article>
+
+      <article class="course sketch-card tint-coral reveal d1">
+        <div class="course-top">
+          <span class="level">HSG lớp 9</span>
+          <h3>HSG Toán 9</h3>
+          <img class="art" src="assets/ocean/svg/starfish.svg" alt="" />
+        </div>
+        <dl class="course-body">
+          <div class="course-row"><dt>Đối tượng</dt><dd>Học sinh khá giỏi lớp 9 thi học sinh giỏi cấp quận, cấp thành phố.</dd></div>
+          <div class="course-row"><dt>Mục tiêu</dt><dd>Thành thạo kỹ thuật chuyên sâu, xử lý được các câu phân loại trong đề HSG.</dd></div>
+          <div class="course-row"><dt>Nội dung</dt><dd class="topics"><span>Bất đẳng thức</span><span>Cực trị đại số</span><span>Nghiệm nguyên</span><span>Số học nâng cao</span><span>Phương tích</span><span>Đồng quy, thẳng hàng</span><span>Tổ hợp, đếm</span><span>Dirichlet, cực hạn, bất biến</span></dd></div>
+          <div class="course-row"><dt>Tài liệu</dt><dd>Bộ 30 chuyên đề HSG 9 và đề ôn tổng hợp.</dd></div>
+        </dl>
+        <div class="course-cta">
+          <a class="btn zalo sm" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener">Đăng ký qua Zalo</a>
+          <a class="btn sm" data-call href="tel:0775118240">Gọi tư vấn</a>
+        </div>
+      </article>
+
+      <article class="course sketch-card tint-sea reveal">
+        <div class="course-top">
+          <span class="level">HSG lớp 7</span>
+          <h3>HSG Toán 7</h3>
+          <img class="art" src="assets/ocean/svg/goldfish-koi.svg" alt="" />
+        </div>
+        <dl class="course-body">
+          <div class="course-row"><dt>Đối tượng</dt><dd>Học sinh lớp 7 yêu thích Toán, thi học sinh giỏi cấp quận, cấp thành phố.</dd></div>
+          <div class="course-row"><dt>Mục tiêu</dt><dd>Xây nền tư duy sớm, làm quen bài khó và các kỹ thuật chứng minh.</dd></div>
+          <div class="course-row"><dt>Nội dung</dt><dd class="topics"><span>Tính nhanh, dãy quy luật</span><span>Giá trị tuyệt đối</span><span>Chia hết, đồng dư</span><span>Số nguyên tố</span><span>Tỉ lệ thức</span><span>GTLN, GTNN</span><span>Nguyên lý Dirichlet</span><span>Hình học tam giác</span></dd></div>
+          <div class="course-row"><dt>Tài liệu</dt><dd>Bộ 17 chuyên đề HSG 7 có lời giải chi tiết.</dd></div>
+        </dl>
+        <div class="course-cta">
+          <a class="btn zalo sm" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener">Đăng ký qua Zalo</a>
+          <a class="btn sm" data-call href="tel:0775118240">Gọi tư vấn</a>
+        </div>
+      </article>
+
+      <article class="course sketch-card tint-sand reveal d1">
+        <div class="course-top">
+          <span class="level">Lớp 7</span>
+          <h3>Toán cơ bản lớp 7</h3>
+          <img class="art" src="assets/ocean/svg/shell-scallop.svg" alt="" />
+        </div>
+        <dl class="course-body">
+          <div class="course-row"><dt>Đối tượng</dt><dd>Học sinh lớp 7 cần củng cố nền tảng hoặc muốn học thật vững kiến thức trên lớp.</dd></div>
+          <div class="course-row"><dt>Mục tiêu</dt><dd>Hiểu bài trên lớp, làm chắc bài kiểm tra và sẵn sàng học nâng cao.</dd></div>
+          <div class="course-row"><dt>Nội dung</dt><dd class="topics"><span>Số hữu tỉ</span><span>Lũy thừa</span><span>Số thực, căn bậc hai</span><span>Tỉ lệ thuận, nghịch</span><span>Đa thức một biến</span><span>Tam giác bằng nhau</span><span>Thống kê, xác suất</span></dd></div>
+          <div class="course-row"><dt>Tài liệu</dt><dd>Phiếu bài tập theo từng bài học và tài liệu chuyên đề.</dd></div>
+        </dl>
+        <div class="course-cta">
+          <a class="btn zalo sm" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener">Đăng ký qua Zalo</a>
+          <a class="btn sm" data-call href="tel:0775118240">Gọi tư vấn</a>
+        </div>
+      </article>
+    </div>
+
+    <p class="reveal" style="margin-top:2.2rem; text-align:center; font-family:var(--hand); font-size:1.25rem;">
+      Đã là học sinh của lớp? <a href="login.html" style="color:var(--accent); border-bottom:2px solid var(--accent-line)">Vào lớp học trực tuyến</a> để xem video và tải tài liệu.
+    </p>
+  </div>
+</section>
+
+<!-- ═════════ 5. Tài liệu & bài giảng mẫu ═════════ -->
+<section class="sec tone-4" id="mau">
+  <div class="wave-top" aria-hidden="true"></div>
+  <img class="deco float" data-parallax="0.18" src="assets/ocean/svg/jellyfish.svg" alt="" style="width:90px; right:5%; top:8%" />
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Học thử miễn phí</span>
+      <h2 class="reveal d1">Tài liệu &amp; <em>bài giảng mẫu</em></h2>
+      <p class="lede reveal d2">Trích từ bộ tài liệu thầy tự biên soạn và video bài giảng của lớp, mở miễn phí để phụ huynh và học sinh tham khảo.</p>
+    </div>
+
+    <div class="sub-title reveal"><h3>Tài liệu mẫu</h3><span class="hand">Xem trước hoặc tải về bản PDF</span></div>
+    <div class="docs">
+      <article class="doc sketch-card reveal">
+        <div class="doc-thumb"><img src="assets/samples/thumbs/lop9-tuyen-sinh-phuong-trinh-bac-hai-viete.jpg" alt="Trang bìa tài liệu Phương trình bậc hai và hệ thức Viète" loading="lazy" width="720" height="1018" /><span class="pages">23 trang</span></div>
+        <div class="doc-body">
+          <span class="for">Lớp 9 ôn thi tuyển sinh</span>
+          <h4>Phương trình bậc hai và hệ thức Viète</h4>
+          <p>Công thức nghiệm, Viète thuận và đảo, điều kiện tham số, phương trình quy về bậc hai. Có trích đề tuyển sinh 10 và PTNK.</p>
+          <div class="doc-actions">
+            <button class="btn sm" type="button" data-doc="assets/samples/lop9-tuyen-sinh-phuong-trinh-bac-hai-viete.pdf" data-title="Phương trình bậc hai và hệ thức Viète">Xem trước</button>
+            <a class="btn primary sm" href="assets/samples/lop9-tuyen-sinh-phuong-trinh-bac-hai-viete.pdf" download>Tải về</a>
+          </div>
+        </div>
+      </article>
+      <article class="doc sketch-card reveal d1">
+        <div class="doc-thumb"><img src="assets/samples/thumbs/hsg9-so-hoc.jpg" alt="Trang bìa tài liệu Số học" loading="lazy" width="720" height="1018" /><span class="pages">25 trang</span></div>
+        <div class="doc-body">
+          <span class="for">HSG Toán 9</span>
+          <h4>Số học: chia hết, đồng dư, nghiệm nguyên</h4>
+          <p>Chia hết và đồng dư, số nguyên tố, số chính phương, phương trình nghiệm nguyên dạng tích, bài toán đề chuyên.</p>
+          <div class="doc-actions">
+            <button class="btn sm" type="button" data-doc="assets/samples/hsg9-so-hoc.pdf" data-title="Số học: chia hết, đồng dư, nghiệm nguyên">Xem trước</button>
+            <a class="btn primary sm" href="assets/samples/hsg9-so-hoc.pdf" download>Tải về</a>
+          </div>
+        </div>
+      </article>
+      <article class="doc sketch-card reveal d2">
+        <div class="doc-thumb"><img src="assets/samples/thumbs/hsg7-chia-het-dong-du.jpg" alt="Trang bìa tài liệu Phép chia hết và đồng dư thức" loading="lazy" width="720" height="1018" /><span class="pages">20 trang</span></div>
+        <div class="doc-body">
+          <span class="for">HSG Toán 7</span>
+          <h4>Phép chia hết và đồng dư thức</h4>
+          <p>Dấu hiệu chia hết, đồng dư và tính chất, chữ số tận cùng, số dư, định lý Fermat nhỏ. Tổng hợp từ đề thi HSG các cấp.</p>
+          <div class="doc-actions">
+            <button class="btn sm" type="button" data-doc="assets/samples/hsg7-chia-het-dong-du.pdf" data-title="Phép chia hết và đồng dư thức">Xem trước</button>
+            <a class="btn primary sm" href="assets/samples/hsg7-chia-het-dong-du.pdf" download>Tải về</a>
+          </div>
+        </div>
+      </article>
+      <article class="doc sketch-card reveal d3">
+        <div class="doc-thumb"><img src="assets/samples/thumbs/lop7-thuc-hien-phep-tinh.jpg" alt="Trang bìa tài liệu Thực hiện phép tính" loading="lazy" width="720" height="1018" /><span class="pages">25 trang</span></div>
+        <div class="doc-body">
+          <span class="for">Toán cơ bản lớp 7</span>
+          <h4>Số hữu tỉ và thực hiện phép tính</h4>
+          <p>Bốn phép toán trong tập số hữu tỉ, lũy thừa, kỹ thuật tính nhanh, tổng dãy phân số có quy luật, so sánh biểu thức.</p>
+          <div class="doc-actions">
+            <button class="btn sm" type="button" data-doc="assets/samples/lop7-thuc-hien-phep-tinh.pdf" data-title="Số hữu tỉ và thực hiện phép tính">Xem trước</button>
+            <a class="btn primary sm" href="assets/samples/lop7-thuc-hien-phep-tinh.pdf" download>Tải về</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="sub-title block-gap reveal"><h3>Bài giảng mẫu</h3><span class="hand">Video ngắn, có phụ đề và lời giảng</span></div>
+    <div class="lessons" id="lessons">
+      <button class="lesson-card reveal" type="button" data-video="assets/lessons/giai-he-phuong-trinh-bac-hai-hai-an.mp4" data-title="Giải hệ phương trình bậc hai hai ẩn">
+        <div class="phone"><img src="assets/lessons/giai-he-phuong-trinh-bac-hai-hai-an.jpg" alt="" loading="lazy" width="540" height="960" /><span class="dur">0:54</span><span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="lesson-meta"><span class="for">HSG Toán 9</span><h4>Giải hệ phương trình bậc hai hai ẩn</h4><p>Phân tích nhân tử và đặt ẩn phụ khéo léo để đưa một hệ phức tạp về hệ bậc nhất.</p></div>
+      </button>
+      <button class="lesson-card reveal d1" type="button" data-video="assets/lessons/do-dai-tiep-tuyen-va-dien-tich-tam-giac.mp4" data-title="Độ dài tiếp tuyến và diện tích tam giác">
+        <div class="phone"><img src="assets/lessons/do-dai-tiep-tuyen-va-dien-tich-tam-giac.jpg" alt="" loading="lazy" width="540" height="960" /><span class="dur">1:02</span><span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="lesson-meta"><span class="for">Lớp 9 ôn thi tuyển sinh</span><h4>Độ dài tiếp tuyến và diện tích tam giác</h4><p>Tính chất tiếp tuyến vuông góc với bán kính, kết hợp định lý Pythagore.</p></div>
+      </button>
+      <button class="lesson-card reveal d2" type="button" data-video="assets/lessons/duong-di-trong-vuon-pytago-va-ung-dung.mp4" data-title="Đường đi trong vườn: Pythagore và ứng dụng">
+        <div class="phone"><img src="assets/lessons/duong-di-trong-vuon-pytago-va-ung-dung.jpg" alt="" loading="lazy" width="540" height="960" /><span class="dur">0:58</span><span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+        <div class="lesson-meta"><span class="for">Toán cơ bản</span><h4>Đường đi trong vườn: Pythagore và ứng dụng</h4><p>Bài toán thực tế có hoạt cảnh minh họa, giúp học sinh thấy Toán gần gũi.</p></div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 6. Cảm nhận của học sinh (hiện khi có nội dung trong config.js) ═════════ -->
+<section class="sec tone-2" id="cam-nhan" hidden>
+  <div class="wave-top" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Học sinh nói gì</span>
+      <h2 class="reveal d1">Cảm nhận của <em>học sinh</em></h2>
+    </div>
+    <div class="quotes" id="quotes"></div>
+  </div>
+</section>
+</main>
+
+<!-- ═════════ Liên hệ (đáy biển) ═════════ -->
+<footer class="contact" id="lien-he">
+  <video class="contact-video" muted loop playsinline preload="none" poster="assets/ocean/video/water-surface-poster.jpg" data-lazy-video aria-hidden="true">
+    <source src="assets/ocean/video/water-surface-loop.mp4" type="video/mp4" />
+  </video>
+  <video class="contact-bubbles" muted loop playsinline preload="none" data-lazy-video data-alpha aria-hidden="true">
+    <source src="assets/ocean/video/bubbles-overlay-alpha.webm" type="video/webm" />
+  </video>
+  <div class="wrap">
+    <div class="contact-card sketch-card reveal">
+      <span class="eyebrow">Đăng ký học - tư vấn lộ trình</span>
+      <h2>Cùng nhau <em>lặn sâu</em> vào Toán học</h2>
+      <p>Nhắn Zalo hoặc gọi điện để được tư vấn lớp phù hợp, lịch học và học phí.</p>
+      <a class="hotline" data-call href="tel:0775118240">0775 118 240</a>
+      <div class="contact-actions">
+        <a class="btn zalo" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener">Nhắn Zalo</a>
+        <a class="btn primary" data-call href="tel:0775118240">Gọi ngay</a>
+        <a class="btn" href="mailto:ngocdat2006@gmail.com">Gửi email</a>
       </div>
+      <div class="contact-meta">
+        <span>TP. Hồ Chí Minh</span>
+        <a href="mailto:ngocdat2006@gmail.com">ngocdat2006@gmail.com</a>
+        <a href="login.html">Học sinh đăng nhập lớp học</a>
+      </div>
+    </div>
+  </div>
+  <div class="seabed" aria-hidden="true">
+    <img class="deco sway" src="assets/ocean/svg/seaweed.svg" alt="" style="width:clamp(60px,7vw,110px); left:4%" />
+    <img class="deco" src="assets/ocean/svg/shell-scallop.svg" alt="" style="width:clamp(44px,5vw,72px); left:22%" />
+    <img class="deco" src="assets/ocean/svg/anchor.svg" alt="" style="width:clamp(44px,5vw,70px); left:46%" />
+    <img class="deco" src="assets/ocean/svg/starfish.svg" alt="" style="width:clamp(44px,5vw,70px); left:64%" />
+    <img class="deco" src="assets/ocean/svg/message-bottle.svg" alt="" style="width:clamp(34px,4vw,56px); left:80%" />
+    <img class="deco sway" src="assets/ocean/svg/seaweed.svg" alt="" style="width:clamp(60px,7vw,110px); right:3%; animation-delay:-2s" />
+  </div>
+  <div class="foot-bar">
+    <div class="wrap">
+      <span>© 2026 Lớp Toán Ngọc Đạt</span>
+      <nav aria-label="Liên kết cuối trang">
+        <a href="#giao-vien">Giáo viên</a><a href="#chuong-trinh">Chương trình</a><a href="#lop-hoc">Lớp học</a><a href="#mau">Tài liệu mẫu</a><a href="login.html">Đăng nhập</a>
+      </nav>
     </div>
   </div>
 </footer>
 
-<!-- Sample video player -->
-<div class="modal" id="videoModal" aria-hidden="true">
-  <div class="modal-card video" role="dialog" aria-modal="true" aria-labelledby="videoTitle">
-    <button class="modal-close" data-close aria-label="Close">×</button>
-    <div class="video-frame" id="videoFrame"></div>
-    <div class="video-cap"><h3 id="videoTitle"></h3></div>
+<!-- Nút liên hệ nhanh -->
+<div class="quick-contact" aria-label="Liên hệ nhanh">
+  <a class="qc-btn zalo" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener" aria-label="Nhắn Zalo 0775 118 240">Zalo<span class="tip">Nhắn Zalo</span></a>
+  <a class="qc-btn call" data-call href="tel:0775118240" aria-label="Gọi 0775 118 240">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg>
+    <span class="tip">Gọi 0775 118 240</span>
+  </a>
+</div>
+
+<!-- Xem trước tài liệu -->
+<div class="modal" id="docModal" role="dialog" aria-modal="true" aria-labelledby="docTitle">
+  <div class="modal-box doc-box">
+    <div class="modal-head">
+      <h3 id="docTitle"></h3>
+      <a class="btn primary sm" id="docDownload" href="#" download>Tải về</a>
+      <button class="modal-close" type="button" data-close aria-label="Đóng">×</button>
+    </div>
+    <iframe id="docFrame" title="Xem trước tài liệu"></iframe>
   </div>
 </div>
 
-<script src="assets/vendor/supabase-js-2.117.2.js"></script>
+<!-- Phát bài giảng -->
+<div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="videoTitle">
+  <div class="modal-box video-box">
+    <div class="modal-head">
+      <h3 id="videoTitle"></h3>
+      <button class="modal-close" type="button" data-close aria-label="Đóng">×</button>
+    </div>
+    <video id="videoPlayer" controls playsinline preload="none"></video>
+  </div>
+</div>
+
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
 <script src="assets/js/config.js"></script>
-<script src="assets/js/i18n.js"></script>
-<script src="assets/js/supabaseClient.js"></script>
 <script src="assets/js/landing.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /* ============================================================
-   auth.js — authentication + role helpers (window.Auth)
+   auth.js - authentication + role helpers (window.Auth)
    Thin wrapper over Supabase Auth. All authorization is enforced
    server-side by RLS; these helpers are for UX/flow only.
    Requires: config.js, supabaseClient.js

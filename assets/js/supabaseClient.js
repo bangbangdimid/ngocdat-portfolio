@@ -1,5 +1,5 @@
 /* ============================================================
-   supabaseClient.js — one shared Supabase client for all pages.
+   supabaseClient.js - one shared Supabase client for all pages.
    Requires config.js and the supabase-js UMD bundle to be loaded first.
    ============================================================ */
 (function () {

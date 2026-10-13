@@ -1,6 +1,6 @@
 # Ngọc Đạt — Lớp Toán & khu học tập trực tuyến
 
-Website song ngữ (VI/EN) gồm 3 phần:
+Website tiếng Việt, phong cách minh hoạ vẽ tay "đại dương" (ocean-kit), gồm 3 phần:
 
 | Ai | Thấy gì |
 |---|---|
@@ -23,7 +23,11 @@ hoc.html              khu học tập của học sinh (nhập mã lớp, danh s
 khoahoc.html          xem bài học của một khoá (video + tài liệu)
 admin.html            quản trị (chỉ admin)
 assets/css/           tokens · base · components · landing · auth · admin
-assets/js/            config · i18n · supabaseClient · auth · landing · login · hoc · khoahoc · admin
+assets/ocean/         ocean-kit: SVG vẽ tay, con trỏ cá, video mây/mặt nước, 180 khung hình cảnh lặn
+assets/samples/       4 tài liệu PDF mẫu (+ ảnh bìa trong thumbs/)
+assets/lessons/       3 video bài giảng mẫu (720p, khổ dọc) + poster
+assets/img/           ảnh chân dung và ảnh hành trình
+assets/js/            config · supabaseClient · auth · landing · login · hoc · khoahoc · admin
 assets/vendor/        supabase-js 2.117.2 (tự host, đã pin phiên bản)
 supabase/schema.sql   bảng, RLS, hàm kích hoạt mã, chính sách storage
 vercel.json           header bảo mật (CSP, HSTS, chống clickjacking…)
