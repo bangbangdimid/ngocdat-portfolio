@@ -27,9 +27,12 @@
     if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
     return null;
   }
+  // "Hết hạn 30/11" means usable through the whole of 30/11, Vietnam time
+  const endOfDayVN = (d) => (d ? d + "T23:59:59+07:00" : null);
   function randCode() {
     const a = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let s = ""; for (let i = 0; i < 8; i++) s += a[Math.floor(Math.random() * a.length)];
+    const bytes = crypto.getRandomValues(new Uint8Array(8)); // 32 symbols, so byte % 32 is unbiased
+    let s = ""; for (const b of bytes) s += a[b % a.length];
     return s.slice(0, 4) + "-" + s.slice(4);
   }
   const openModal = (id) => $(id).classList.add("on");
@@ -256,7 +259,7 @@
     e.preventDefault();
     const code = ($("cmCode").value.trim() || randCode()).toUpperCase();
     if (!/^[A-Z0-9-]{4,32}$/.test(code)) return toast("Mã chỉ gồm chữ, số, dấu gạch ngang (4-32 ký tự)", true);
-    const payload = { course_id: state.current.id, code, max_uses: parseInt($("cmMax").value) || 1, expires_at: $("cmExp").value || null };
+    const payload = { course_id: state.current.id, code, max_uses: parseInt($("cmMax").value) || 1, expires_at: endOfDayVN($("cmExp").value) };
     const { error } = await sb.from("access_codes").insert(payload);
     if (error) return toast(error.message.includes("duplicate") ? "Mã đã tồn tại, chọn mã khác" : "Lỗi: " + error.message, true);
     $("codeForm").reset(); toast("Đã tạo mã: " + code); loadCodes();
