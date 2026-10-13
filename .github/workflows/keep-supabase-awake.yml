@@ -2,11 +2,15 @@
 # break student logins. This makes one tiny read-only request every day.
 # It uses the PUBLIC anon key (the same one shipped in assets/js/config.js);
 # Row Level Security means it can only read published course titles.
+#
+# GitHub also switches off scheduled workflows in public repos after 60 days
+# without commits. The second step re-enables this workflow through the API on
+# every run, which resets that timer without needing dummy commits.
 name: Keep Supabase awake
 
 on:
   schedule:
-    - cron: "17 2 * * *"   # every day at 02:17 UTC (09:17 Vietnam time)
+    - cron: "17 2 * * *"   # every day at 02:17 UTC (09:17 Vietnam time); GitHub may start it late
   workflow_dispatch:        # allow a manual run from the Actions tab
 
 permissions: {}
@@ -14,7 +18,9 @@ permissions: {}
 jobs:
   ping:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
+    permissions:
+      actions: write        # only to re-enable this workflow's own schedule
     steps:
       - name: Ping Supabase (read-only)
         env:
@@ -22,11 +28,18 @@ jobs:
           SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ibHVna2Fjd3NzZGRhaWJidnZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MzUyMjUsImV4cCI6MjA5NDExMTIyNX0.WUWDsydW3fIQzMRU8ZJAiszaflmoKbgKvQbD7NBC0kE
         run: |
           code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
+            --retry 3 --retry-delay 20 --retry-all-errors \
             "$SUPABASE_URL/rest/v1/courses?select=id&limit=1" \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY")
           echo "Supabase responded HTTP $code"
           if [ "$code" != "200" ]; then
-            echo "::error::Supabase did not answer 200 — the project may be paused. Resume it in the dashboard."
+            echo "::error::Supabase did not answer 200 - the project may be paused. Resume it in the dashboard."
             exit 1
           fi
+
+      - name: Keep this schedule from being auto-disabled
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${{ github.repository }}/actions/workflows/keep-supabase-awake.yml/enable"
