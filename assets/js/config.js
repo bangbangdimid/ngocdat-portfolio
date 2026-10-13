@@ -20,9 +20,21 @@ window.APP_CONFIG = {
   // một mục có "quote". Điền đúng lời học sinh viết (không tự soạn thay).
   //   name: tên hiển thị, badge: lớp/khoá đã học, quote: lời cảm nhận
   TESTIMONIALS: [
-    { name: "Đông Nghi",  badge: "", quote: "" },
-    { name: "Hải Đăng",   badge: "", quote: "" },
-    { name: "Quang Khôi", badge: "", quote: "" },
+    {
+      name: "Quang Khôi",
+      badge: "Giải Nhất HSG môn Toán",
+      quote: "Học đội tuyển với anh Đạt cuốn thật sự. Anh không bắt học vẹt công thức mà dạy cách đào sâu bản chất bài toán, rèn cách lập luận chặt chẽ từng bước một. Tài liệu LaTeX anh soạn siêu xịn và chuẩn chỉ. Nhờ anh đồng hành sát sao mà em tự tin ẵm luôn giải Nhất HSG đợt vừa rồi!",
+    },
+    {
+      name: "Đông Nghi",
+      badge: "Đỗ Chuyên Toán - THPT Chuyên Lê Hồng Phong",
+      quote: "Giai đoạn ôn thi vào Chuyên Toán LHP áp lực cực kỳ, nhưng cứ tới giờ học với anh Đạt là thấy nhẹ đầu hẳn. Mấy câu hình học với đại số phân loại khó nhằn được anh mổ xẻ rất dễ hiểu, chỉ cần nhìn đúng bản chất là ra hướng làm ngay. Em đỗ được nguyện vọng 1 công lớn là nhờ anh Đạt kèm.",
+    },
+    {
+      name: "Hải Đăng",
+      badge: "Đỗ Chuyên Tin 2 - Phổ thông Năng khiếu",
+      quote: "Tư duy số học với logic anh Đạt rèn cho em lúc học đội tuyển bổ trợ cực mạnh cho môn Tin. Anh dạy tư duy bài toán rất mạch lạc, tối ưu và không bị rập khuôn. Nhờ nền tảng toán vững chắc anh xây cho mà em đã chinh phục thành công mục tiêu Chuyên Tin 2 PTNK.",
+    },
   ],
 
   // where to send students after login, and admins

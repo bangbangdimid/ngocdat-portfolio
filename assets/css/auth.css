@@ -32,10 +32,18 @@
   color: var(--ink); padding: clamp(2rem, 5vw, 4rem);
   display: flex; flex-direction: column; justify-content: space-between;
 }
-/* soft light veil keeps the underwater art visible but the copy readable */
-.auth-aside::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(238,246,252,.86) 0%, rgba(238,246,252,.55) 55%, rgba(238,246,252,.15) 100%); }
 .auth-aside > * { position: relative; z-index: 1; }
-.auth-aside .a-brand { font-family: var(--serif); font-weight: 600; font-size: 1.45rem; }
+/* copy lives on solid riso cards so it never sits on top of the underwater art */
+.auth-aside .a-brand {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: .55rem;
+  font-family: var(--serif); font-weight: 600; font-size: 1.35rem;
+  padding: .4rem 1.1rem .4rem .55rem; background: rgba(255,255,255,.94); border: var(--stroke); border-radius: 999px; box-shadow: var(--riso);
+}
+.auth-aside .a-brand img { width: 36px; height: auto; }
+.auth-aside .a-card {
+  max-width: 30rem; padding: clamp(1.4rem, 3vw, 2.1rem);
+  background: rgba(255,255,255,.95); border: var(--stroke); border-radius: var(--r-md); box-shadow: var(--riso-lg);
+}
 .auth-aside h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 1.3rem + 2vw, 3.1rem); line-height: 1.05; }
 .auth-aside h2 .ital { font-style: italic; color: var(--accent); }
 .auth-aside .pts { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; gap: .8rem; }

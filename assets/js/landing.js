@@ -112,36 +112,62 @@
     $("cursorRing")?.remove();
   }
 
-  /* ---------- scroll dive: 180 frames drawn on a sticky canvas ---------- */
-  (function dive() {
-    const section = $("dive"), canvas = $("diveCanvas");
-    const captions = [...section.querySelectorAll(".dive-caption")];
-    if (reduceMotion || isNarrow()) return; // CSS shows the static image + stacked captions
+  /* ---------- ocean backdrop: the whole page is one dive ---------- */
+  // A fixed canvas behind every section shows frame i of 180, where i follows the
+  // scroll position of the entire page: sky at the top, seabed at the footer.
+  // Frames load coarse-to-fine after the page has loaded, so the backdrop is usable
+  // early and never competes with the hero. Phones / Save-Data load every 3rd frame;
+  // reduced motion keeps the static CSS picture.
+  (function oceanBackdrop() {
+    const canvas = $("oceanCanvas");
+    const saveData = navigator.connection?.saveData;
+    if (!canvas || reduceMotion) return;
     const ctx = canvas.getContext("2d");
     const N = 180, frames = new Array(N);
-    let loaded = false, current = -1, queued = false;
+    const step = isNarrow() || saveData ? 3 : 1;
     const src = (i) => `assets/ocean/frames/dive_${String(i).padStart(3, "0")}.webp`;
-    function load() {
-      if (loaded) return; loaded = true;
-      for (let i = 0; i < N; i++) { const img = new Image(); img.decoding = "async"; img.src = src(i); frames[i] = img; }
-      frames[0].onload = () => draw(0);
+    let target = 0, drawn = -1, queued = false;
+    const ready = (i) => frames[i] && frames[i].complete && frames[i].naturalWidth > 0;
+
+    function nearest(i) { // closest decoded frame, so fast scrolling never shows a gap
+      for (let d = 0; d < N; d++) {
+        if (i - d >= 0 && ready(i - d)) return i - d;
+        if (i + d < N && ready(i + d)) return i + d;
+      }
+      return -1;
     }
-    function draw(i) {
-      const img = frames[i];
-      if (!img || !img.complete || !img.naturalWidth) return false;
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height); current = i; return true;
-    }
-    function update() {
+    function render() {
       queued = false;
-      const r = section.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
-      const i = Math.round(p * (N - 1));
-      if (i !== current && !draw(i)) { for (let k = i; k >= 0; k--) if (draw(k)) break; } // nearest decoded frame
-      const step = p < 0.04 || p > 0.97 ? -1 : Math.min(2, Math.floor(p * 3));
-      captions.forEach((c, k) => c.classList.toggle("on", k === step));
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+      target = Math.round(p * (N - 1));
+      const i = nearest(target);
+      if (i >= 0 && i !== drawn) { ctx.drawImage(frames[i], 0, 0, canvas.width, canvas.height); drawn = i; }
     }
-    new IntersectionObserver((es) => { if (es[0].isIntersecting) load(); }, { rootMargin: "100% 0px" }).observe(section);
-    addEventListener("scroll", () => { if (loaded && !queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+    const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(render); } };
+
+    function load() {
+      // coarse-to-fine order: every 24th, 12th, 6th, then the rest
+      const order = [];
+      [24, 12, 6, 3, 1].filter((s) => s >= step && s % step === 0).forEach((s) => {
+        for (let i = 0; i < N; i += s) if (!order.includes(i)) order.push(i);
+      });
+      if (!order.includes(N - 1)) order.push(N - 1);
+      let next = 0, inFlight = 0;
+      const pump = () => {
+        while (inFlight < 6 && next < order.length) {
+          const i = order[next++], img = new Image();
+          inFlight++; img.decoding = "async";
+          img.onload = () => { inFlight--; if (Math.abs(i - target) <= Math.abs(drawn - target) || drawn < 0) schedule(); pump(); };
+          img.onerror = () => { inFlight--; pump(); };
+          img.src = src(i); frames[i] = img;
+        }
+      };
+      pump();
+    }
+    addEventListener("scroll", schedule, { passive: true });
+    addEventListener("resize", schedule, { passive: true });
+    if (document.readyState === "complete") load(); else addEventListener("load", load, { once: true });
   })();
 
   /* ---------- modals ---------- */
@@ -150,7 +176,7 @@
   function closeModal(m) {
     m.classList.remove("on"); document.body.style.overflow = "";
     if (m.id === "videoModal") { const v = $("videoPlayer"); v.pause(); v.removeAttribute("src"); v.load(); m.querySelector("iframe")?.remove(); v.hidden = false; }
-    if (m.id === "docModal") $("docFrame").removeAttribute("src");
+    if (m.id === "docModal") closeDoc();
     lastFocus?.focus?.();
   }
   document.querySelectorAll(".modal").forEach((m) => {
@@ -159,13 +185,89 @@
   });
   addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".modal.on").forEach(closeModal); });
 
-  // document preview: phones and tablets handle PDFs better in their own viewer
-  function openDoc(url, title) {
-    if (!finePointer || innerWidth < 900) { window.open(url, "_blank", "noopener"); return; }
+  /* ---------- document preview: pdf.js renders pages in-page ---------- */
+  // The browser's built-in PDF viewer cannot be framed reliably (Chrome blocks it
+  // under strict headers, phones download instead), so pages are drawn on canvases
+  // with the self-hosted pdf.js. Pages render as they scroll into view and release
+  // their bitmap when far away, keeping memory flat on long documents.
+  const PDFJS_DIR = new URL("assets/vendor/pdfjs-6.3.289/", document.baseURI).href;
+  let pdfjsLib = null, docSession = null;
+  async function loadPdfjs() {
+    if (!pdfjsLib) {
+      pdfjsLib = await import(PDFJS_DIR + "pdf.min.mjs");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_DIR + "pdf.worker.min.mjs";
+    }
+    return pdfjsLib;
+  }
+  function docNote(text, url) {
+    const box = $("docPages");
+    box.innerHTML = `<p class="pdf-note">${esc(text)}${url ? ` <a class="btn primary sm" href="${esc(url)}" download>Tải về</a>` : ""}</p>`;
+  }
+  async function openDoc(url, title) {
     $("docTitle").textContent = title;
     $("docDownload").href = url;
-    $("docFrame").src = url + "#view=FitH";
+    docNote("Đang mở tài liệu…");
     openModal($("docModal"));
+    const session = { closed: false, doc: null, io: null };
+    docSession = session;
+    try {
+      const lib = await loadPdfjs();
+      const task = lib.getDocument({ url, enableXfa: false });
+      session.task = task;
+      const doc = await task.promise;
+      if (session.closed) { doc.destroy(); return; }
+      session.doc = doc;
+      await layoutPages(session);
+    } catch (err) {
+      if (session.closed) return;
+      console.error("pdf preview:", err);
+      docNote("Không xem trước được tài liệu này trên trình duyệt.", url);
+    }
+  }
+  async function layoutPages(session) {
+    const box = $("docPages"), doc = session.doc;
+    const first = await doc.getPage(1);
+    const base = first.getViewport({ scale: 1 });
+    box.innerHTML = "";
+    for (let n = 1; n <= doc.numPages; n++) { // placeholders keep the scrollbar honest before rendering
+      const slot = document.createElement("div");
+      slot.className = "pdf-page"; slot.dataset.page = n;
+      slot.style.aspectRatio = `${base.width} / ${base.height}`;
+      slot.innerHTML = `<span class="pdf-num">${n} / ${doc.numPages}</span>`;
+      box.appendChild(slot);
+    }
+    box.scrollTop = 0; box.focus({ preventScroll: true });
+    session.io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (e.isIntersecting) renderPage(session, e.target); else releasePage(e.target);
+    }), { root: box, rootMargin: "120% 0px" });
+    box.querySelectorAll(".pdf-page").forEach((s) => session.io.observe(s));
+  }
+  async function renderPage(session, slot) {
+    if (slot.querySelector("canvas") || slot.dataset.busy) return;
+    slot.dataset.busy = "1";
+    try {
+      const page = await session.doc.getPage(+slot.dataset.page);
+      if (session.closed) return;
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const scale = (slot.clientWidth * dpr) / page.getViewport({ scale: 1 }).width;
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(viewport.width); canvas.height = Math.floor(viewport.height);
+      await page.render({ canvas, viewport }).promise;
+      if (!session.closed && slot.isConnected) slot.prepend(canvas);
+    } catch (err) {
+      if (!session.closed) console.error("pdf page:", err);
+    } finally { delete slot.dataset.busy; }
+  }
+  function releasePage(slot) {
+    const c = slot.querySelector("canvas");
+    if (c) { c.width = c.height = 0; c.remove(); }
+  }
+  function closeDoc() {
+    const s = docSession; docSession = null;
+    if (s) { s.closed = true; s.io?.disconnect(); s.task?.destroy(); }
+    $("docPages").querySelectorAll(".pdf-page").forEach(releasePage);
+    $("docPages").innerHTML = "";
   }
   function openVideo(src, title) {
     $("videoTitle").textContent = title;
@@ -267,7 +369,8 @@
       const { data, error } = await sb.storage.from(CFG.STORAGE_BUCKET).createSignedUrl(b.dataset.storage, 600);
       b.disabled = false;
       if (error || !data?.signedUrl) { alert("Không mở được tài liệu. Vui lòng thử lại."); return; }
-      window.open(data.signedUrl, "_blank", "noopener");
+      if (/\.pdf$/i.test(b.dataset.storage)) openDoc(data.signedUrl, b.dataset.title || "");
+      else window.open(data.signedUrl, "_blank", "noopener");
     });
     observeReveals($("mau"));
   }

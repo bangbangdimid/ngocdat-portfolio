@@ -6,7 +6,7 @@ Thiết lập lần đầu (Supabase, email, chống bot): xem [supabase/SETUP.m
 
 ## 1. Vào trang quản trị
 `/login.html` → đăng nhập bằng email admin → tự chuyển tới **Quản trị** (`/admin.html`).
-Từ khu học tập cũng có nút **Quản trị** ở góc trên.
+Từ trang Lớp học cũng có nút **Quản trị** ở góc trên.
 
 ## 2. Tạo khoá học
 **+ Khoá học mới** → nhập tên, mô tả → tích **Xuất bản** nếu muốn khoá hiện ở trang chủ → *Lưu khoá*.
@@ -38,7 +38,7 @@ Gửi mã cho học sinh (Zalo/tin nhắn). Mã **không phân biệt hoa thư�
 ## 6. Học sinh vào học như thế nào
 1. Vào website → **Đăng nhập** → tab **Đăng ký** (họ tên, email, SĐT, mật khẩu ≥ 8 ký tự).
 2. Mở email, bấm link xác nhận (kiểm tra cả mục Spam).
-3. Đăng nhập → **Khu học tập** → nhập **mã lớp** → khoá hiện ra → bấm **Vào học**.
+3. Đăng nhập → **Lớp học** → nhập **mã lớp** → khoá hiện ra → bấm **Vào học**.
 4. Quên mật khẩu: trang đăng nhập → **Quên mật khẩu?** → nhận link đặt lại qua email.
 
 ## 7. Quản lý học sinh

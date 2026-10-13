@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Lớp Toán Ngọc Đạt - Đào tạo Toán học chuyên sâu</title>
-<meta name="description" content="Lớp Toán Ngọc Đạt: luyện thi HSG Toán THCS lớp 6-9, Toán cơ bản lớp 6-12, ôn thi vào lớp 10 chuyên và các kỳ thi Toán quốc tế AMC, AMO, IKMC. Hotline/Zalo 0775 118 240." />
+<title>Ara đang dạy toán</title>
+<meta name="description" content="Lớp Toán anh Đạt: luyện thi HSG Toán THCS lớp 6-9, Toán cơ bản lớp 6-12, ôn thi vào lớp 10 chuyên và các kỳ thi Toán quốc tế AMC, AMO, IKMC. Hotline/Zalo 0775 118 240." />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Lớp Toán Ngọc Đạt - Đào tạo Toán học chuyên sâu" />
+<meta property="og:title" content="Ara đang dạy toán - Lớp Toán anh Đạt" />
 <meta property="og:description" content="Luyện thi HSG THCS, ôn thi lớp 10 chuyên, Toán quốc tế AMC, AMO, IKMC. Hotline/Zalo 0775 118 240." />
 <meta property="og:image" content="https://ngocdat.vercel.app/assets/img/portrait.jpg" />
 <meta name="theme-color" content="#7fa9de" />
@@ -36,6 +36,9 @@
   <a class="btn primary" href="login.html">Đăng nhập</a>
 </nav>
 
+<!-- Nền đại dương: cảnh lặn chạy theo thanh cuộn của toàn trang -->
+<div class="ocean-bg" aria-hidden="true"><canvas id="oceanCanvas" width="1280" height="720"></canvas></div>
+
 <main id="top">
 <!-- ═════════ 1. Hero ═════════ -->
 <header class="hero">
@@ -49,8 +52,8 @@
   <img class="deco" data-parallax="-0.4" src="assets/ocean/svg/sparkles.svg" alt="" style="width:64px; right:20%; top:18%" />
 
   <div class="hero-inner">
-    <p class="kicker rise">Lớp Toán Ngọc Đạt</p>
-    <h1 class="rise d1">Đào tạo Toán học<br /><em>chuyên sâu</em></h1>
+    <p class="kicker rise">Lớp Toán anh Đạt</p>
+    <h1 class="rise d1">Khám phá vẻ đẹp<br /><em>Toán học</em></h1>
     <p class="hero-sub rise d2">Luyện thi HSG THCS, ôn thi vào lớp 10 chuyên và các kỳ thi Toán quốc tế. Học để hiểu bản chất, không học thuộc dạng.</p>
     <div class="hero-actions rise d3">
       <a class="btn zalo" data-zalo href="https://zalo.me/0775118240" target="_blank" rel="noopener">
@@ -72,44 +75,19 @@
   <img class="scroll-hint float" src="assets/ocean/svg/scroll-hint.svg" alt="" />
 </header>
 
-<!-- ═════════ Lặn xuống biển (scroll dive) ═════════ -->
-<section class="dive" id="dive" aria-label="Phương pháp học">
-  <div class="dive-stage">
-    <canvas id="diveCanvas" width="1280" height="720" aria-hidden="true"></canvas>
-    <img class="dive-fallback" src="assets/ocean/video/dive-key-090.jpg" alt="" loading="lazy" />
-    <div class="dive-captions">
-      <div class="dive-caption" data-step="0">
-        <span class="n">01 · Nền tảng</span>
-        <h3>Hiểu tận gốc khái niệm</h3>
-        <p>Mỗi chuyên đề bắt đầu từ lý thuyết cốt lõi và ví dụ có lời giải chi tiết từng bước.</p>
-      </div>
-      <div class="dive-caption" data-step="1">
-        <span class="n">02 · Tư duy</span>
-        <h3>Rèn kỹ thuật, không học mẹo</h3>
-        <p>Phân dạng rõ ràng, luyện cách suy nghĩ để tự xử lý được cả những bài toán lạ.</p>
-      </div>
-      <div class="dive-caption" data-step="2">
-        <span class="n">03 · Bứt phá</span>
-        <h3>Sẵn sàng cho kỳ thi</h3>
-        <p>Luyện đề sát cấu trúc thi HSG, tuyển sinh 10 chuyên và các kỳ thi Toán quốc tế.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ═════════ 2. Giáo viên & thành tích ═════════ -->
 <section class="sec tone-1" id="giao-vien">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow reveal">Giáo viên giảng dạy</span>
-      <h2 class="reveal d1">Thầy <em>Ngọc Đạt</em></h2>
+      <h2 class="reveal d1">Anh <em>Ngọc Đạt</em></h2>
     </div>
 
     <div class="teacher">
       <div class="portrait-wrap reveal">
         <div class="portrait-blob" aria-hidden="true"></div>
-        <div class="portrait"><img src="assets/img/portrait.jpg" alt="Thầy Ngọc Đạt" width="720" height="900" /></div>
-        <span class="name-tag">Thầy Ngọc Đạt</span>
+        <div class="portrait"><img src="assets/img/portrait.jpg" alt="Anh Ngọc Đạt" width="720" height="900" /></div>
+        <span class="name-tag">Anh Ngọc Đạt</span>
         <img class="deco whale float" src="assets/ocean/svg/whale-mascot.svg" alt="" />
         <img class="deco bubbles float" src="assets/ocean/svg/bubbles-cluster.svg" alt="" style="animation-delay:-1.2s" />
       </div>
@@ -120,7 +98,7 @@
           <ul class="checks">
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Sinh viên ngành <b>Tài chính - Ngân hàng</b>, Trường Đại học Ngoại thương, cơ sở TP. Hồ Chí Minh.</span></li>
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Cựu học sinh <b>chuyên Tin, Trường Phổ thông Năng khiếu</b> - ĐHQG TP. Hồ Chí Minh.</span></li>
-            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Học sinh từng kèm đạt <b>Giải Nhất HSG Toán lớp 9</b> và <b>đỗ lớp chuyên Tin PTNK</b>.</span></li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Học sinh từng kèm đạt <b>Giải Nhất HSG Toán</b>, đỗ <b>chuyên Toán THPT chuyên Lê Hồng Phong</b> và <b>chuyên Tin PTNK</b>.</span></li>
           </ul>
         </div>
 
@@ -135,23 +113,37 @@
             <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span><b>Giải Nhất</b> HSG Toán và <b>Giải Nhất</b> Giải toán trên Máy tính cầm tay cấp Thành phố lớp 9.</span></li>
           </ul>
         </div>
-
-        <div class="info-block reveal d3">
-          <h3>Phong cách giảng dạy</h3>
-          <ul class="checks">
-            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Đi vào bản chất: hiểu vì sao lời giải đúng, không học mẹo máy móc.</span></li>
-            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Lộ trình theo chuyên đề, đi từ nền tảng đến nâng cao, phù hợp trình độ từng học sinh.</span></li>
-            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Tài liệu tự biên soạn, lời giải chi tiết, bám sát cấu trúc đề thi.</span></li>
-            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Video bài giảng xem lại bất cứ lúc nào trong lớp học trực tuyến.</span></li>
-          </ul>
-        </div>
       </div>
+    </div>
+
+    <div class="style-head reveal"><h3>Phong cách giảng dạy</h3><span class="hand">Học để hiểu, không học thuộc dạng</span></div>
+    <div class="styles">
+      <article class="style-card sketch-card reveal">
+        <img src="assets/ocean/svg/anchor.svg" alt="" />
+        <h4>Đi vào bản chất</h4>
+        <p>Hiểu vì sao lời giải đúng và lập luận chặt chẽ từng bước, không học mẹo máy móc.</p>
+      </article>
+      <article class="style-card sketch-card reveal d1">
+        <img src="assets/ocean/svg/paper-boat.svg" alt="" />
+        <h4>Lộ trình theo chuyên đề</h4>
+        <p>Đi từ nền tảng đến nâng cao, điều chỉnh theo trình độ và mục tiêu của từng học sinh.</p>
+      </article>
+      <article class="style-card sketch-card reveal d2">
+        <img src="assets/ocean/svg/message-bottle.svg" alt="" />
+        <h4>Tài liệu tự biên soạn</h4>
+        <p>Soạn bằng LaTeX, lời giải chi tiết, bám sát cấu trúc đề thi HSG và tuyển sinh 10.</p>
+      </article>
+      <article class="style-card sketch-card reveal d3">
+        <img src="assets/ocean/svg/shell-scallop.svg" alt="" />
+        <h4>Xem lại mọi lúc</h4>
+        <p>Video bài giảng và tài liệu luôn có sẵn trong lớp học trực tuyến của từng khoá.</p>
+      </article>
     </div>
 
     <div class="journey">
       <figure class="reveal"><img src="assets/img/hanh-trinh-olympic-31.jpg" alt="Đoàn tham dự kỳ thi Olympic Toán học Sinh viên và Học sinh lần thứ 31" loading="lazy" width="1200" height="900" /><figcaption>Olympic Toán học Sinh viên và Học sinh lần thứ 31</figcaption></figure>
       <figure class="reveal d1"><img src="assets/img/hanh-trinh-ftu.jpg" alt="Nhận giấy khen tại Trường Đại học Ngoại thương" loading="lazy" width="1200" height="900" /><figcaption>Nhận giấy khen tại Đại học Ngoại thương</figcaption></figure>
-      <figure class="reveal d2"><img src="assets/img/hanh-trinh-rise-ptnk.jpg" alt="Thuyết trình dự án tại RiSE, Trường Phổ thông Năng khiếu" loading="lazy" width="1200" height="800" /><figcaption>Thuyết trình dự án tại RiSE - PTNK</figcaption></figure>
+      <figure class="reveal d2"><img src="assets/img/hanh-trinh-piise-ptnk.jpg" alt="Thuyết trình dự án tại PiiSE, Trường Phổ thông Năng khiếu" loading="lazy" width="1200" height="800" /><figcaption>Thuyết trình dự án tại PiiSE - PTNK</figcaption></figure>
       <figure class="reveal d3"><img src="assets/img/hanh-trinh-ptnk-20-11.jpg" alt="Lễ kỷ niệm Ngày Nhà giáo Việt Nam 20/11 tại Trường Phổ thông Năng khiếu" loading="lazy" width="1200" height="900" /><figcaption>Ngày Nhà giáo 20/11 tại Phổ thông Năng khiếu</figcaption></figure>
     </div>
   </div>
@@ -159,7 +151,6 @@
 
 <!-- ═════════ 3. Định hướng chương trình ═════════ -->
 <section class="sec tone-2" id="chuong-trinh">
-  <div class="wave-top" aria-hidden="true"></div>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow reveal">Định hướng đào tạo</span>
@@ -197,7 +188,6 @@
 
 <!-- ═════════ 4. Lớp học ═════════ -->
 <section class="sec tone-3" id="lop-hoc">
-  <div class="wave-top" aria-hidden="true"></div>
   <img class="deco float" data-parallax="0.12" src="assets/ocean/svg/fish-sky.svg" alt="" style="width:110px; left:3%; top:14%" />
   <img class="deco float" data-parallax="-0.1" src="assets/ocean/svg/fish-seafoam.svg" alt="" style="width:80px; right:4%; top:40%; animation-delay:-1s" />
   <div class="wrap">
@@ -289,13 +279,12 @@
 
 <!-- ═════════ 5. Tài liệu & bài giảng mẫu ═════════ -->
 <section class="sec tone-4" id="mau">
-  <div class="wave-top" aria-hidden="true"></div>
   <img class="deco float" data-parallax="0.18" src="assets/ocean/svg/jellyfish.svg" alt="" style="width:90px; right:5%; top:8%" />
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow reveal">Học thử miễn phí</span>
       <h2 class="reveal d1">Tài liệu &amp; <em>bài giảng mẫu</em></h2>
-      <p class="lede reveal d2">Trích từ bộ tài liệu thầy tự biên soạn và video bài giảng của lớp, mở miễn phí để phụ huynh và học sinh tham khảo.</p>
+      <p class="lede reveal d2">Trích từ bộ tài liệu anh Đạt tự biên soạn và video bài giảng của lớp, mở miễn phí để phụ huynh và học sinh tham khảo.</p>
     </div>
 
     <div class="sub-title reveal"><h3>Tài liệu mẫu</h3><span class="hand">Xem trước hoặc tải về bản PDF</span></div>
@@ -370,7 +359,6 @@
 
 <!-- ═════════ 6. Cảm nhận của học sinh (hiện khi có nội dung trong config.js) ═════════ -->
 <section class="sec tone-2" id="cam-nhan" hidden>
-  <div class="wave-top" aria-hidden="true"></div>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow reveal">Học sinh nói gì</span>
@@ -383,9 +371,6 @@
 
 <!-- ═════════ Liên hệ (đáy biển) ═════════ -->
 <footer class="contact" id="lien-he">
-  <video class="contact-video" muted loop playsinline preload="none" poster="assets/ocean/video/water-surface-poster.jpg" data-lazy-video aria-hidden="true">
-    <source src="assets/ocean/video/water-surface-loop.mp4" type="video/mp4" />
-  </video>
   <video class="contact-bubbles" muted loop playsinline preload="none" data-lazy-video data-alpha aria-hidden="true">
     <source src="assets/ocean/video/bubbles-overlay-alpha.webm" type="video/webm" />
   </video>
@@ -407,17 +392,9 @@
       </div>
     </div>
   </div>
-  <div class="seabed" aria-hidden="true">
-    <img class="deco sway" src="assets/ocean/svg/seaweed.svg" alt="" style="width:clamp(60px,7vw,110px); left:4%" />
-    <img class="deco" src="assets/ocean/svg/shell-scallop.svg" alt="" style="width:clamp(44px,5vw,72px); left:22%" />
-    <img class="deco" src="assets/ocean/svg/anchor.svg" alt="" style="width:clamp(44px,5vw,70px); left:46%" />
-    <img class="deco" src="assets/ocean/svg/starfish.svg" alt="" style="width:clamp(44px,5vw,70px); left:64%" />
-    <img class="deco" src="assets/ocean/svg/message-bottle.svg" alt="" style="width:clamp(34px,4vw,56px); left:80%" />
-    <img class="deco sway" src="assets/ocean/svg/seaweed.svg" alt="" style="width:clamp(60px,7vw,110px); right:3%; animation-delay:-2s" />
-  </div>
   <div class="foot-bar">
     <div class="wrap">
-      <span>© 2026 Lớp Toán Ngọc Đạt</span>
+      <span>© 2026 Lớp Toán anh Đạt</span>
       <nav aria-label="Liên kết cuối trang">
         <a href="#giao-vien">Giáo viên</a><a href="#chuong-trinh">Chương trình</a><a href="#lop-hoc">Lớp học</a><a href="#mau">Tài liệu mẫu</a><a href="login.html">Đăng nhập</a>
       </nav>
@@ -442,7 +419,7 @@
       <a class="btn primary sm" id="docDownload" href="#" download>Tải về</a>
       <button class="modal-close" type="button" data-close aria-label="Đóng">×</button>
     </div>
-    <iframe id="docFrame" title="Xem trước tài liệu"></iframe>
+    <div class="pdf-pages" id="docPages" tabindex="0" aria-label="Nội dung tài liệu"></div>
   </div>
 </div>
 

@@ -171,7 +171,7 @@
       if (!user) return showMsg("err", "Link đã hết hạn. Hãy yêu cầu link mới.");
       const res = await window.Auth.updatePassword(p1);
       if (!res.ok) return showMsg("err", friendly(res.error));
-      showMsg("ok", "Đã đổi mật khẩu. Đang chuyển vào khu học tập…");
+      showMsg("ok", "Đã đổi mật khẩu. Đang chuyển vào lớp học…");
       history.replaceState(null, "", location.pathname);
       setTimeout(goHome, 1200);
     });
