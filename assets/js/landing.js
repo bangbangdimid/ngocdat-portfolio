@@ -185,90 +185,16 @@
   });
   addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".modal.on").forEach(closeModal); });
 
-  /* ---------- document preview: pdf.js renders pages in-page ---------- */
-  // The browser's built-in PDF viewer cannot be framed reliably (Chrome blocks it
-  // under strict headers, phones download instead), so pages are drawn on canvases
-  // with the self-hosted pdf.js. Pages render as they scroll into view and release
-  // their bitmap when far away, keeping memory flat on long documents.
-  const PDFJS_DIR = new URL("assets/vendor/pdfjs-6.3.289/", document.baseURI).href;
-  let pdfjsLib = null, docSession = null;
-  async function loadPdfjs() {
-    if (!pdfjsLib) {
-      pdfjsLib = await import(PDFJS_DIR + "pdf.min.mjs");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_DIR + "pdf.worker.min.mjs";
-    }
-    return pdfjsLib;
-  }
-  function docNote(text, url) {
-    const box = $("docPages");
-    box.innerHTML = `<p class="pdf-note">${esc(text)}${url ? ` <a class="btn primary sm" href="${esc(url)}" download>Tải về</a>` : ""}</p>`;
-  }
-  async function openDoc(url, title) {
+  /* ---------- document preview (shared pdf.js reader, doc-preview.js) ---------- */
+  let docViewer = null;
+  function openDoc(url, title) {
     $("docTitle").textContent = title;
     $("docDownload").href = url;
-    docNote("Đang mở tài liệu…");
     openModal($("docModal"));
-    const session = { closed: false, doc: null, io: null };
-    docSession = session;
-    try {
-      const lib = await loadPdfjs();
-      const task = lib.getDocument({ url, enableXfa: false });
-      session.task = task;
-      const doc = await task.promise;
-      if (session.closed) { doc.destroy(); return; }
-      session.doc = doc;
-      await layoutPages(session);
-    } catch (err) {
-      if (session.closed) return;
-      console.error("pdf preview:", err);
-      docNote("Không xem trước được tài liệu này trên trình duyệt.", url);
-    }
+    docViewer = window.DocPreview.mount($("docPages"), url);
+    $("docPages").focus({ preventScroll: true });
   }
-  async function layoutPages(session) {
-    const box = $("docPages"), doc = session.doc;
-    const first = await doc.getPage(1);
-    const base = first.getViewport({ scale: 1 });
-    box.innerHTML = "";
-    for (let n = 1; n <= doc.numPages; n++) { // placeholders keep the scrollbar honest before rendering
-      const slot = document.createElement("div");
-      slot.className = "pdf-page"; slot.dataset.page = n;
-      slot.style.aspectRatio = `${base.width} / ${base.height}`;
-      slot.innerHTML = `<span class="pdf-num">${n} / ${doc.numPages}</span>`;
-      box.appendChild(slot);
-    }
-    box.scrollTop = 0; box.focus({ preventScroll: true });
-    session.io = new IntersectionObserver((entries) => entries.forEach((e) => {
-      if (e.isIntersecting) renderPage(session, e.target); else releasePage(e.target);
-    }), { root: box, rootMargin: "120% 0px" });
-    box.querySelectorAll(".pdf-page").forEach((s) => session.io.observe(s));
-  }
-  async function renderPage(session, slot) {
-    if (slot.querySelector("canvas") || slot.dataset.busy) return;
-    slot.dataset.busy = "1";
-    try {
-      const page = await session.doc.getPage(+slot.dataset.page);
-      if (session.closed) return;
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      const scale = (slot.clientWidth * dpr) / page.getViewport({ scale: 1 }).width;
-      const viewport = page.getViewport({ scale });
-      const canvas = document.createElement("canvas");
-      canvas.width = Math.floor(viewport.width); canvas.height = Math.floor(viewport.height);
-      await page.render({ canvas, viewport }).promise;
-      if (!session.closed && slot.isConnected) slot.prepend(canvas);
-    } catch (err) {
-      if (!session.closed) console.error("pdf page:", err);
-    } finally { delete slot.dataset.busy; }
-  }
-  function releasePage(slot) {
-    const c = slot.querySelector("canvas");
-    if (c) { c.width = c.height = 0; c.remove(); }
-  }
-  function closeDoc() {
-    const s = docSession; docSession = null;
-    if (s) { s.closed = true; s.io?.disconnect(); s.task?.destroy(); }
-    $("docPages").querySelectorAll(".pdf-page").forEach(releasePage);
-    $("docPages").innerHTML = "";
-  }
+  function closeDoc() { docViewer?.destroy(); docViewer = null; }
   function openVideo(src, title) {
     $("videoTitle").textContent = title;
     const v = $("videoPlayer"); v.src = src;

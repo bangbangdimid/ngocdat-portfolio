@@ -7,7 +7,7 @@
   const CFG = window.APP_CONFIG;
   const BUCKET = CFG.STORAGE_BUCKET;
   const $ = (id) => document.getElementById(id);
-  const state = { courses: [], current: null, pendingDoc: null };
+  const state = { courses: [], current: null, pendingDoc: null, materials: [] };
   const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
   // files that a browser could execute when opened from storage
   const BLOCKED_EXT = /\.(html?|xhtml|svg|js|mjs|php|exe|bat|cmd|sh|msi|jar|apk)$/i;
@@ -35,19 +35,34 @@
     let s = ""; for (const b of bytes) s += a[b % a.length];
     return s.slice(0, 4) + "-" + s.slice(4);
   }
+  // modals: closing runs that modal's clean-up (stop video, free PDF canvases)
+  const onModalClose = {};
   const openModal = (id) => $(id).classList.add("on");
-  const closeModal = (id) => $(id).classList.remove("on");
+  function closeModal(id) {
+    const m = $(id);
+    if (!m.classList.contains("on")) return;
+    m.classList.remove("on");
+    onModalClose[id]?.();
+  }
   document.querySelectorAll(".modal").forEach((m) => {
-    m.addEventListener("click", (e) => { if (e.target === m) m.classList.remove("on"); });
-    m.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => m.classList.remove("on")));
+    m.addEventListener("click", (e) => { if (e.target === m) closeModal(m.id); });
+    m.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => closeModal(m.id)));
   });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".modal.on").forEach((m) => closeModal(m.id)); });
 
   const ICONS = {
     video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>',
     doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/></svg>',
     edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 113 3L7 19l-4 1 1-4z"/></svg>',
     del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>',
+    view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   };
+  const VIS_LABEL = { sample: "Mẫu công khai", enrolled: "Chỉ ghi danh" };
+  const KIND_LABEL = { pdf: "PDF", image: "Ảnh", video: "Video MP4", audio: "Âm thanh" };
+  const PREVIEW_TTL = 600; // seconds a preview/download link stays valid
+  // uploads are stored as "<timestamp>_<name>"; show the original name again
+  const fileName = (path) => (path || "").split("/").pop().replace(/^\d+_/, "");
+  const fileExt = (path) => ((path || "").match(/\.([a-z0-9]+)$/i) || [, ""])[1].toUpperCase();
 
   // ---------- courses ----------
   async function loadCourses() {
@@ -115,6 +130,7 @@
     $("cvTitle").textContent = c.title;
     $("cvDesc").textContent = c.description || "";
     $("cvPublishBtn").textContent = c.is_published ? "Gỡ xuất bản" : "Xuất bản";
+    $("cvViewBtn").href = "khoahoc.html?course=" + encodeURIComponent(c.id);
   }
   $("backToCourses").addEventListener("click", (e) => { e.preventDefault(); $("courseView").style.display = "none"; $("coursesView").style.display = ""; state.current = null; });
   $("newCourseBtn").addEventListener("click", () => openCourseModal(null));
@@ -153,28 +169,146 @@
   async function loadMaterials() {
     const { data, error } = await sb.from("materials").select("*").eq("course_id", state.current.id).order("sort_order").order("created_at");
     if (error) { toast("Lỗi tải nội dung", true); return; }
-    const mats = data || [];
+    state.materials = data || [];
+    const mats = state.materials;
     $("matCount").textContent = mats.length + " mục";
-    $("materialsList").innerHTML = mats.length ? mats.map((m) => `
-      <div class="item-row" data-id="${m.id}" data-kind="${m.kind}" data-path="${esc(m.storage_path || "")}">
-        <div class="ic">${ICONS[m.kind] || ICONS.doc}</div>
-        <div class="meta">
-          <div class="t">${esc(m.title)}</div>
-          <div class="s">${m.kind === "video" ? "Video · " + esc(m.youtube_id || "") : "Tài liệu"} ·
-            <span class="vis-tag ${m.visibility}">${m.visibility === "sample" ? "Mẫu công khai" : "Chỉ ghi danh"}</span></div>
-        </div>
-        <div class="acts"><button class="icon-btn danger" data-del title="Xoá">${ICONS.del}</button></div>
-      </div>`).join("") : "<p class='muted'>Chưa có nội dung nào.</p>";
-    $("materialsList").querySelectorAll(".item-row").forEach((row) =>
-      row.querySelector("[data-del]").addEventListener("click", () => deleteMaterial(row.dataset)));
+    $("materialsList").innerHTML = mats.length ? mats.map(materialRow).join("") : "<p class='muted'>Chưa có nội dung nào.</p>";
   }
-  async function deleteMaterial(ds) {
-    if (!confirm("Xoá mục này?")) return;
-    if (ds.kind === "doc" && ds.path) { try { await sb.storage.from(BUCKET).remove([ds.path]); } catch {} }
-    const { error } = await sb.from("materials").delete().eq("id", ds.id);
+  function materialRow(m) {
+    const isVideo = m.kind === "video";
+    const thumb = isVideo
+      ? `<img class="thumb" src="https://i.ytimg.com/vi/${encodeURIComponent(m.youtube_id || "")}/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" />`
+      : `<div class="ic">${ICONS.doc}</div>`;
+    const kind = isVideo ? "Video YouTube" : (KIND_LABEL[window.DocPreview.fileKind(m.storage_path)] || fileExt(m.storage_path) || "Tệp");
+    return `
+      <div class="item-row" data-id="${m.id}">
+        <button class="thumb-btn" type="button" data-act="view" title="Xem">${thumb}</button>
+        <div class="meta">
+          <button class="t t-link" type="button" data-act="view">${esc(m.title)}</button>
+          <div class="s">#${m.sort_order ?? 0} · ${esc(kind)}${isVideo ? "" : " · " + esc(fileName(m.storage_path))} ·
+            <span class="vis-tag ${m.visibility}">${VIS_LABEL[m.visibility] || ""}</span></div>
+        </div>
+        <div class="acts">
+          <button class="icon-btn" type="button" data-act="view" title="Xem">${ICONS.view}</button>
+          <button class="icon-btn" type="button" data-act="edit" title="Sửa">${ICONS.edit}</button>
+          <button class="icon-btn danger" type="button" data-act="del" title="Xoá">${ICONS.del}</button>
+        </div>
+      </div>`;
+  }
+  $("materialsList").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-act]");
+    const m = b && state.materials.find((x) => x.id === b.closest(".item-row").dataset.id);
+    if (!m) return;
+    if (b.dataset.act === "view") previewMaterial(m);
+    else if (b.dataset.act === "edit") openMatModal(m);
+    else if (b.dataset.act === "del") deleteMaterial(m);
+  });
+  async function deleteMaterial(m) {
+    if (!confirm(`Xoá "${m.title}"?`)) return;
+    if (m.kind === "doc" && m.storage_path) {
+      const { error: rmErr } = await sb.storage.from(BUCKET).remove([m.storage_path]);
+      if (rmErr) console.warn("storage remove:", rmErr); // the row is still removed, so students lose access
+    }
+    const { error } = await sb.from("materials").delete().eq("id", m.id);
     if (error) return toast("Lỗi: " + error.message, true);
     toast("Đã xoá"); loadMaterials();
   }
+
+  // ---------- material preview (what students will see) ----------
+  let pvViewer = null, pvToken = 0;
+  onModalClose.previewModal = () => {
+    pvToken++; // ignore links that arrive after closing
+    pvViewer?.destroy(); pvViewer = null;
+    $("pvBody").innerHTML = ""; // also stops a playing video
+    $("pvActs").innerHTML = "";
+  };
+  const pvNote = (text) => `<p class="pdf-note">${esc(text)}</p>`;
+  async function previewMaterial(m) {
+    const token = ++pvToken;
+    const card = $("previewModal").querySelector(".preview-card");
+    const body = $("pvBody"), acts = $("pvActs");
+    $("pvTitle").textContent = m.title;
+    $("pvSub").innerHTML = `<span class="vis-tag ${m.visibility}">${VIS_LABEL[m.visibility] || ""}</span>${m.description ? " " + esc(m.description) : ""}`;
+    acts.innerHTML = "";
+    if (m.kind === "video") {
+      card.classList.add("is-media");
+      body.innerHTML = `<div class="pv-video"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(m.youtube_id)}?rel=0&modestbranding=1&autoplay=1"
+        title="${esc(m.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+      acts.innerHTML = `<a class="btn sm" href="https://youtu.be/${encodeURIComponent(m.youtube_id)}" target="_blank" rel="noopener">Mở trên YouTube</a>`;
+      openModal("previewModal");
+      return;
+    }
+    const kind = window.DocPreview.fileKind(m.storage_path);
+    card.classList.toggle("is-media", kind !== "pdf");
+    body.innerHTML = pvNote("Đang tạo link xem…");
+    openModal("previewModal");
+    const store = sb.storage.from(BUCKET);
+    const [view, dl] = await Promise.all([
+      store.createSignedUrl(m.storage_path, PREVIEW_TTL),
+      store.createSignedUrl(m.storage_path, PREVIEW_TTL, { download: fileName(m.storage_path) || true }),
+    ]);
+    if (token !== pvToken) return; // closed or replaced meanwhile
+    if (view.error || !view.data?.signedUrl) {
+      body.innerHTML = pvNote("Không tạo được link xem. Tệp có thể đã bị xoá khỏi kho lưu trữ.");
+      return;
+    }
+    const url = view.data.signedUrl, dlUrl = dl.data?.signedUrl || url;
+    acts.innerHTML = `<a class="btn primary sm" href="${esc(dlUrl)}" target="_blank" rel="noopener">Tải về</a>`;
+    if (kind === "pdf") {
+      body.innerHTML = "";
+      const box = document.createElement("div");
+      body.appendChild(box);
+      pvViewer = window.DocPreview.mount(box, url, { downloadUrl: dlUrl });
+    } else if (kind === "image") {
+      body.innerHTML = `<div class="pv-media"><img src="${esc(url)}" alt="${esc(m.title)}" /></div>`;
+    } else if (kind === "video") {
+      body.innerHTML = `<div class="pv-media"><video src="${esc(url)}" controls playsinline></video></div>`;
+    } else if (kind === "audio") {
+      body.innerHTML = `<div class="pv-media"><audio src="${esc(url)}" controls></audio></div>`;
+    } else {
+      body.innerHTML = pvNote(`Trình duyệt không xem trước được tệp ${fileExt(m.storage_path) || "này"}. Bấm "Tải về" để mở bằng ứng dụng trên máy.`);
+    }
+  }
+
+  // ---------- material edit ----------
+  function openMatModal(m) {
+    $("mmId").value = m.id;
+    $("mmTitle").value = m.title || "";
+    $("mmDesc").value = m.description || "";
+    $("mmVis").value = m.visibility;
+    $("mmOrder").value = m.sort_order ?? 0;
+    openModal("matModal");
+    $("mmTitle").focus();
+  }
+  $("matForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const m = state.materials.find((x) => x.id === $("mmId").value);
+    if (!m) return;
+    const patch = {
+      title: $("mmTitle").value.trim(), description: $("mmDesc").value.trim(),
+      visibility: $("mmVis").value, sort_order: parseInt($("mmOrder").value) || 0,
+    };
+    if (!patch.title) return toast("Nhập tiêu đề", true);
+    const btn = $("mmSave"); btn.disabled = true;
+    let moved = null;
+    try {
+      // a document's folder decides who may read the file (storage policies),
+      // so changing its visibility moves it between samples/ and course/
+      if (m.kind === "doc" && m.storage_path && patch.visibility !== m.visibility) {
+        const to = m.storage_path.replace(/^(samples|course)\//, (patch.visibility === "sample" ? "samples" : "course") + "/");
+        const mv = await sb.storage.from(BUCKET).move(m.storage_path, to);
+        if (mv.error) throw mv.error;
+        moved = { from: m.storage_path, to };
+        patch.storage_path = to;
+      }
+      const { error } = await sb.from("materials").update(patch).eq("id", m.id);
+      if (error) throw error;
+      closeModal("matModal"); toast("Đã lưu thay đổi"); loadMaterials();
+    } catch (err) {
+      if (moved) await sb.storage.from(BUCKET).move(moved.to, moved.from); // put the file back
+      toast("Lỗi: " + err.message, true);
+    } finally { btn.disabled = false; }
+  });
 
   $("videoForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -247,11 +381,15 @@
     $("codesList").querySelectorAll(".item-row").forEach((row) => {
       row.querySelector("[data-toggle]").addEventListener("click", async () => {
         const c = codes.find((x) => x.id === row.dataset.id);
-        await sb.from("access_codes").update({ active: !c.active }).eq("id", c.id); loadCodes();
+        const { error } = await sb.from("access_codes").update({ active: !c.active }).eq("id", c.id);
+        if (error) return toast("Lỗi: " + error.message, true);
+        toast(c.active ? "Đã tắt mã " + c.code : "Đã bật mã " + c.code); loadCodes();
       });
       row.querySelector("[data-del]").addEventListener("click", async () => {
-        if (!confirm("Xoá mã này?")) return;
-        await sb.from("access_codes").delete().eq("id", row.dataset.id); loadCodes();
+        if (!confirm("Xoá mã này? Học sinh đã kích hoạt vẫn giữ quyền học.")) return;
+        const { error } = await sb.from("access_codes").delete().eq("id", row.dataset.id);
+        if (error) return toast("Lỗi: " + error.message, true);
+        toast("Đã xoá mã"); loadCodes();
       });
     });
   }

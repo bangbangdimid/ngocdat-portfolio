@@ -4,7 +4,7 @@
     {
       "source": "/((?!assets/samples/).*)",
       "headers": [
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; connect-src 'self' https://oblugkacwssddaibbvvx.supabase.co wss://oblugkacwssddaibbvvx.supabase.co; frame-src 'self' https://www.youtube-nocookie.com https://challenges.cloudflare.com; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://oblugkacwssddaibbvvx.supabase.co; connect-src 'self' https://oblugkacwssddaibbvvx.supabase.co wss://oblugkacwssddaibbvvx.supabase.co; frame-src 'self' https://www.youtube-nocookie.com https://challenges.cloudflare.com; media-src 'self' https://oblugkacwssddaibbvvx.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests" },
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },

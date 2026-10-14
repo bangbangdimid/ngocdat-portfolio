@@ -1,0 +1,11 @@
+/* ============================================================
+   doc-preview.css - in-page document reader (doc-preview.js)
+   Shared by the home page, admin panel and course viewer.
+   ============================================================ */
+.pdf-pages { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; display: grid; align-content: start; justify-items: center; gap: .9rem; padding: clamp(.5rem, 2vw, 1.2rem); background: #e4ecf5; }
+.pdf-pages:focus-visible { outline-offset: -4px; }
+.pdf-page { position: relative; width: min(100%, 860px); background: #fff; border: 1.5px solid var(--ink); box-shadow: 3px 3px 0 rgba(43, 63, 108, .3); }
+.pdf-page canvas { display: block; width: 100%; height: auto; }
+.pdf-num { position: absolute; right: .5rem; bottom: .5rem; font-size: var(--text-xs); font-weight: 600; padding: .15em .55em; background: rgba(255, 255, 255, .92); border: 1.5px solid var(--ink); border-radius: 999px; }
+.pdf-note { align-self: center; margin-top: 18vh; padding: 0 1rem; text-align: center; font-family: var(--hand); font-size: 1.3rem; display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+.pdf-pages .pdf-note .btn { font-family: var(--sans); }

@@ -78,6 +78,14 @@ Tab **Tài liệu (tệp)** → kéo-thả tệp → đặt tiêu đề, quyền
 - **Công khai (mẫu)**: hiện ở trang chủ, mục **Tài liệu & bài giảng mẫu**, cho phụ huynh xem thử. Chỉ hiện khi khoá đã xuất bản.
 - **Thứ tự**: số nhỏ hiện trước (0, 1, 2...).
 
+### Xem lại, sửa và xoá nội dung đã đăng
+Trong **Danh sách nội dung**, mỗi dòng có 3 nút:
+- **Xem** (hình con mắt, hoặc bấm vào tên/ảnh nhỏ): mở đúng thứ học sinh sẽ thấy. Video YouTube phát ngay; PDF đọc từng trang; ảnh, MP4, MP3 xem trực tiếp; Word/Excel/PowerPoint/ZIP có nút **Tải về**.
+- **Sửa** (cây bút): đổi tiêu đề, mô tả, thứ tự, quyền xem. Đổi quyền xem của tài liệu thì web tự chuyển tệp sang đúng thư mục, không cần tải lại.
+- **Xoá** (thùng rác): xoá cả mục lẫn tệp trong kho.
+
+Nút **Xem như học sinh** ở đầu trang khoá mở trang học của khoá đó trong tab mới, đúng như học sinh nhìn thấy.
+
 ## 4. Phát mã kích hoạt
 Tab **Mã kích hoạt** → nhập mã (vd `TOAN9-2026`) hoặc **để trống để tự sinh**, rồi đặt:
 - **Số lượt dùng tối đa**: mã chung cho cả lớp thì đặt bằng sĩ số (vd 30); mã riêng từng em thì để 1.
