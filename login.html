@@ -38,8 +38,8 @@
         <a class="home" href="index.html">← Trang chủ</a>
       </div>
 
-      <h1>Chào mừng trở lại</h1>
-      <p class="sub">Đăng nhập để vào lớp học, hoặc tạo tài khoản mới.</p>
+      <h1 id="authTitle">Chào mừng trở lại</h1>
+      <p class="sub" id="authSub">Đăng nhập để vào lớp học.</p>
 
       <div class="auth-tabs">
         <button id="tabLogin" class="active">Đăng nhập</button>
@@ -70,7 +70,6 @@
       <!-- FORGOT PASSWORD -->
       <section class="auth-pane" id="paneForgot">
         <form id="forgotForm" novalidate>
-          <p class="sub">Nhập email tài khoản. Bạn sẽ nhận được link để đặt mật khẩu mới.</p>
           <div class="field">
             <label for="fgEmail">Email</label>
             <input type="email" id="fgEmail" autocomplete="email" required placeholder="you@example.com" />
@@ -86,7 +85,6 @@
       <!-- SET NEW PASSWORD (after clicking the email link) -->
       <section class="auth-pane" id="paneReset">
         <form id="resetForm" novalidate>
-          <p class="sub">Đặt mật khẩu mới cho tài khoản của bạn.</p>
           <div class="field">
             <label for="rsPass">Mật khẩu mới</label>
             <input type="password" id="rsPass" autocomplete="new-password" required minlength="8" placeholder="••••••••" />
@@ -131,6 +129,7 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/supabaseClient.js"></script>
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/typo.js"></script>
 <script src="assets/js/login.js"></script>
 </body>
 </html>

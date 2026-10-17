@@ -231,6 +231,7 @@
           <span><span class="name">${esc(t.name)}</span><br />${t.badge ? `<span class="badge">${esc(t.badge)}</span>` : ""}</span>
         </figcaption>
       </figure>`).join("");
+    window.Typo?.apply($("quotes"));
     $("cam-nhan").hidden = false;
     $("navQuotes").hidden = false;
     navMap.set("cam-nhan", $("navQuotes").querySelector("a")); spy.observe($("cam-nhan"));
@@ -298,6 +299,7 @@
       if (/\.pdf$/i.test(b.dataset.storage)) openDoc(data.signedUrl, b.dataset.title || "");
       else window.open(data.signedUrl, "_blank", "noopener");
     });
+    window.Typo?.apply($("mau"));
     observeReveals($("mau"));
   }
 })();

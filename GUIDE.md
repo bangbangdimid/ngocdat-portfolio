@@ -168,6 +168,12 @@ ZALO_URL:      "https://zalo.me/0775118240",
 Các đoạn chữ khác (giới thiệu, thành tích, lớp học) sửa trực tiếp trong `index.html`.
 Quy ước: chỉ tiếng Việt, xưng "anh Đạt", dùng dấu gạch ngắn "-" và không dùng dấu gạch dài.
 
+**Chatbot tư vấn** (nút bong bóng chat ở góc phải màn hình): trợ lý tự động, miễn phí, chạy ngay trên trình duyệt, không cần máy chủ hay khoá API nên không tốn tiền và không thể "bịa" thông tin. Bot trả lời về các lớp, cách tạo tài khoản, tài liệu mẫu, thành tích của anh Đạt... và chuyển khách sang Zalo/gọi điện với câu hỏi về học phí, lịch học, hình thức học (vì trang web chưa công bố những thông tin này).
+- Muốn đổi nội dung trả lời (ví dụ khi đã có bảng học phí): mở `assets/js/chat-kb.js`, tìm mục tương ứng (`id: "fee"` là học phí, `"schedule"` là lịch học, `"hsg9"` là lớp HSG Toán 9...), sửa chữ trong `say`.
+- Muốn bot hiểu thêm cách hỏi mới: thêm cụm từ vào `kw` của mục đó, **viết thường và không dấu** (ví dụ `"hoc phi"`). Sau khi sửa, hỏi thử vài câu trên web để kiểm tra.
+- Khi mở thêm lớp mới, nhớ thêm một mục cho lớp đó trong `chat-kb.js` và thêm vào `next` của mục `courses`.
+
+**Ngắt dòng tiếng Việt**: file `assets/js/typo.js` giữ các cụm như "TP. Hồ Chí Minh", "lớp 10", "Đại học Ngoại thương" luôn nằm trên một dòng, và không để dòng cuối chỉ còn một chữ. Có cụm tên riêng mới hay bị tách dòng thì thêm vào danh sách `KEEP` đầu file đó.
 **Thêm video mẫu tự quay (mp4) vào trang chủ**: nén về 720p khổ dọc 9:16, đặt vào `assets/lessons/` kèm ảnh poster `.jpg` cùng tên, rồi thêm một khối `lesson-card` trong `index.html`. Video trên 20 MB nên đưa lên YouTube và đăng qua trang Quản trị.
 
 ---

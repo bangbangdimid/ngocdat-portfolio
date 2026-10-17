@@ -25,11 +25,22 @@
 
   // ---------- panes ----------
   const PANES = { login: "paneLogin", signup: "paneSignup", forgot: "paneForgot", reset: "paneReset" };
+  // each pane gets its own heading: a new visitor on Đăng ký must not read "welcome back"
+  const COPY = {
+    login:  { title: "Chào mừng trở lại", sub: "Đăng nhập để vào lớp học.", tab: "Đăng nhập" },
+    signup: { title: "Tạo tài khoản mới", sub: "Chỉ mất 1 phút. Đăng ký xong, nhập mã lớp anh Đạt gửi để vào học.", tab: "Đăng ký" },
+    forgot: { title: "Quên mật khẩu?", sub: "Nhập email của tài khoản. Mình sẽ gửi link để đặt mật khẩu mới.", tab: "Quên mật khẩu" },
+    reset:  { title: "Đặt mật khẩu mới", sub: "Chọn mật khẩu mới cho tài khoản của bạn.", tab: "Đặt mật khẩu mới" },
+  };
   function selectPane(name, keepMsg) {
     Object.entries(PANES).forEach(([k, id]) => $(id).classList.toggle("active", k === name));
     $("tabLogin").classList.toggle("active", name === "login");
     $("tabSignup").classList.toggle("active", name === "signup");
     document.querySelector(".auth-tabs").style.display = name === "reset" ? "none" : "";
+    $("authTitle").textContent = COPY[name].title;
+    $("authSub").textContent = COPY[name].sub;
+    document.title = COPY[name].tab + " - Ara đang dạy toán";
+    window.Typo?.apply($("authSub"));
     if (!keepMsg) clearMsg();
     ensureWidget(PANES[name]);
   }
