@@ -173,7 +173,12 @@ Quy ước: chỉ tiếng Việt, xưng "anh Đạt", dùng dấu gạch ngắn 
 - Muốn bot hiểu thêm cách hỏi mới: thêm cụm từ vào `kw` của mục đó, **viết thường và không dấu** (ví dụ `"hoc phi"`). Sau khi sửa, hỏi thử vài câu trên web để kiểm tra.
 - Khi mở thêm lớp mới, nhớ thêm một mục cho lớp đó trong `chat-kb.js` và thêm vào `next` của mục `courses`.
 
-**Ngắt dòng tiếng Việt**: file `assets/js/typo.js` giữ các cụm như "TP. Hồ Chí Minh", "lớp 10", "Đại học Ngoại thương" luôn nằm trên một dòng, và không để dòng cuối chỉ còn một chữ. Có cụm tên riêng mới hay bị tách dòng thì thêm vào danh sách `KEEP` đầu file đó.
+**Ngắt dòng tiếng Việt**: tiếng Việt viết từng âm tiết cách nhau bằng dấu cách nên trình duyệt hay cắt đôi một từ ("toàn / quốc", "kiểm / tra") hoặc để một chữ lẻ ở dòng cuối. File `assets/js/typo.js` giữ các từ ghép, tên riêng ("TP. Hồ Chí Minh"), số đi kèm từ ("lớp 10", "6-12") luôn trên cùng một dòng, và không để dòng cuối chỉ còn một chữ. Nó dùng danh sách từ ghép trong `assets/js/vi-words.js`.
+- Thấy một từ ghép vẫn bị cắt đôi: thêm từ đó vào `tools/words-extra.txt` (mỗi từ một dòng, viết thường, có dấu), rồi chạy `node tools/build-words.js` để tạo lại `vi-words.js`, commit và push. Nhờ Claude làm giúp cũng được.
+- Đã viết thêm chữ mới trong `index.html` (hoặc các trang khác): chạy lại `node tools/build-words.js` để công cụ tự nhận ra từ ghép trong chữ mới (nó đối chiếu với từ điển Wiktionary tiếng Việt). Danh sách chỉ chứa vài trăm từ nên rất nhẹ.
+- Một cặp chữ bị ghép nhầm (ví dụ "dạy tư" trong "dạy tư duy") thì thêm vào `tools/words-skip.txt`.
+- Tên riêng viết hoa, có dấu gạch hoặc dấu phẩy ("Huy chương Vàng", "AMC, AMO") thêm vào danh sách `KEEP` đầu file `typo.js`.
+
 **Thêm video mẫu tự quay (mp4) vào trang chủ**: nén về 720p khổ dọc 9:16, đặt vào `assets/lessons/` kèm ảnh poster `.jpg` cùng tên, rồi thêm một khối `lesson-card` trong `index.html`. Video trên 20 MB nên đưa lên YouTube và đăng qua trang Quản trị.
 
 ---

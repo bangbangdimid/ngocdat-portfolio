@@ -1,0 +1,11 @@
+# Pairs that exist in the dictionary but are wrong in this site's sentences,
+# because they steal a syllable from the real word next to them.
+# One per line, lower case. After editing: node tools/build-words.js
+dạy tư
+có tài
+học cụ
+không kích
+từ thông
+từng lớp
+động từ
+thi tuyển

@@ -1,0 +1,116 @@
+#!/usr/bin/env node
+/* ============================================================
+   build-words.js - generates assets/js/vi-words.js
+
+   typo.js needs to know which syllables form one Vietnamese word
+   ("toàn quốc", "bản chất", "kiểm tra") so that a line never breaks
+   inside it. The list is built from:
+     1. every 2-4 syllable run in the site's own text (HTML pages and
+        the strings in the scripts) that is also a lower-case title in
+        the Vietnamese Wiktionary (CC BY-SA 4.0), minus words-skip.txt;
+     2. tools/words-extra.txt, maintained by hand.
+   Only a few hundred words end up shipped, not the whole dictionary.
+
+   Run after changing the site's text or the two .txt files:
+       node tools/build-words.js
+   The Wiktionary title list (about 1.3 MB) is downloaded once and cached
+   in the operating system's temp folder.
+   ============================================================ */
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const zlib = require("zlib");
+const https = require("https");
+
+const ROOT = path.resolve(__dirname, "..");
+const OUT = path.join(ROOT, "assets/js/vi-words.js");
+const TITLES_URL = "https://dumps.wikimedia.org/viwiktionary/latest/viwiktionary-latest-all-titles-in-ns0.gz";
+const CACHE = path.join(os.tmpdir(), "viwiktionary-titles.gz");
+const SOURCES = [
+  "index.html", "login.html", "hoc.html", "khoahoc.html",
+  "assets/js/chat-kb.js", "assets/js/config.js", "assets/js/login.js",
+  "assets/js/hoc.js", "assets/js/khoahoc.js", "assets/js/landing.js", "assets/js/chatbot.js",
+];
+const MAX_SYLLABLES = 4;
+const VI_LETTERS = "a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđĐ";
+const WORD_RE = new RegExp("^[" + VI_LETTERS + "]+( [" + VI_LETTERS + "]+){1,3}$");
+const NO_FOREIGN = /[fjwz]/;
+
+const INLINE = /^(b|i|em|strong|u|mark)$/i;
+const stripTags = (v) => v.replace(/<\/?([a-z0-9]+)[^>]*>/gi, (m, t) => (INLINE.test(t) ? "" : " | "));
+const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&nbsp;": " ", "&quot;": '"' };
+
+function readList(file) {
+  return fs.readFileSync(path.join(__dirname, file), "utf8").split(/\r?\n/)
+    .map((l) => l.trim().toLowerCase()).filter((l) => l && !l.startsWith("#"));
+}
+
+// text pieces of one source file (HTML text, or the string literals of a script)
+function textsOf(file) {
+  const src = fs.readFileSync(path.join(ROOT, file), "utf8").replace(/\r\n/g, "\n");
+  if (file.endsWith(".html")) {
+    const body = src.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<!--[\s\S]*?-->/g, " ");
+    return [stripTags(body).replace(/&\w+;/g, (e) => ENTITIES[e] || " ")];
+  }
+  const out = [];
+  const literal = /"((?:[^"\\\n]|\\.)*)"|'((?:[^'\\\n]|\\.)*)'|`((?:[^`\\]|\\.)*)`/g;
+  let m;
+  while ((m = literal.exec(src))) {
+    const v = m[1] || m[2] || m[3] || "";
+    if (/[^\x00-\x7f]/.test(v) || / /.test(v)) out.push(stripTags(v).replace(/\$\{[^}]*\}/g, " | "));
+  }
+  return out;
+}
+
+// every 2-4 syllable run of lower-cased text on the site
+function siteNgrams() {
+  const grams = new Set();
+  for (const file of SOURCES) for (const t of textsOf(file)) {
+    const runs = t.replace(/ /g, " ").match(/\p{L}+(?: \p{L}+)*/gu) || [];
+    for (const run of runs) {
+      const w = run.toLowerCase().split(" ");
+      for (let n = 2; n <= MAX_SYLLABLES; n++) for (let i = 0; i + n <= w.length; i++) grams.add(w.slice(i, i + n).join(" "));
+    }
+  }
+  return grams;
+}
+
+function download(url, dest) {
+  return new Promise((resolve, reject) => {
+    https.get(url, { headers: { "User-Agent": "ngocdat-site-build/1.0" } }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) return resolve(download(res.headers.location, dest));
+      if (res.statusCode !== 200) return reject(new Error("HTTP " + res.statusCode + " for " + url));
+      const file = fs.createWriteStream(dest);
+      res.pipe(file);
+      file.on("finish", () => file.close(resolve));
+    }).on("error", reject);
+  });
+}
+
+async function wiktionaryWords() {
+  if (!fs.existsSync(CACHE)) { console.log("downloading", TITLES_URL); await download(TITLES_URL, CACHE); }
+  const titles = zlib.gunzipSync(fs.readFileSync(CACHE)).toString("utf8").split("\n");
+  const words = new Set();
+  for (const raw of titles) {
+    const t = raw.replace(/_/g, " ");
+    if (t === t.toLowerCase() && WORD_RE.test(t) && !NO_FOREIGN.test(t)) words.add(t);
+  }
+  return words;
+}
+
+(async () => {
+  const dictionary = await wiktionaryWords();
+  const skip = new Set(readList("words-skip.txt"));
+  const found = [...siteNgrams()].filter((g) => dictionary.has(g) && !skip.has(g));
+  const extra = readList("words-extra.txt");
+  const all = [...new Set([...found, ...extra])].filter((w) => !skip.has(w)).sort((a, b) => a.localeCompare(b, "vi"));
+
+  const header = [
+    "/* GENERATED by tools/build-words.js - do not edit by hand.",
+    "   Vietnamese words of 2-4 syllables that typo.js keeps on one line.",
+    "   Sources: words found on this site that also exist in the Vietnamese Wiktionary",
+    "   (CC BY-SA 4.0, https://vi.wiktionary.org) plus tools/words-extra.txt. */",
+  ].join("\n");
+  fs.writeFileSync(OUT, header + "\nwindow.VI_WORDS = " + JSON.stringify(all.join("|")) + ";\n");
+  console.log("site words found in Wiktionary:", found.length, "| manual:", extra.length, "| written:", all.length, "->", path.relative(ROOT, OUT));
+})().catch((e) => { console.error(e); process.exit(1); });

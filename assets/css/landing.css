@@ -52,6 +52,10 @@
 .corner.tl { left: 0; top: 0; }
 .corner.br { right: 0; bottom: 0; transform: rotate(180deg); }
 .deco { position: absolute; pointer-events: none; z-index: 0; will-change: transform; }
+/* hero ornaments live in the top corners, above the text block, at every width (no scroll parallax:
+   it used to slide them down over the headline) */
+.hero .d-gulls { width: clamp(56px, 11vw, 150px); left: 3%; top: 100px; }
+.hero .d-spark { width: clamp(36px, 5vw, 60px); right: 6%; top: 104px; }
 .hero-inner { position: relative; z-index: 1; max-width: 980px; }
 /* hero copy animates in with pure CSS so the LCP text never waits for JS */
 @keyframes rise-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
@@ -262,6 +266,7 @@
   .styles { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 980px) {
+  .hero .d-boat { display: none; } /* it would sit behind the buttons and the floating contact stack */
   .nav { left: 12px; right: 12px; transform: none; justify-content: space-between; padding-left: .55rem; }
   .nav-burger { display: inline-flex; }
   .nav-links { display: none; position: absolute; top: calc(100% + 10px); left: 0; right: 0; flex-direction: column; gap: .2rem; padding: .8rem; background: var(--foam); border: var(--stroke); border-radius: var(--r-md); box-shadow: var(--riso); }

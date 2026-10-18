@@ -1,0 +1,210 @@
+# Vietnamese compound words to keep on one line (one per line, lower case).
+# They are added on top of the words found on the site that also exist in the
+# Vietnamese Wiktionary. Lines starting with # are comments.
+# After editing: node tools/build-words.js
+
+# --- missing from Wiktionary but used on this site ---
+bài kiểm tra
+bậc hai
+bậc nhất
+bảng giá
+bên dưới
+cầm tay
+máy tính cầm tay
+chuẩn chỉ
+cùng nhau
+cực hạn
+cấp quận
+dành cho
+dạng bài
+dễ hiểu
+giải toán
+giải nhất
+giải ba
+gọi điện
+hết hạn
+hết lượt
+họ tên
+học thử
+hệ phương trình
+hệ thức lượng
+học sinh giỏi
+khá giỏi
+lịch học
+lời giải
+lời giảng
+luyện thi
+ôn thi
+mã lớp
+mất điểm
+một biến
+mở khoá
+nghiệm nguyên
+nhiều lần
+phép chia hết
+phép toán
+phía trên
+số điện thoại
+tiếng anh
+tiếng việt
+trang chủ
+tuỳ chọn
+tạm khoá
+tải về
+tải lại
+tải lên
+tính nhanh
+từng bước
+tự luyện
+tự biên soạn
+vài phút
+vẻ đẹp
+xem trước
+xem lại
+đáng tiếc
+đề thi
+đồng quy
+ẩn phụ
+đặt lại
+đào sâu
+tỉ lệ thức
+
+# --- school and study ---
+học tập
+học hành
+học kỳ
+học bạ
+học bổng
+học vấn
+học lực
+học trò
+trường học
+giờ học
+buổi học
+môn học
+giáo trình
+giáo án
+giáo dục
+thầy cô
+thầy giáo
+cô giáo
+bài thi
+đề cương
+đáp án
+hướng dẫn
+ôn tập
+ôn luyện
+luyện tập
+thi cử
+thi đấu
+điểm số
+điểm thi
+kết quả
+giải thưởng
+bằng khen
+chứng nhận
+chứng chỉ
+tốt nghiệp
+nhập học
+thông báo
+ví dụ
+thắc mắc
+giải đáp
+câu hỏi
+câu trả lời
+vấn đề
+kế hoạch
+kỹ năng
+sáng tạo
+tập trung
+kiên trì
+thành viên
+cha mẹ
+bố mẹ
+bạn bè
+gia đình
+
+# --- everyday words that often start a new line ---
+quan trọng
+cần thiết
+đặc biệt
+thông thường
+bình thường
+đơn giản
+hiệu quả
+nhanh chóng
+an toàn
+bảo mật
+sử dụng
+phát triển
+riêng tư
+rõ ràng
+tuyệt vời
+cuối cùng
+đồng thời
+tương tự
+tương ứng
+tiếp theo
+tiếp tục
+bắt đầu
+kết thúc
+hoàn thành
+hoàn toàn
+thường xuyên
+nhanh nhất
+dễ dàng
+khó khăn
+mạnh mẽ
+bất kỳ
+mỗi ngày
+hằng ngày
+hằng tuần
+hằng tháng
+
+# --- mathematics ---
+bất phương trình
+đồ thị
+phân thức
+số tự nhiên
+ước số
+bội số
+ước chung
+bội chung
+tứ giác
+đường thẳng
+đường cao
+trung tuyến
+phân giác
+chu vi
+thể tích
+đường kính
+song song
+tính toán
+giá trị lớn nhất
+giá trị nhỏ nhất
+hình chữ nhật
+hình vuông
+hình thang
+hình bình hành
+hình tròn
+hình hộp
+hình chóp
+tập hợp
+mệnh đề
+quy nạp
+phản chứng
+tích phân
+đạo hàm
+giới hạn
+lượng giác
+toạ độ
+mặt phẳng
+không gian
+hoán vị
+chỉnh hợp
+cấp số cộng
+cấp số nhân
+dãy số
+số phức
+ma trận
+biểu đồ
