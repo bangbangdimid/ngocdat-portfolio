@@ -231,9 +231,9 @@
           <span><span class="name">${esc(t.name)}</span><br />${t.badge ? `<span class="badge">${esc(t.badge)}</span>` : ""}</span>
         </figcaption>
       </figure>`).join("");
-    window.Typo?.apply($("quotes"));
-    $("cam-nhan").hidden = false;
+    $("cam-nhan").hidden = false;   // visible before typo/balance measure the text
     $("navQuotes").hidden = false;
+    window.Typo?.apply($("quotes"));
     navMap.set("cam-nhan", $("navQuotes").querySelector("a")); spy.observe($("cam-nhan"));
     observeReveals($("cam-nhan"));
   })();

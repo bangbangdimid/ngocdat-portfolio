@@ -26,6 +26,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: 500; }
 /* line breaks: headings share their words evenly; paragraphs avoid a lone last word (typo.js covers browsers without these) */
 h1, h2, h3, h4, figcaption { text-wrap: balance; }
 p, li, dd, blockquote { text-wrap: pretty; }
+/* balance.js measures plain greedy wrapping and sets the width itself */
+[data-bal] { text-wrap: wrap; }
 p, ul { margin: 0; }
 ::selection { background: var(--sky); color: #fff; }
 :where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; border-radius: 6px; }
