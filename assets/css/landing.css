@@ -85,10 +85,6 @@
 /* ---------- 5. Shared section scaffolding ---------- */
 .sec { position: relative; padding-block: clamp(2.5rem, 6vw, 5.5rem); overflow: hidden; }
 /* each section is a sketchbook sheet floating in the water; the sea shows around it */
-/* Body text is flush on both sides. justify.js tunes letter/word spacing per block so the gaps stay small
-   (plain justification stretches them 2-3x in narrow columns). Keep this selector in step with JUSTIFY_SEL in typo.js. */
-.sec p, .sec dd, .sec li > span:not(.tick), .contact-card p, .hero-sub, .lesson-meta p { text-align: justify; text-justify: inter-word; hyphens: manual; }
-.sec-head p, .program p, .contact-card p, .hero-sub, .sec p[style*="text-align:center"] { text-align-last: center; }
 .sec > .wrap {
   position: relative; z-index: 1; /* content always above decorative creatures */
   width: min(var(--maxw), calc(100% - 2 * clamp(.6rem, 3vw, 2.5rem)));
@@ -134,7 +130,6 @@
 .checks .medal-silver { background: #c9d3df; color: var(--ink); }
 .checks .medal-bronze { background: #d99a6c; color: var(--ink); }
 .checks b { font-weight: 700; }
-.checks b.t { display: block; } /* achievement title on its own line, description below */
 
 /* teaching style: a full-width row of four cards under the profile */
 .style-head { margin-top: clamp(3rem, 6vw, 4.5rem); display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .4rem 1rem; }
@@ -270,9 +265,6 @@
 .modal-box video { width: 100%; aspect-ratio: 9 / 16; background: #000; max-height: calc(92vh - 64px); }
 
 /* ---------- 14. Responsive ---------- */
-@media (max-width: 1100px) {
-  .quotes { grid-template-columns: 1fr; max-width: 620px; margin-inline: auto; } /* three narrow columns of long quotes cannot be even */
-}
 @media (max-width: 1080px) {
   .programs { grid-template-columns: repeat(2, 1fr); }
   .docs { grid-template-columns: repeat(2, 1fr); }

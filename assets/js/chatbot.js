@@ -2,7 +2,7 @@
    chatbot.js - online advisor widget for the home page
    Rule-based, runs fully in the browser: no server, no API key, no cost,
    and it cannot make facts up. Answers live in chat-kb.js.
-   Requires: config.js, chat-kb.js (typo.js optional)
+   Requires: config.js, chat-kb.js
    ============================================================ */
 (function () {
   const KB = window.CHAT_KB;
@@ -117,7 +117,6 @@
       else if (b.acts) { const row = el("div", "msg-acts"); b.acts.forEach((a) => row.appendChild(actionNode(a))); body.appendChild(row); }
     });
     m.appendChild(body); log.appendChild(m);
-    window.Typo?.apply(body);
     scrollDown();
   }
 

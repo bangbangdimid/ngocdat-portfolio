@@ -24,7 +24,6 @@
           : '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/></svg>'}</div>
         <div class="lt">${esc(m.title)}<span class="s">${m.kind === "video" ? "Video" : "Tài liệu"}${m.visibility === "sample" ? " · " + "mẫu" : ""}</span></div>
       </div>`).join("");
-    window.Typo?.apply(el);
     el.querySelectorAll(".lesson").forEach((l) => l.addEventListener("click", () => selectLesson(+l.dataset.idx)));
   }
 

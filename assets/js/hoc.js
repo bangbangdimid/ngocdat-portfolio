@@ -43,7 +43,6 @@
       return;
     }
     wrap.className = "course-grid";
-    requestAnimationFrame(() => window.Typo?.apply(wrap));
     wrap.innerHTML = state.courses.map((c) => `
       <a class="course-card" href="khoahoc.html?course=${encodeURIComponent(c.id)}">
         <div class="cc-top">${escapeHtml(c.title || "")}</div>

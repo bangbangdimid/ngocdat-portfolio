@@ -40,7 +40,6 @@
     $("authTitle").textContent = COPY[name].title;
     $("authSub").textContent = COPY[name].sub;
     document.title = COPY[name].tab + " - Ara đang dạy toán";
-    window.Typo?.apply($("authSub"));
     if (!keepMsg) clearMsg();
     ensureWidget(PANES[name]);
   }
