@@ -24,6 +24,11 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; }
 h1, h2, h3, h4 { margin: 0; font-weight: 500; }
 p, ul { margin: 0; }
+/* a last line never holds just one or two words: headings and short centred text share their words evenly,
+   running text avoids a lone last word (orphan.js makes the last line at least three words) */
+h1, h2, h3, h4, figcaption { text-wrap: balance; }
+p, li, dd, blockquote { text-wrap: pretty; }
+.hero-sub, .sec-head p, .program p, .contact-card p { text-wrap: balance; }
 ::selection { background: var(--sky); color: #fff; }
 :where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; border-radius: 6px; }
 
