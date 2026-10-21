@@ -105,8 +105,9 @@
         range.setStart(n, m.index);
         range.setEnd(n, m.index + m[0].length);
         const w = range.getBoundingClientRect().width;
-        if (cur) cur.w += w; else cur = { w };
         const end = m.index + m[0].length;
+        if (cur) { cur.w += w; cur.n += m[0].length; cur.text += m[0]; cur.node = null; } // split over inline elements: one word, but no single text node
+        else cur = { w, n: m[0].length, text: m[0], node: n, start: m.index, end };
         if (end < s.length && isWs.test(s[end])) flush();
       }
     }
@@ -195,10 +196,16 @@
       const b = nearestBlock(w.currentNode);
       if (b) els.add(b);
     }
-    els.forEach((el) => { if (scope.contains(el) && !el.closest(SKIP)) balanceElement(el); });
+    const justified = window.Typo && window.Typo.JUSTIFY_SEL;
+    els.forEach((el) => {
+      if (!scope.contains(el) || el.closest(SKIP)) return;
+      if (justified && el.matches(justified)) { if (window.Justify) window.Justify.element(el); } // even edges by spacing, not by width
+      else balanceElement(el);
+    });
   }
 
   function refresh() {
+    if (window.Justify) window.Justify.releaseAll();
     balanced.forEach((el) => { release(el); if (!el.isConnected) balanced.delete(el); });
     apply(document.body);
   }
@@ -230,5 +237,7 @@
     return { full, extra, realLines: baseW.map(Math.round), simLines: sim.map(Math.round), space, words: words.map((w) => Math.round(w.w)), font: cs.font };
   }
 
-  window.Balance = { apply, refresh, explain };
+  // measuring helpers shared with justify.js
+  const util = { ownTextNodes, lineWidths, measureWords, spaceWidth, SKIP };
+  window.Balance = { apply, refresh, explain, util };
 })();

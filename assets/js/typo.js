@@ -38,6 +38,11 @@
 
   const SKIP = "script, style, textarea, pre, code, [data-notypo], .pdf-pages";
 
+  // Body text is justified (flush on both sides). In justified text every possible line break matters,
+  // so compound words are NOT glued here: justify.js glues only the ones that would really be split.
+  // Keep this list in step with the justified-text rule in base.css.
+  const JUSTIFY_SEL = ".sec p, .sec dd, .sec li > span:not(.tick), .contact-card p, .hero-sub, .lesson-meta p";
+
   function textNodes(root) {
     const list = [];
     const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -63,10 +68,9 @@
     });
   }
 
-  function bind(text) {
+  function bind(text, soft) {
     let s = text;
-    for (const k of KEEP) s = s.replace(k.re, k.to);
-    s = bindWords(s);
+    if (!soft) { for (const k of KEEP) s = s.replace(k.re, k.to); s = bindWords(s); } // soft: justified text, see above
     s = s.replace(/(\d{4}) (\d{3}) (\d{3})/g, "$1" + NB + "$2" + NB + "$3");      // 0775 118 240 is one unit
     s = s.replace(/(\d)-(?=\d)/g, "$1-" + WJ);                       // 6-12, 1-2 phút: no break after the hyphen
     s = s.replace(/(\p{L}|\.) (?=\d+(?![\d/]))/gu, "$1" + NB);       // lớp 10, Toán 9, thứ 31 (not a date such as 20/11)
@@ -76,13 +80,36 @@
 
   function apply(root) {
     const scope = root || document.body;
-    textNodes(scope).forEach((n) => { const t = bind(n.nodeValue); if (t !== n.nodeValue) n.nodeValue = t; });
+    textNodes(scope).forEach((n) => { const t = bind(n.nodeValue, !!n.parentElement.closest(JUSTIFY_SEL)); if (t !== n.nodeValue) n.nodeValue = t; });
     // the italic part of a heading ("lặn sâu", "lớp học") is one phrase: never split it
     scope.querySelectorAll("h1 em, h2 em, h3 em").forEach((em) =>
       textNodes(em).forEach((n) => { if (n.nodeValue.length <= MAX_CHUNK) n.nodeValue = n.nodeValue.replace(/ /g, NB); }));
     if (window.Balance) window.Balance.apply(scope);
   }
 
-  window.Typo = { apply };
+  // words of 2-4 syllables found in a run of tokens: [[from, to), ...] (dictionary words and the names above)
+  const NAMES = new Set([
+    "tp hồ chí minh", "hồ chí minh", "lê hồng phong", "sinh viên", "giải nhất", "giải ba", "ngày nhà giáo", "việt nam",
+    "toán học", "ngọc đạt", "quang khôi", "đông nghi", "hải đăng", "chuyên tin", "chuyên toán", "toán cơ bản",
+    "đại học ngoại thương", "phổ thông năng khiếu", "huy chương", "olympic toán học",
+  ]);
+  const core = (t) => t.toLowerCase().replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+  function segment(tokens) {
+    const groups = [];
+    for (let i = 0; i < tokens.length;) {
+      let hit = 0;
+      for (let n = Math.min(4, tokens.length - i); n >= 2; n--) {
+        const part = tokens.slice(i, i + n);
+        // punctuation inside a group (a comma, a dash) is a natural place to break
+        if (part.slice(0, -1).some((t) => /[^\p{L}\p{N}.]$/u.test(t)) || part.slice(1).some((t) => /^[^\p{L}\p{N}]/u.test(t))) continue;
+        const key = part.map(core).join(" ");
+        if (WORDS.has(key) || NAMES.has(key)) { hit = n; break; }
+      }
+      if (hit) { groups.push([i, i + hit]); i += hit; } else i++;
+    }
+    return groups;
+  }
+
+  window.Typo = { apply, segment, JUSTIFY_SEL };
   apply();
 })();

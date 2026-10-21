@@ -173,14 +173,15 @@ Quy ước: chỉ tiếng Việt, xưng "anh Đạt", dùng dấu gạch ngắn 
 - Muốn bot hiểu thêm cách hỏi mới: thêm cụm từ vào `kw` của mục đó, **viết thường và không dấu** (ví dụ `"hoc phi"`). Sau khi sửa, hỏi thử vài câu trên web để kiểm tra.
 - Khi mở thêm lớp mới, nhớ thêm một mục cho lớp đó trong `chat-kb.js` và thêm vào `next` của mục `courses`.
 
-**Chữ đều dòng trên mọi màn hình**: web có 3 lớp xử lý để các dòng chữ dài ngắn đều nhau trên điện thoại (iPhone, Android) lẫn laptop. Anh không phải làm gì, chữ mới thêm vào cũng tự được xử lý.
-- `assets/js/balance.js` (quan trọng nhất): với mỗi đoạn chữ từ 2 dòng trở lên, nó thử nhiều độ rộng và chọn độ rộng làm các dòng gần bằng nhau nhất mà không thêm dòng. Tự tính lại khi xoay màn hình, đổi cỡ cửa sổ hoặc khi font tải xong. Không cân đoạn nào ghi `data-nobalance`.
+**Chữ canh đều hai bên trên mọi màn hình**: đoạn văn, mô tả thẻ và danh sách được canh đều cả lề trái lẫn lề phải (iPhone, Android, laptop). Anh không phải làm gì, chữ mới thêm vào cũng tự được xử lý.
+- `assets/js/justify.js`: canh đều bằng CSS thường sẽ làm khoảng cách giữa các từ giãn gấp 2-3 lần trên màn hình hẹp. File này tính trước cách ngắt dòng của từng đoạn và chỉnh khoảng cách chữ, khoảng cách từ rất nhỏ (tối đa khoảng 0,4 px, mắt không thấy) để mỗi dòng vừa khít với khoảng cách gần bình thường nhất. Từ ghép chỉ được dán lại khi dòng thật sự cắt đôi chúng. Kết quả được kiểm tra lại với cách trình duyệt ngắt dòng thật, lệch thì bỏ qua đoạn đó. Không xử lý đoạn nào ghi `data-nojustify`. Danh sách đoạn được canh đều nằm ở `JUSTIFY_SEL` trong `typo.js` và phải khớp với quy tắc `text-align: justify` trong `assets/css/landing.css`.
+- `assets/js/balance.js`: với các khối không canh đều (tiêu đề, chú thích, nhãn), nó thử nhiều độ rộng và chọn độ rộng làm các dòng gần bằng nhau nhất mà không thêm dòng. Tự tính lại khi xoay màn hình, đổi cỡ cửa sổ hoặc khi font tải xong. Không cân đoạn nào ghi `data-nobalance`. Cũng là nơi kích hoạt `justify.js`.
 - `assets/js/typo.js`: dùng khoảng trắng không ngắt để giữ các từ ghép tiếng Việt ("toàn quốc", "bản chất"), số đi kèm từ ("lớp 10", "6-12"), số điện thoại trên một dòng. Ưu tiên thẩm mỹ: cụm dài (trên 16 ký tự) không bị ghép cả cục, vì cục dài đẩy xuống dòng sau và để lại dòng ngắn.
 - `assets/fonts/` + `assets/css/fonts.css`: font Be Vietnam Pro, Cormorant Garamond, Patrick Hand được lưu ngay trong web (không tải từ Google) nên mọi máy dùng đúng cùng một font, độ rộng chữ giống nhau.
 
 Khi viết thêm chữ mới, để dòng đều nhất:
 - Câu ngắn gọn (khoảng 60-90 ký tự cho mô tả thẻ), tránh một từ rất dài ở cuối câu.
-- Nếu thấy một đoạn vẫn lệch, thử đổi một hai từ hoặc bớt một mệnh đề. Nhờ Claude đo giúp ở 15 độ rộng màn hình (từ 360 đến 1920 px).
+- Nếu thấy một đoạn vẫn có chỗ chữ giãn rộng, thử đổi một hai từ hoặc bớt một mệnh đề (câu dài có nhiều từ ngắn canh đều đẹp hơn câu toàn từ dài). Nhờ Claude đo giúp ở 15 độ rộng màn hình (từ 360 đến 1920 px).
 - Thấy một từ ghép bị cắt đôi: thêm từ đó vào `tools/words-extra.txt` (mỗi từ một dòng, viết thường, có dấu) rồi chạy `node tools/build-words.js`, commit và push. Sửa chữ trong `index.html` xong cũng nên chạy lại lệnh này.
 - Cặp chữ bị ghép nhầm (ví dụ "dạy tư" trong "dạy tư duy") thì thêm vào `tools/words-skip.txt`. Tên riêng viết hoa hay có dấu gạch thêm vào danh sách `KEEP` đầu file `typo.js`.
 - Muốn đổi font hoặc độ đậm: sửa `tools/fetch-fonts.js` rồi chạy `node tools/fetch-fonts.js`.

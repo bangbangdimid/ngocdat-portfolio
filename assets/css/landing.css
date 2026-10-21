@@ -85,6 +85,10 @@
 /* ---------- 5. Shared section scaffolding ---------- */
 .sec { position: relative; padding-block: clamp(2.5rem, 6vw, 5.5rem); overflow: hidden; }
 /* each section is a sketchbook sheet floating in the water; the sea shows around it */
+/* Body text is flush on both sides. justify.js tunes letter/word spacing per block so the gaps stay small
+   (plain justification stretches them 2-3x in narrow columns). Keep this selector in step with JUSTIFY_SEL in typo.js. */
+.sec p, .sec dd, .sec li > span:not(.tick), .contact-card p, .hero-sub, .lesson-meta p { text-align: justify; text-justify: inter-word; hyphens: manual; }
+.sec-head p, .program p, .contact-card p, .hero-sub, .sec p[style*="text-align:center"] { text-align-last: center; }
 .sec > .wrap {
   position: relative; z-index: 1; /* content always above decorative creatures */
   width: min(var(--maxw), calc(100% - 2 * clamp(.6rem, 3vw, 2.5rem)));
@@ -304,7 +308,6 @@
   .doc-thumb::after { display: none; }
   .doc-thumb .pages { right: .4rem; bottom: .4rem; }
   .doc-body { padding: .9rem 1rem 1rem; min-width: 0; }
-  .doc-body p { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .doc-actions { flex-wrap: wrap; }
   .course-row { grid-template-columns: 1fr; gap: .15rem; }
   .hero-badges { display: none; }
