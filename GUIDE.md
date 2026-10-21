@@ -175,7 +175,7 @@ Quy ước: chỉ tiếng Việt, xưng "anh Đạt", dùng dấu gạch ngắn 
 
 **Font chữ**: font Be Vietnam Pro, Cormorant Garamond, Patrick Hand được lưu ngay trong web (thư mục `assets/fonts/`, khai báo ở `assets/css/fonts.css`), không tải từ Google, nên mọi máy dùng đúng cùng một font. Muốn đổi font hoặc độ đậm: sửa `tools/fetch-fonts.js` rồi chạy `node tools/fetch-fonts.js`.
 
-Chữ trên web được để xuống dòng tự nhiên theo trình duyệt, không có script canh đều hay ghép từ.
+**Chữ đều hai bên, dòng cuối không lẻ**: `assets/js/textfit.js` tự làm, anh không phải làm gì (chữ mới thêm vào cũng tự được xử lý). Đoạn văn được canh đều cả hai lề (có chỉnh khoảng cách chữ cực nhỏ, khoảng nửa pixel) nhưng chỉ khi các khoảng trắng giữa từ không giãn quá khoảng 1,8 lần bình thường; đoạn nào không đạt thì giữ canh trái cho đẹp. Dòng cuối của mỗi đoạn luôn có ít nhất 3 chữ (script nối 3 chữ cuối bằng khoảng trắng không ngắt). Văn bản căn giữa và tiêu đề dùng `text-wrap: balance` trong `assets/css/base.css`. Không áp dụng cho khối nào ghi `data-noeven`. Danh sách khối được canh đều là `EVEN_SEL` trong `textfit.js`.
 
 **Thêm video mẫu tự quay (mp4) vào trang chủ**: nén về 720p khổ dọc 9:16, đặt vào `assets/lessons/` kèm ảnh poster `.jpg` cùng tên, rồi thêm một khối `lesson-card` trong `index.html`. Video trên 20 MB nên đưa lên YouTube và đăng qua trang Quản trị.
 

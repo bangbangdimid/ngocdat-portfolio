@@ -25,10 +25,12 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 h1, h2, h3, h4 { margin: 0; font-weight: 500; }
 p, ul { margin: 0; }
 /* a last line never holds just one or two words: headings and short centred text share their words evenly,
-   running text avoids a lone last word (orphan.js makes the last line at least three words) */
+   running text avoids a lone last word (textfit.js makes the last line at least three words) */
 h1, h2, h3, h4, figcaption { text-wrap: balance; }
 p, li, dd, blockquote { text-wrap: pretty; }
 .hero-sub, .sec-head p, .program p, .contact-card p, .eyebrow { text-wrap: balance; }
+/* textfit.js: running text is flush on both sides only where the gaps stay small */
+.is-even { text-align: justify; text-justify: inter-word; hyphens: manual; text-wrap: wrap; } /* wrap: the breaks must match the simulation */
 ::selection { background: var(--sky); color: #fff; }
 :where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; border-radius: 6px; }
 
