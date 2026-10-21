@@ -107,7 +107,13 @@
 /* ---------- 6. Teacher & achievements ---------- */
 .teacher { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(2rem, 5vw, 5rem); align-items: start; }
 .portrait-wrap { position: relative; max-width: 420px; width: 88%; margin-inline: auto; }
-@media (min-width: 981px) { .portrait-wrap { position: sticky; top: 104px; } }
+/* side by side: whichever column is shorter sits centred against the other, so neither hangs from the top */
+@media (min-width: 981px) and (max-width: 1099px) { .teacher { grid-template-columns: 1fr; } } /* too narrow for two columns of even height */
+@media (min-width: 1100px) {
+  .teacher { align-items: center; grid-template-columns: 1fr 1fr; }
+  .portrait-wrap { max-width: 480px; width: 94%; }
+  .portrait-wrap .portrait { aspect-ratio: 3 / 4; } /* taller than on phones, to sit closer to the height of the text */
+}
 .portrait-blob { position: absolute; inset: 12% -12% -9% 14%; background: var(--sea); border: var(--stroke); border-radius: 46% 54% 42% 58% / 52% 44% 56% 48%; }
 .portrait {
   position: relative; border: var(--stroke); border-radius: var(--r-lg); overflow: hidden; background: #fff;
