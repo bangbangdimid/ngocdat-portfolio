@@ -62,6 +62,7 @@
       sitekey: CFG.TURNSTILE_SITE_KEY,
       language: "vi",
       theme: "light",
+      size: window.innerWidth <= 350 ? "compact" : "normal", // the normal widget is 300px wide: too wide for a 320px phone
       callback: (token) => captchaTokens.set(box, token),
       "expired-callback": () => captchaTokens.delete(box),
       "error-callback": () => { captchaTokens.delete(box); },

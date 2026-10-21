@@ -27,7 +27,8 @@
     const text = node.nodeValue, end = text.trimEnd().length;
     let s = text.slice(0, end), glued = 0;
     for (let i = s.length - 1; i > 0 && glued < TAIL_WORDS - 1; i--) {
-      if (s[i] === " " && s[i - 1] !== " ") { s = s.slice(0, i) + NB + s.slice(i + 1); glued++; }
+      if (s[i] === NB) glued++;                                     // joined by an earlier run: count it, do not extend
+      else if (s[i] === " " && s[i - 1] !== " ") { s = s.slice(0, i) + NB + s.slice(i + 1); glued++; }
     }
     if (glued) node.nodeValue = s + text.slice(end);
   }

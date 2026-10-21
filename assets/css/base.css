@@ -28,7 +28,7 @@ p, ul { margin: 0; }
    running text avoids a lone last word (orphan.js makes the last line at least three words) */
 h1, h2, h3, h4, figcaption { text-wrap: balance; }
 p, li, dd, blockquote { text-wrap: pretty; }
-.hero-sub, .sec-head p, .program p, .contact-card p { text-wrap: balance; }
+.hero-sub, .sec-head p, .program p, .contact-card p, .eyebrow { text-wrap: balance; }
 ::selection { background: var(--sky); color: #fff; }
 :where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; border-radius: 6px; }
 
