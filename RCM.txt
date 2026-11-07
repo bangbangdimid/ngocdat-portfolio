@@ -1,4 +1,0 @@
-cd C:\Users\NGOCD\Downloads\Personal_website
-git add .
-git commit -m "Mô tả ngắn thay đổi"
-git push
