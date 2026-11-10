@@ -17,6 +17,16 @@
   const phone = (CFG.CONTACT_PHONE || "").replace(/[^\d+]/g, "");
   if (phone) document.querySelectorAll("[data-call]").forEach((a) => (a.href = "tel:" + phone));
   if (CFG.ZALO_URL) document.querySelectorAll("[data-zalo]").forEach((a) => (a.href = CFG.ZALO_URL));
+  // Trường Ramanujan: chỉ nhận địa chỉ https; chưa có địa chỉ thì ẩn nút, hiện dòng "sắp khai giảng".
+  const schoolUrl = /^https:\/\/[^\s"<>]+$/.test(CFG.SCHOOL_URL || "") ? CFG.SCHOOL_URL : "";
+  document.querySelectorAll("[data-school]").forEach((a) => {
+    if (schoolUrl) a.href = schoolUrl;
+    else {
+      a.removeAttribute("target");
+      if (a.classList.contains("btn")) a.hidden = true;
+    }
+  });
+  document.querySelectorAll("[data-school-soon]").forEach((p) => (p.hidden = !!schoolUrl));
 
   /* ---------- navigation: burger + scroll-spy ---------- */
   const links = $("navLinks"), burger = $("navBurger");

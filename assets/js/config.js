@@ -16,6 +16,9 @@ window.APP_CONFIG = {
   CONTACT_EMAIL: "ngocdat2006@gmail.com",
   ZALO_URL:      "https://zalo.me/0775118240",
 
+  // Địa chỉ Trường Ramanujan (trường Toán 3D). Để "" thì nút "Vào trường" hiện "sắp khai giảng".
+  SCHOOL_URL:    "https://truong-ramanujan.vercel.app",
+
   // Cảm nhận của học sinh. Phần này chỉ hiện trên trang chủ khi có ít nhất
   // một mục có "quote". Điền đúng lời học sinh viết (không tự soạn thay).
   //   name: tên hiển thị, badge: lớp/khoá đã học, quote: lời cảm nhận
